@@ -3,6 +3,7 @@ import { ShoppingCart, Clock, Plus, Minus, Trash2 } from "lucide-react";
 import { menu } from "./Data/menu";
 import Checkout from "./components/Checkout";
 import { calculateSubtotal, formatCurrency } from "./utils/calculations";
+import logo from "./IMG_6208.png";
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -99,9 +100,11 @@ function App() {
       <div className="site">
         <header className="header">
           <div className="brand">
-            <span className="brand-name">
-              BLEND BURGUER
-            </span>
+            <img
+              src={logo}
+              alt="Blend Burguer"
+              className="brand-logo"
+            />
 
             <span className="brand-city">
               037 • DIVINÓPOLIS - MG
@@ -122,9 +125,11 @@ function App() {
     <div className="site">
       <header className="header">
         <div className="brand">
-          <span className="brand-name">
-            BLEND BURGUER
-          </span>
+          <img
+            src={logo}
+            alt="Blend Burguer"
+            className="brand-logo"
+          />
 
           <span className="brand-city">
             037 • DIVINÓPOLIS - MG
