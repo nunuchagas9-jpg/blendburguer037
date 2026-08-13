@@ -5,6 +5,7 @@ import {
   Plus,
   Minus,
   Trash2,
+  X,
 } from "lucide-react";
 
 import { menu } from "./Data/menu";
@@ -21,6 +22,9 @@ function App() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState("ARTESANAIS");
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("");
 
   // =========================
   // HORÁRIO DA HAMBURGUERIA
@@ -67,15 +71,34 @@ function App() {
     0
   );
 
+  // =========================
+  // ADICIONAR AO CARRINHO
+  // =========================
+
   function addToCart(product) {
+    // Se o produto tiver opções, abre a janela de escolha
+    if (product.options && product.options.length > 0) {
+      setSelectedProduct(product);
+      setSelectedOption("");
+      return;
+    }
+
+    adicionarProdutoAoCarrinho(product);
+  }
+
+  function adicionarProdutoAoCarrinho(product, option = "") {
     setCart((currentCart) => {
+      const itemId = option
+        ? `${product.id}-${option}`
+        : product.id;
+
       const existing = currentCart.find(
-        (item) => item.id === product.id
+        (item) => item.cartItemId === itemId
       );
 
       if (existing) {
         return currentCart.map((item) =>
-          item.id === product.id
+          item.cartItemId === itemId
             ? {
                 ...item,
                 quantity: item.quantity + 1,
@@ -88,16 +111,39 @@ function App() {
         ...currentCart,
         {
           ...product,
+          cartItemId: itemId,
           quantity: 1,
+          selectedOption: option,
         },
       ];
     });
   }
 
-  function increaseQuantity(id) {
+  function confirmarOpcao() {
+    if (!selectedProduct) return;
+
+    if (
+      selectedProduct.options?.some(
+        (option) => option.required
+      ) &&
+      !selectedOption
+    ) {
+      return;
+    }
+
+    adicionarProdutoAoCarrinho(
+      selectedProduct,
+      selectedOption
+    );
+
+    setSelectedProduct(null);
+    setSelectedOption("");
+  }
+
+  function increaseQuantity(cartItemId) {
     setCart((currentCart) =>
       currentCart.map((item) =>
-        item.id === id
+        item.cartItemId === cartItemId
           ? {
               ...item,
               quantity: item.quantity + 1,
@@ -107,11 +153,11 @@ function App() {
     );
   }
 
-  function decreaseQuantity(id) {
+  function decreaseQuantity(cartItemId) {
     setCart((currentCart) =>
       currentCart
         .map((item) =>
-          item.id === id
+          item.cartItemId === cartItemId
             ? {
                 ...item,
                 quantity: item.quantity - 1,
@@ -122,9 +168,11 @@ function App() {
     );
   }
 
-  function removeFromCart(id) {
+  function removeFromCart(cartItemId) {
     setCart((currentCart) =>
-      currentCart.filter((item) => item.id !== id)
+      currentCart.filter(
+        (item) => item.cartItemId !== cartItemId
+      )
     );
   }
 
@@ -325,10 +373,17 @@ function App() {
               {cart.map((item) => (
                 <article
                   className="cart-item"
-                  key={item.id}
+                  key={item.cartItemId}
                 >
                   <div>
                     <h3>{item.name}</h3>
+
+                    {item.selectedOption && (
+                      <small>
+                        Recheio:{" "}
+                        {item.selectedOption}
+                      </small>
+                    )}
 
                     <span>
                       {formatCurrency(item.price)}
@@ -339,7 +394,9 @@ function App() {
                     <button
                       type="button"
                       onClick={() =>
-                        decreaseQuantity(item.id)
+                        decreaseQuantity(
+                          item.cartItemId
+                        )
                       }
                       aria-label="Diminuir quantidade"
                     >
@@ -351,7 +408,9 @@ function App() {
                     <button
                       type="button"
                       onClick={() =>
-                        increaseQuantity(item.id)
+                        increaseQuantity(
+                          item.cartItemId
+                        )
                       }
                       aria-label="Aumentar quantidade"
                     >
@@ -361,7 +420,9 @@ function App() {
                     <button
                       type="button"
                       onClick={() =>
-                        removeFromCart(item.id)
+                        removeFromCart(
+                          item.cartItemId
+                        )
                       }
                       aria-label="Remover produto"
                     >
@@ -398,6 +459,68 @@ function App() {
 
         <span>Feito pra matar a fome.</span>
       </footer>
+
+      {/* =========================
+          MODAL DE OPÇÕES
+      ========================= */}
+
+      {selectedProduct && (
+        <div className="option-overlay">
+          <div className="option-modal">
+            <button
+              className="option-close"
+              type="button"
+              onClick={() => {
+                setSelectedProduct(null);
+                setSelectedOption("");
+              }}
+              aria-label="Fechar"
+            >
+              <X size={20} />
+            </button>
+
+            <h2>{selectedProduct.name}</h2>
+
+            <p>
+              {selectedProduct.options?.[0]?.name}
+            </p>
+
+            <div className="option-list">
+              {selectedProduct.options?.[0]?.values.map(
+                (value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={
+                      selectedOption === value
+                        ? "option-selected"
+                        : ""
+                    }
+                    onClick={() =>
+                      setSelectedOption(value)
+                    }
+                  >
+                    <span>{value}</span>
+
+                    {selectedOption === value && (
+                      <strong>✓</strong>
+                    )}
+                  </button>
+                )
+              )}
+            </div>
+
+            <button
+              className="primary-button"
+              type="button"
+              disabled={!selectedOption}
+              onClick={confirmarOpcao}
+            >
+              ADICIONAR AO CARRINHO
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
