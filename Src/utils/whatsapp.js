@@ -1,6 +1,6 @@
 import { formatCurrency } from "./calculations";
 
-export const WHATSAPP_NUMBER = "37984188332";
+export const WHATSAPP_NUMBER = "5537984188332";
 
 function cleanText(value) {
   return String(value ?? "").trim();
