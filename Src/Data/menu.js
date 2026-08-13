@@ -1,0 +1,205 @@
+export const categories = [
+  "ARTESANAIS",
+  "TRADICIONAIS",
+  "PASTÉIS",
+  "ADICIONAIS",
+  "COMBOS",
+  "BEBIDAS",
+];
+
+export const menu = [
+  {
+    id: "blend-burger",
+    category: "ARTESANAIS",
+    name: "BLEND BURGER",
+    description:
+      "Blend de 120g, mussarela, alface, tomate, cebola e maionese temperada.",
+    price: 25,
+  },
+  {
+    id: "cheddar-bacon",
+    category: "ARTESANAIS",
+    name: "CHEDDAR BACON",
+    description:
+      "Blend de 120g, creme de cheddar, bacon crocante, alface, tomate, cebola e maionese temperada.",
+    price: 28,
+    popular: true,
+  },
+  {
+    id: "blend-burger-duplo",
+    category: "ARTESANAIS",
+    name: "BLEND BURGER DUPLO",
+    description:
+      "2 blends de 120g, bacon crocante, cheddar, alface, tomate, cebola, catupiry e maionese temperada.",
+    price: 35,
+  },
+
+  {
+    id: "x-burguer",
+    category: "TRADICIONAIS",
+    name: "X-BURGUER",
+    description:
+      "Bife de hambúrguer 90g, mussarela, alface, tomate e maionese temperada.",
+    price: 20,
+  },
+  {
+    id: "x-cheddar-bacon",
+    category: "TRADICIONAIS",
+    name: "X-CHEDDAR BACON",
+    description:
+      "Bife de hambúrguer 90g, cheddar, bacon crocante, alface, tomate e maionese temperada.",
+    price: 23,
+  },
+  {
+    id: "x-tudo-burger",
+    category: "TRADICIONAIS",
+    name: "X-TUDO BURGER",
+    description:
+      "Bife de hambúrguer, bacon, catupiry, mussarela, batata palha, milho, ovo, alface, tomate e maionese temperada.",
+    price: 26,
+  },
+
+  {
+    id: "pastel-frango-bacon",
+    category: "PASTÉIS",
+    name: "FRANGO COM BACON",
+    description: "Pastel de frango com bacon.",
+    price: 15,
+    options: [
+      {
+        name: "Escolha o recheio cremoso",
+        required: true,
+        values: ["Cheddar", "Catupiry"],
+      },
+    ],
+  },
+  {
+    id: "pastel-pizza",
+    category: "PASTÉIS",
+    name: "PIZZA",
+    description: "Pastel sabor pizza.",
+    price: 15,
+  },
+
+  {
+    id: "mussarela-empanada",
+    category: "ADICIONAIS",
+    name: "MUSSARELA EMPANADA",
+    description: "Mussarela empanada.",
+    price: 8,
+  },
+  {
+    id: "geleia-pimenta-abacaxi",
+    category: "ADICIONAIS",
+    name: "GELEIA DE PIMENTA C/ ABACAXI",
+    description: "Geleia de pimenta com abacaxi.",
+    price: 3,
+  },
+  {
+    id: "blend-extra",
+    category: "ADICIONAIS",
+    name: "BLEND EXTRA",
+    description: "Um blend extra de 120g.",
+    price: 5,
+  },
+  {
+    id: "barbecue-goiabada",
+    category: "ADICIONAIS",
+    name: "BARBECUE DE GOIABADA",
+    description: "Molho barbecue de goiabada.",
+    price: 3,
+  },
+  {
+    id: "farofa-bacon",
+    category: "ADICIONAIS",
+    name: "FAROFA DE BACON",
+    description: "Farofa crocante de bacon.",
+    price: 3,
+  },
+  {
+    id: "ovo",
+    category: "ADICIONAIS",
+    name: "OVO",
+    description: "Ovo adicional.",
+    price: 1,
+  },
+  {
+    id: "batata-cheddar-bacon",
+    category: "ADICIONAIS",
+    name: "BATATA FRITA COM CHEDDAR E BACON",
+    description: "Batata frita individual com cheddar e bacon.",
+    price: 8,
+  },
+  {
+    id: "cheddar-batata",
+    category: "ADICIONAIS",
+    name: "CHEDDAR PARA BATATA",
+    description: "Porção adicional de cheddar para batata.",
+    price: 3,
+  },
+
+  {
+    id: "coca-cola-310",
+    category: "BEBIDAS",
+    name: "COCA-COLA 310ML",
+    description: "Coca-Cola lata 310ml.",
+    price: 6,
+    subcategory: "LATA",
+  },
+  {
+    id: "coca-cola-zero",
+    category: "BEBIDAS",
+    name: "COCA-COLA ZERO",
+    description: "Coca-Cola Zero lata.",
+    price: 6.5,
+    subcategory: "LATA",
+  },
+  {
+    id: "fanta-350",
+    category: "BEBIDAS",
+    name: "FANTA 350ML",
+    description: "Fanta lata 350ml.",
+    price: 5,
+    subcategory: "LATA",
+  },
+  {
+    id: "guarana-antartica",
+    category: "BEBIDAS",
+    name: "GUARANÁ ANTARCTICA",
+    description: "Guaraná Antarctica lata.",
+    price: 5,
+    subcategory: "LATA",
+  },
+  {
+    id: "suco-uva",
+    category: "BEBIDAS",
+    name: "SUCO DE UVA",
+    description: "Suco de uva.",
+    price: 6,
+    subcategory: "LATA",
+  },
+  {
+    id: "mate-couro",
+    category: "BEBIDAS",
+    name: "MATE COURO",
+    description: "Mate Couro 1 litro.",
+    price: 9,
+    subcategory: "1 LITRO",
+  },
+  {
+    id: "coca-cola-2l",
+    category: "BEBIDAS",
+    name: "COCA-COLA 2 LITROS",
+    description: "Coca-Cola 2 litros.",
+    price: 14,
+    subcategory: "2 LITROS",
+  },
+  {
+    id: "antartica-2l",
+    category: "BEBIDAS",
+    name: "ANTARCTICA 2 LITROS",
+    description: "Antarctica 2 litros.",
+    price: 12,
+    subcategory: "2 LITROS",
+  },
+];
