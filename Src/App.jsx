@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ShoppingCart, Clock, Plus, Minus, Trash2 } from "lucide-react";
-import { menu } from "./data/menu";
+import { menu } from "./Data/menu";
 import Checkout from "./components/Checkout";
 import { calculateSubtotal, formatCurrency } from "./utils/calculations";
 
