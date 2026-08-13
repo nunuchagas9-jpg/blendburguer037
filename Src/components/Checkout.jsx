@@ -9,7 +9,7 @@ import {
   buildWhatsAppMessage,
   createWhatsAppLink,
 } from "../utils/whatsapp";
-import { deliveryRules } from "../data/delivery";
+import { deliveryRules } from "../Data/delivery";
 
 function Checkout({
   cart = [],
