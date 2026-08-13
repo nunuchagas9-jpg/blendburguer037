@@ -15,10 +15,11 @@ export function buildWhatsAppMessage({
 }) {
   const lines = [];
 
-  lines.push("🍔 *BLEND BURGUER*");
-  lines.push("*Feito pra matar a fome.*");
+  lines.push("🍔 *BLEND BURGUER 037*");
+  lines.push("Feito pra matar a fome.");
   lines.push("");
   lines.push("📋 *NOVO PEDIDO*");
+  lines.push("━━━━━━━━━━━━━━━━━━");
   lines.push("");
 
   lines.push("👤 *CLIENTE*");
@@ -26,80 +27,138 @@ export function buildWhatsAppMessage({
   lines.push(`WhatsApp: ${cleanText(customer?.phone)}`);
   lines.push("");
 
-  lines.push("📍 *ENTREGA*");
-  lines.push(`Endereço: ${cleanText(customer?.address)}`);
-  lines.push(`Número: ${cleanText(customer?.number)}`);
-  lines.push(`Bairro: ${cleanText(customer?.neighborhood)}`);
-  lines.push(`Ponto de referência: ${cleanText(customer?.reference)}`);
+  const orderType = cleanText(customer?.orderType);
 
-  if (cleanText(customer?.complement)) {
-    lines.push(`Complemento: ${cleanText(customer.complement)}`);
+  if (orderType === "Retirada no local") {
+    lines.push("🏪 *RETIRADA NO LOCAL*");
+    lines.push("Rua Frei Patrício de Moura, 71");
+    lines.push("Morumbi — Divinópolis/MG");
+  } else {
+    lines.push("🚚 *ENTREGA*");
+    lines.push(
+      `Endereço: ${cleanText(customer?.address)}, ${cleanText(
+        customer?.number
+      )}`
+    );
+    lines.push(`Bairro: ${cleanText(customer?.neighborhood)}`);
+    lines.push(
+      `Referência: ${cleanText(customer?.reference)}`
+    );
+
+    if (cleanText(customer?.complement)) {
+      lines.push(
+        `Complemento: ${cleanText(customer.complement)}`
+      );
+    }
   }
 
   lines.push("");
-  lines.push("🛒 *PEDIDO*");
+  lines.push("🛒 *ITENS DO PEDIDO*");
+  lines.push("");
 
   if (Array.isArray(cart) && cart.length > 0) {
     cart.forEach((item) => {
       const quantity = Number(item.quantity) || 0;
-      const itemTotal = Number(item.total) || 0;
+      const price = Number(item.price) || 0;
+      const itemTotal =
+        Number(item.total) || price * quantity;
 
       lines.push(
-        `${quantity}x ${cleanText(item.name)} — ${formatCurrency(itemTotal)}`
+        `*${quantity}x ${cleanText(item.name)}*`
+      );
+
+      lines.push(
+        `   ${formatCurrency(price)} cada`
+      );
+
+      lines.push(
+        `   Total: ${formatCurrency(itemTotal)}`
       );
 
       if (Array.isArray(item.selectedOptions)) {
         item.selectedOptions.forEach((option) => {
-          lines.push(`   ↳ ${cleanText(option.name)}`);
+          lines.push(
+            `   ↳ ${cleanText(option.name)}`
+          );
         });
       }
 
       if (cleanText(item.observation)) {
-        lines.push(`   Obs.: ${cleanText(item.observation)}`);
+        lines.push(
+          `   📝 Obs.: ${cleanText(item.observation)}`
+        );
       }
+
+      lines.push("");
     });
   } else {
     lines.push("Nenhum produto informado.");
   }
 
+  lines.push("━━━━━━━━━━━━━━━━━━");
+
+  lines.push(
+    `Subtotal: ${formatCurrency(subtotal)}`
+  );
+
+  if (orderType === "Retirada no local") {
+    lines.push("Entrega: Grátis");
+  } else {
+    lines.push(
+      `Entrega: ${formatCurrency(deliveryFee)}`
+    );
+  }
+
   lines.push("");
-  lines.push(`Subtotal: ${formatCurrency(subtotal)}`);
-  lines.push(`Taxa de entrega: ${formatCurrency(deliveryFee)}`);
-  lines.push(`*TOTAL: ${formatCurrency(total)}*`);
+  lines.push(`💰 *TOTAL: ${formatCurrency(total)}*`);
 
   lines.push("");
   lines.push("💳 *PAGAMENTO*");
 
-  const paymentMethod = cleanText(customer?.paymentMethod);
+  const paymentMethod = cleanText(
+    customer?.paymentMethod
+  );
 
   if (paymentMethod) {
     lines.push(`Forma: ${paymentMethod}`);
   }
 
   if (paymentMethod.toLowerCase() === "dinheiro") {
-    const needsChange = customer?.needsChange === true;
+    const needsChange =
+      customer?.needsChange === true;
 
-    lines.push(`Precisa de troco: ${needsChange ? "Sim" : "Não"}`);
+    lines.push(
+      `Troco: ${needsChange ? "SIM" : "NÃO"}`
+    );
 
     if (needsChange) {
       lines.push(
-        `Troco para: ${formatCurrency(customer?.cashAmount)}`
+        `Troco para: ${formatCurrency(
+          customer?.cashAmount
+        )}`
       );
 
       lines.push(
-        `Troco: ${formatCurrency(customer?.changeAmount)}`
+        `Valor do troco: ${formatCurrency(
+          customer?.changeAmount
+        )}`
       );
     }
   }
 
+  lines.push("");
+  lines.push("📝 *OBSERVAÇÃO*");
+
   if (cleanText(customer?.observation)) {
-    lines.push("");
-    lines.push(`📝 *OBSERVAÇÃO:* ${cleanText(customer.observation)}`);
+    lines.push(cleanText(customer.observation));
+  } else {
+    lines.push("Nenhuma");
   }
 
   lines.push("");
-  lines.push("Obrigado pela preferência! ❤️");
-  lines.push("BLEND BURGUER 037");
+  lines.push("━━━━━━━━━━━━━━━━━━");
+  lines.push("❤️ *Obrigado pela preferência!*");
+  lines.push("*BLEND BURGUER 037*");
 
   return lines.join("\n");
 }
@@ -109,7 +168,8 @@ export function createWhatsAppLink(message) {
     return null;
   }
 
-  const encodedMessage = encodeURIComponent(message);
+  const encodedMessage =
+    encodeURIComponent(message);
 
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 }
