@@ -131,13 +131,6 @@ export const menu = [
     price: 8,
   },
   {
-    id: "cheddar-batata",
-    category: "ADICIONAIS",
-    name: "CHEDDAR PARA BATATA",
-    description: "Porção adicional de cheddar para batata.",
-    price: 3,
-  },
-  {
     id: "coca-cola-310",
     category: "BEBIDAS",
     name: "COCA-COLA 310ML",
