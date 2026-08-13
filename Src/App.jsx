@@ -1,8 +1,19 @@
 import { useMemo, useState } from "react";
-import { ShoppingCart, Clock, Plus, Minus, Trash2 } from "lucide-react";
+import {
+  ShoppingCart,
+  Clock,
+  Plus,
+  Minus,
+  Trash2,
+} from "lucide-react";
+
 import { menu } from "./Data/menu";
 import Checkout from "./components/Checkout";
-import { calculateSubtotal, formatCurrency } from "./utils/calculations";
+import {
+  calculateSubtotal,
+  formatCurrency,
+} from "./utils/calculations";
+
 import logo from "./IMG_6208.png";
 
 function App() {
@@ -10,6 +21,28 @@ function App() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState("ARTESANAIS");
+
+  // =========================
+  // HORÁRIO DA HAMBURGUERIA
+  // Sexta a domingo
+  // 19:00 às 23:30
+  // =========================
+
+  const now = new Date();
+
+  const day = now.getDay();
+  const hour = now.getHours();
+  const minutes = now.getMinutes();
+
+  const currentTime = hour * 60 + minutes;
+
+  const openingTime = 19 * 60;
+  const closingTime = 23 * 60 + 30;
+
+  const isOpen =
+    (day === 5 || day === 6 || day === 0) &&
+    currentTime >= openingTime &&
+    currentTime <= closingTime;
 
   const categories = [
     "ARTESANAIS",
@@ -95,6 +128,10 @@ function App() {
     );
   }
 
+  // =========================
+  // CHECKOUT
+  // =========================
+
   if (showCheckout) {
     return (
       <div className="site">
@@ -120,6 +157,10 @@ function App() {
       </div>
     );
   }
+
+  // =========================
+  // SITE
+  // =========================
 
   return (
     <div className="site">
@@ -163,13 +204,23 @@ function App() {
             <p>Feito pra matar a fome.</p>
 
             <div className="store-status">
-              <span className="status-dot" />
+              <span
+                className={`status-dot ${
+                  isOpen
+                    ? "status-open"
+                    : "status-closed"
+                }`}
+              />
 
-              <span>ABERTO</span>
+              <span>
+                {isOpen ? "ABERTO" : "FECHADO"}
+              </span>
 
               <Clock size={17} />
 
-              <span>18h às 23h30</span>
+              <span>
+                Sexta a domingo · 19h às 23h30
+              </span>
             </div>
 
             <button
