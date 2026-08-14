@@ -1,4 +1,4 @@
-export function roundMoney(value) {
+﻿export function roundMoney(value) {
   return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
 }
 
@@ -57,3 +57,5 @@ export function validateCashPayment(total, cashAmount) {
 
   return amountReceived >= orderTotal;
 }
+
+

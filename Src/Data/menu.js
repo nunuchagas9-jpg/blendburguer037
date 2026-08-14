@@ -195,6 +195,3 @@ export const menu = [
     subcategory: "2 LITROS",
   },
 ];
-
-
-

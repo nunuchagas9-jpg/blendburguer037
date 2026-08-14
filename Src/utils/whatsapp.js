@@ -1,4 +1,4 @@
-import { formatCurrency } from "./calculations";
+﻿import { formatCurrency } from "./calculations";
 
 export const WHATSAPP_NUMBER = "5537998121783";
 
@@ -15,14 +15,14 @@ export function buildWhatsAppMessage({
 }) {
   const lines = [];
 
-  lines.push("🍔 *BLEND BURGUER 037*");
+  lines.push("ðŸ” *BLEND BURGUER 037*");
   lines.push("Feito pra matar a fome.");
   lines.push("");
-  lines.push("📋 *NOVO PEDIDO*");
-  lines.push("━━━━━━━━━━━━━━━━━━");
+  lines.push("ðŸ“‹ *NOVO PEDIDO*");
+  lines.push("â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”");
   lines.push("");
 
-  lines.push("👤 *CLIENTE*");
+  lines.push("ðŸ‘¤ *CLIENTE*");
   lines.push(`Nome: ${cleanText(customer?.name)}`);
   lines.push(`WhatsApp: ${cleanText(customer?.phone)}`);
   lines.push("");
@@ -30,11 +30,11 @@ export function buildWhatsAppMessage({
   const orderType = cleanText(customer?.orderType);
 
   if (orderType === "Retirada no local") {
-    lines.push("🏪 *RETIRADA NO LOCAL*");
+    lines.push("ðŸª *RETIRADA NO LOCAL*");
     lines.push("Rua Frei Patrício de Moura, 71");
-    lines.push("Morumbi — Divinópolis/MG");
+    lines.push("Morumbi â€” Divinópolis/MG");
   } else {
-    lines.push("🚚 *ENTREGA*");
+    lines.push("ðŸšš *ENTREGA*");
     lines.push(
       `Endereço: ${cleanText(customer?.address)}, ${cleanText(
         customer?.number
@@ -53,7 +53,7 @@ export function buildWhatsAppMessage({
   }
 
   lines.push("");
-  lines.push("🛒 *ITENS DO PEDIDO*");
+  lines.push("ðŸ›’ *ITENS DO PEDIDO*");
   lines.push("");
 
   if (Array.isArray(cart) && cart.length > 0) {
@@ -79,14 +79,14 @@ export function buildWhatsAppMessage({
       if (Array.isArray(item.selectedOptions)) {
         item.selectedOptions.forEach((option) => {
           lines.push(
-            `   ↳ ${cleanText(option.name)}`
+            `   â†³ ${cleanText(option.name)}`
           );
         });
       }
 
       if (cleanText(item.observation)) {
         lines.push(
-          `   📝 Obs.: ${cleanText(item.observation)}`
+          `   ðŸ“ Obs.: ${cleanText(item.observation)}`
         );
       }
 
@@ -96,7 +96,7 @@ export function buildWhatsAppMessage({
     lines.push("Nenhum produto informado.");
   }
 
-  lines.push("━━━━━━━━━━━━━━━━━━");
+  lines.push("â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”");
 
   lines.push(
     `Subtotal: ${formatCurrency(subtotal)}`
@@ -111,10 +111,10 @@ export function buildWhatsAppMessage({
   }
 
   lines.push("");
-  lines.push(`💰 *TOTAL: ${formatCurrency(total)}*`);
+  lines.push(`ðŸ’° *TOTAL: ${formatCurrency(total)}*`);
 
   lines.push("");
-  lines.push("💳 *PAGAMENTO*");
+  lines.push("ðŸ’³ *PAGAMENTO*");
 
   const paymentMethod = cleanText(
     customer?.paymentMethod
@@ -129,7 +129,7 @@ export function buildWhatsAppMessage({
       customer?.needsChange === true;
 
     lines.push(
-      `Troco: ${needsChange ? "SIM" : "NÃO"}`
+      `Troco: ${needsChange ? "SIM" : "NAƒO"}`
     );
 
     if (needsChange) {
@@ -148,7 +148,7 @@ export function buildWhatsAppMessage({
   }
 
   lines.push("");
-  lines.push("📝 *OBSERVAÇÃO*");
+  lines.push("ðŸ“ *OBSERVAA‡AƒO*");
 
   if (cleanText(customer?.observation)) {
     lines.push(cleanText(customer.observation));
@@ -157,8 +157,8 @@ export function buildWhatsAppMessage({
   }
 
   lines.push("");
-  lines.push("━━━━━━━━━━━━━━━━━━");
-  lines.push("❤️ *Obrigado pela preferência!*");
+  lines.push("â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”");
+  lines.push("â¤ï¸ *Obrigado pela preferência!*");
   lines.push("*BLEND BURGUER 037*");
 
   return lines.join("\n");
@@ -174,3 +174,4 @@ export function createWhatsAppLink(message) {
 
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 }
+

@@ -103,12 +103,12 @@ function Checkout({
 
       if (orderType === "delivery") {
         if (!customer.address.trim()) {
-          setError("Informe o endereÃ§o.");
+          setError("Informe o endereço.");
           return;
         }
 
         if (!customer.number.trim()) {
-          setError("Informe o nÃºmero.");
+          setError("Informe o número.");
           return;
         }
 
@@ -119,7 +119,7 @@ function Checkout({
 
         if (!customer.reference.trim()) {
           setError(
-            "O ponto de referÃªncia Ã© obrigatÃ³rio."
+            "O ponto de referência é obrigatório."
           );
           return;
         }
@@ -215,7 +215,7 @@ function Checkout({
 
       if (!whatsappLink) {
         setError(
-          "O WhatsApp ainda nÃ£o foi configurado corretamente."
+          "O WhatsApp ainda não foi configurado corretamente."
         );
         return;
       }
@@ -225,7 +225,7 @@ function Checkout({
        * ABRIR WHATSAPP
        * =========================================
        *
-       * O pedido serÃ¡ enviado para:
+       * O pedido será enviado para:
        * +55 37 99812-1783
        */
 
@@ -266,7 +266,7 @@ function Checkout({
       );
 
       setError(
-        "NÃ£o foi possÃ­vel enviar o pedido. Tente novamente."
+        "Não foi possível enviar o pedido. Tente novamente."
       );
     } finally {
       setSending(false);
@@ -276,7 +276,7 @@ function Checkout({
   return (
     <section className="checkout">
       <div className="section-heading">
-        <span>FINALIZAÃ‡ÃƒO</span>
+        <span>FINALIZAA‡AƒO</span>
 
         <h2>Finalizar pedido</h2>
       </div>
@@ -286,7 +286,7 @@ function Checkout({
 
         <div className="checkout-section">
           <h3>
-            Como vocÃª quer receber?
+            Como você quer receber?
           </h3>
 
           <div className="choice-grid">
@@ -364,16 +364,16 @@ function Checkout({
           </label>
         </div>
 
-        {/* ENDEREÃ‡O */}
+        {/* ENDEREA‡O */}
 
         {orderType === "delivery" && (
           <div className="checkout-section">
             <h3>
-              EndereÃ§o de entrega
+              Endereço de entrega
             </h3>
 
             <label>
-              EndereÃ§o *
+              Endereço *
 
               <input
                 type="text"
@@ -390,7 +390,7 @@ function Checkout({
             </label>
 
             <label>
-              NÃºmero *
+              Número *
 
               <input
                 type="text"
@@ -401,7 +401,7 @@ function Checkout({
                     event.target.value
                   )
                 }
-                placeholder="NÃºmero"
+                placeholder="Número"
               />
             </label>
 
@@ -424,7 +424,7 @@ function Checkout({
             </label>
 
             <label>
-              Ponto de referÃªncia *
+              Ponto de referência *
 
               <input
                 type="text"
@@ -437,7 +437,7 @@ function Checkout({
                     event.target.value
                   )
                 }
-                placeholder="Ex.: perto da praÃ§a"
+                placeholder="Ex.: perto da praça"
               />
             </label>
 
@@ -470,8 +470,8 @@ function Checkout({
             </strong>
 
             <p>
-              Rua Frei PatrÃ­cio de Moura, 71 â€”
-              Morumbi, DivinÃ³polis - MG
+              Rua Frei Patrício de Moura, 71 â€”
+              Morumbi, Divinópolis - MG
             </p>
           </div>
         )}
@@ -484,7 +484,7 @@ function Checkout({
           <div className="choice-grid payment-grid">
             {[
               "Pix",
-              "CartÃ£o",
+              "Cartão",
               "Dinheiro",
             ].map((method) => (
               <button
@@ -529,7 +529,7 @@ function Checkout({
                   }
                 >
                   <option value="nao">
-                    NÃ£o
+                    Não
                   </option>
 
                   <option value="sim">
@@ -578,10 +578,10 @@ function Checkout({
           )}
         </div>
 
-        {/* OBSERVAÃ‡ÃƒO */}
+        {/* OBSERVAA‡AƒO */}
 
         <div className="checkout-section">
-          <h3>ObservaÃ§Ã£o</h3>
+          <h3>Observação</h3>
 
           <textarea
             value={
@@ -593,7 +593,7 @@ function Checkout({
                 event.target.value
               )
             }
-            placeholder="Alguma observaÃ§Ã£o sobre o pedido?"
+            placeholder="Alguma observação sobre o pedido?"
             rows="3"
           />
         </div>
@@ -616,7 +616,7 @@ function Checkout({
 
             <strong>
               {orderType === "pickup"
-                ? "GrÃ¡tis"
+                ? "Grátis"
                 : formatCurrency(
                     deliveryFee
                   )}
@@ -640,7 +640,7 @@ function Checkout({
           </div>
         )}
 
-        {/* BOTÃ•ES */}
+        {/* BOTA•ES */}
 
         <div className="checkout-actions">
           <button
@@ -668,5 +668,7 @@ function Checkout({
 }
 
 export default Checkout;
+
+
 
 

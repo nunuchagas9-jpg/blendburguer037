@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const cors = require("cors");
 const { execFile } = require("child_process");
 
@@ -179,3 +179,4 @@ app.listen(PORT, "127.0.0.1", () => {
     `Servidor de impressão funcionando em http://127.0.0.1:${PORT}`
   );
 });
+

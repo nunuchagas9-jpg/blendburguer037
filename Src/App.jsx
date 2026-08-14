@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import {
   ShoppingCart,
   Clock,
@@ -29,7 +29,7 @@ function App() {
   // =========================
   // HORÁRIO DA HAMBURGUERIA
   // Sexta a domingo
-  // 19:00 às 23:30
+  // 19:00 A s 23:30
   // =========================
 
   const now = new Date();
@@ -76,7 +76,7 @@ function App() {
   // =========================
 
   function addToCart(product) {
-    // Se o produto tiver opções, abre a janela de escolha
+    // Se o produto tiver opçAµes, abre a janela de escolha
     if (product.options && product.options.length > 0) {
       setSelectedProduct(product);
       setSelectedOption("");
@@ -192,7 +192,7 @@ function App() {
             />
 
             <span className="brand-city">
-              037 • DIVINÓPOLIS - MG
+              037 â€¢ DIVINA“POLIS - MG
             </span>
           </div>
         </header>
@@ -221,7 +221,7 @@ function App() {
           />
 
           <span className="brand-city">
-            037 • DIVINÓPOLIS - MG
+            037 â€¢ DIVINA“POLIS - MG
           </span>
         </div>
 
@@ -244,7 +244,7 @@ function App() {
         <section className="hero">
           <div className="hero-content">
             <span className="hero-label">
-              SABOR • QUALIDADE • ATITUDE
+              SABOR â€¢ QUALIDADE â€¢ ATITUDE
             </span>
 
             <h1>BLEND BURGUER</h1>
@@ -267,7 +267,7 @@ function App() {
               <Clock size={17} />
 
               <span>
-                Sexta a domingo · 19h às 23h30
+                Sexta a domingo Â· 19h A s 23h30
               </span>
             </div>
 
@@ -332,7 +332,7 @@ function App() {
                 >
                   {product.popular && (
                     <span className="popular-badge">
-                      🔥 MAIS PEDIDO
+                      ðŸ”¥ MAIS PEDIDO
                     </span>
                   )}
 
@@ -455,13 +455,13 @@ function App() {
       <footer className="footer">
         <strong>BLEND BURGUER</strong>
 
-        <span>037 • DIVINÓPOLIS - MG</span>
+        <span>037 â€¢ DIVINA“POLIS - MG</span>
 
         <span>Feito pra matar a fome.</span>
       </footer>
 
       {/* =========================
-          MODAL DE OPÇÕES
+          MODAL DE OPA‡A•ES
       ========================= */}
 
       {selectedProduct && (
@@ -503,7 +503,7 @@ function App() {
                     <span>{value}</span>
 
                     {selectedOption === value && (
-                      <strong>✓</strong>
+                      <strong>âœ“</strong>
                     )}
                   </button>
                 )
@@ -526,3 +526,5 @@ function App() {
 }
 
 export default App;
+
+
