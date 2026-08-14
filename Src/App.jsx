@@ -267,7 +267,7 @@ function App() {
               <Clock size={17} />
 
               <span>
-                Sexta a domingo Â· 19h A s 23h30
+                Sexta a domingo - 19h as 23h30
               </span>
             </div>
 
@@ -332,7 +332,7 @@ function App() {
                 >
                   {product.popular && (
                     <span className="popular-badge">
-                      ðŸ”¥ MAIS PEDIDO
+MAIS PEDIDO
                     </span>
                   )}
 
