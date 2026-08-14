@@ -13,7 +13,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "BLEND BURGER",
     description:
-      "Blend de 120g, mussarela, alface, tomate, cebola e maionese temperada.",
+      "Blend de 120g, mussarela, alface, tomate, cebola, maionese temperada e batata palha.",
     price: 25,
   },
   {
@@ -21,7 +21,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "CHEDDAR BACON",
     description:
-      "Blend de 120g, cheddar, bacon crocante, alface, tomate, cebola e maionese temperada.",
+      "Blend de 120g, cheddar, bacon crocante, alface, tomate, cebola, maionese temperada e batata palha.",
     price: 28,
     popular: true,
   },
@@ -30,7 +30,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "BLEND BURGER DUPLO",
     description:
-      "2 blends de 120g, bacon crocante, cheddar, alface, tomate, cebola, catupiry e maionese temperada.",
+      "2 blends de 120g, bacon crocante, cheddar, alface, tomate, cebola, catupiry, maionese temperada e batata palha.",
     price: 35,
   },
 
@@ -39,7 +39,7 @@ export const menu = [
     category: "TRADICIONAIS",
     name: "X-BURGUER",
     description:
-      "Bife de hambúrguer 90g, mussarela, alface, tomate e maionese temperada.",
+      "Bife de hambúrguer 90g, mussarela, alface, tomate, maionese temperada e batata palha.",
     price: 20,
   },
   {
@@ -47,7 +47,7 @@ export const menu = [
     category: "TRADICIONAIS",
     name: "X-CHEDDAR BACON",
     description:
-      "Bife de hambúrguer 90g, cheddar, bacon crocante, alface, tomate e maionese temperada.",
+      "Bife de hambúrguer 90g, cheddar, bacon crocante, alface, tomate, maionese temperada e batata palha.",
     price: 23,
   },
   {
@@ -195,4 +195,6 @@ export const menu = [
     subcategory: "2 LITROS",
   },
 ];
+
+
 
