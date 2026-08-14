@@ -40,8 +40,12 @@ function Checkout({
       return 0;
     }
 
+    if (!customer.address.trim()) {
+      return 0;
+    }
+
     return 5;
-  }, [orderType]);
+  }, [orderType, customer.address]);
 
   const total = calculateTotal(
     subtotal,
@@ -636,3 +640,4 @@ function Checkout({
 }
 
 export default Checkout;
+
