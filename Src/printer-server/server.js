@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const cors = require("cors");
 const { execFile } = require("child_process");
 
@@ -24,7 +24,13 @@ app.post("/print", (req, res) => {
     });
   }
 
+  console.log("PEDIDO RECEBIDO:");
+  console.log(JSON.stringify(order, null, 2));
+
   const receiptText = createReceipt(order);
+
+  console.log("TEXTO DA IMPRESSÃO:");
+  console.log(receiptText);
 
   printText(receiptText, (error) => {
     if (error) {
@@ -87,16 +93,39 @@ function createReceipt(order) {
   text += "PEDIDO\n";
   text += "--------------------------------\n";
 
+  let calculatedSubtotal = 0;
+
   cart.forEach((item) => {
     const quantity = Number(item.quantity) || 1;
-    const price = Number(item.price) || 0;
 
-    const itemTotal =
-      Number(item.total) ||
-      price * quantity;
+    // Aceita:
+    // 35
+    // 35.00
+    // "35"
+    // "35,00"
+    // "R$ 35,00"
+    const price = parseMoney(
+      item.price ??
+      item.unitPrice ??
+      item.valor ??
+      item.preco
+    );
+
+    let itemTotal = parseMoney(
+      item.total ??
+      item.itemTotal ??
+      item.totalPrice
+    );
+
+    // Se não existir total do item, calcula pelo preço x quantidade
+    if (itemTotal <= 0) {
+      itemTotal = price * quantity;
+    }
+
+    calculatedSubtotal += itemTotal;
 
     text += `${quantity}x ${item.name || "Produto"}\n`;
-    text += `Valor: R$ ${formatMoney(price)} cada\n`;
+    text += `R$ ${formatMoney(price)} cada\n`;
     text += `Total: R$ ${formatMoney(itemTotal)}\n`;
 
     if (item.selectedOption) {
@@ -123,9 +152,19 @@ function createReceipt(order) {
 
   text += "--------------------------------\n";
 
-  text += `Subtotal: R$ ${formatMoney(
-    order.subtotal
-  )}\n`;
+  // Primeiro tenta usar o subtotal enviado pelo site.
+  // Se vier vazio/zero, calcula pelos itens.
+  let subtotal = parseMoney(
+    order.subtotal ??
+    order.subTotal ??
+    order.sub_total
+  );
+
+  if (subtotal <= 0) {
+    subtotal = calculatedSubtotal;
+  }
+
+  text += `Subtotal: R$ ${formatMoney(subtotal)}\n`;
 
   if (customer.orderType === "Entrega") {
     text += "Entrega: A CONFIRMAR\n";
@@ -133,9 +172,20 @@ function createReceipt(order) {
     text += "Entrega: GRATIS\n";
   }
 
-  text += "\n";
+  // Total do pedido
+  let total = parseMoney(
+    order.total ??
+    order.totalPrice ??
+    order.finalTotal
+  );
 
-  text += `TOTAL: R$ ${formatMoney(order.total)}\n\n`;
+  // Se o total não vier corretamente, usa o subtotal.
+  if (total <= 0) {
+    total = subtotal;
+  }
+
+  text += "\n";
+  text += `TOTAL: R$ ${formatMoney(total)}\n\n`;
 
   text += "PAGAMENTO\n";
   text += "--------------------------------\n";
@@ -145,11 +195,11 @@ function createReceipt(order) {
 
   if (customer.needsChange) {
     text += `Troco para: R$ ${formatMoney(
-      customer.cashAmount
+      parseMoney(customer.cashAmount)
     )}\n`;
 
     text += `Troco: R$ ${formatMoney(
-      customer.changeAmount
+      parseMoney(customer.changeAmount)
     )}\n`;
   }
 
@@ -168,8 +218,57 @@ function createReceipt(order) {
   return text;
 }
 
+/**
+ * Converte valores como:
+ *
+ * 35
+ * 35.00
+ * "35"
+ * "35.00"
+ * "35,00"
+ * "R$ 35,00"
+ * "R$35,00"
+ *
+ * para número.
+ */
+function parseMoney(value) {
+  if (value === null || value === undefined) {
+    return 0;
+  }
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  let text = String(value).trim();
+
+  if (!text) {
+    return 0;
+  }
+
+  // Remove R$, espaços e outros caracteres
+  text = text
+    .replace(/R\$/gi, "")
+    .replace(/\s/g, "")
+    .replace(/[^\d,.-]/g, "");
+
+  if (!text) {
+    return 0;
+  }
+
+  // Caso brasileiro: 35,00
+  if (text.includes(",")) {
+    text = text.replace(/\./g, "");
+    text = text.replace(",", ".");
+  }
+
+  const number = Number(text);
+
+  return Number.isFinite(number) ? number : 0;
+}
+
 function formatMoney(value) {
-  return Number(value || 0)
+  return parseMoney(value)
     .toFixed(2)
     .replace(".", ",");
 }
