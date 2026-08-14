@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import {
   calculateChange,
   calculateTotal,
@@ -103,12 +103,12 @@ function Checkout({
 
       if (orderType === "delivery") {
         if (!customer.address.trim()) {
-          setError("Informe o endereço.");
+          setError("Informe o endereÃ§o.");
           return;
         }
 
         if (!customer.number.trim()) {
-          setError("Informe o número.");
+          setError("Informe o nÃºmero.");
           return;
         }
 
@@ -119,7 +119,7 @@ function Checkout({
 
         if (!customer.reference.trim()) {
           setError(
-            "O ponto de referência é obrigatório."
+            "O ponto de referÃªncia Ã© obrigatÃ³rio."
           );
           return;
         }
@@ -215,7 +215,7 @@ function Checkout({
 
       if (!whatsappLink) {
         setError(
-          "O WhatsApp ainda não foi configurado corretamente."
+          "O WhatsApp ainda nÃ£o foi configurado corretamente."
         );
         return;
       }
@@ -225,12 +225,40 @@ function Checkout({
        * ABRIR WHATSAPP
        * =========================================
        *
-       * O pedido será enviado para:
+       * O pedido serÃ¡ enviado para:
        * +55 37 99812-1783
        */
 
-      window.location.href =
-        whatsappLink;
+      const printResponse = await fetch(
+        "http://127.0.0.1:3001/print",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            order: orderData,
+          }),
+        }
+      );
+
+      if (!printResponse.ok) {
+        throw new Error(
+          "Não foi possível imprimir o pedido."
+        );
+      }
+
+      const printResult =
+        await printResponse.json();
+
+      if (!printResult.success) {
+        throw new Error(
+          printResult.message ||
+            "Não foi possível imprimir o pedido."
+        );
+      }
+
+      window.location.href = whatsappLink;
     } catch (error) {
       console.error(
         "Erro ao enviar pedido:",
@@ -238,7 +266,7 @@ function Checkout({
       );
 
       setError(
-        "Não foi possível enviar o pedido. Tente novamente."
+        "NÃ£o foi possÃ­vel enviar o pedido. Tente novamente."
       );
     } finally {
       setSending(false);
@@ -248,7 +276,7 @@ function Checkout({
   return (
     <section className="checkout">
       <div className="section-heading">
-        <span>FINALIZAÇÃO</span>
+        <span>FINALIZAÃ‡ÃƒO</span>
 
         <h2>Finalizar pedido</h2>
       </div>
@@ -258,7 +286,7 @@ function Checkout({
 
         <div className="checkout-section">
           <h3>
-            Como você quer receber?
+            Como vocÃª quer receber?
           </h3>
 
           <div className="choice-grid">
@@ -275,7 +303,7 @@ function Checkout({
                 )
               }
             >
-              🚚 Entrega
+              ðŸšš Entrega
             </button>
 
             <button
@@ -291,7 +319,7 @@ function Checkout({
                 )
               }
             >
-              🏪 Retirar no local
+              ðŸª Retirar no local
             </button>
           </div>
         </div>
@@ -336,16 +364,16 @@ function Checkout({
           </label>
         </div>
 
-        {/* ENDEREÇO */}
+        {/* ENDEREÃ‡O */}
 
         {orderType === "delivery" && (
           <div className="checkout-section">
             <h3>
-              Endereço de entrega
+              EndereÃ§o de entrega
             </h3>
 
             <label>
-              Endereço *
+              EndereÃ§o *
 
               <input
                 type="text"
@@ -362,7 +390,7 @@ function Checkout({
             </label>
 
             <label>
-              Número *
+              NÃºmero *
 
               <input
                 type="text"
@@ -373,7 +401,7 @@ function Checkout({
                     event.target.value
                   )
                 }
-                placeholder="Número"
+                placeholder="NÃºmero"
               />
             </label>
 
@@ -396,7 +424,7 @@ function Checkout({
             </label>
 
             <label>
-              Ponto de referência *
+              Ponto de referÃªncia *
 
               <input
                 type="text"
@@ -409,7 +437,7 @@ function Checkout({
                     event.target.value
                   )
                 }
-                placeholder="Ex.: perto da praça"
+                placeholder="Ex.: perto da praÃ§a"
               />
             </label>
 
@@ -438,12 +466,12 @@ function Checkout({
         {orderType === "pickup" && (
           <div className="pickup-info">
             <strong>
-              🏪 Retirada no local
+              ðŸª Retirada no local
             </strong>
 
             <p>
-              Rua Frei Patrício de Moura, 71 —
-              Morumbi, Divinópolis - MG
+              Rua Frei PatrÃ­cio de Moura, 71 â€”
+              Morumbi, DivinÃ³polis - MG
             </p>
           </div>
         )}
@@ -456,7 +484,7 @@ function Checkout({
           <div className="choice-grid payment-grid">
             {[
               "Pix",
-              "Cartão",
+              "CartÃ£o",
               "Dinheiro",
             ].map((method) => (
               <button
@@ -501,7 +529,7 @@ function Checkout({
                   }
                 >
                   <option value="nao">
-                    Não
+                    NÃ£o
                   </option>
 
                   <option value="sim">
@@ -550,10 +578,10 @@ function Checkout({
           )}
         </div>
 
-        {/* OBSERVAÇÃO */}
+        {/* OBSERVAÃ‡ÃƒO */}
 
         <div className="checkout-section">
-          <h3>Observação</h3>
+          <h3>ObservaÃ§Ã£o</h3>
 
           <textarea
             value={
@@ -565,7 +593,7 @@ function Checkout({
                 event.target.value
               )
             }
-            placeholder="Alguma observação sobre o pedido?"
+            placeholder="Alguma observaÃ§Ã£o sobre o pedido?"
             rows="3"
           />
         </div>
@@ -588,7 +616,7 @@ function Checkout({
 
             <strong>
               {orderType === "pickup"
-                ? "Grátis"
+                ? "GrÃ¡tis"
                 : formatCurrency(
                     deliveryFee
                   )}
@@ -612,7 +640,7 @@ function Checkout({
           </div>
         )}
 
-        {/* BOTÕES */}
+        {/* BOTÃ•ES */}
 
         <div className="checkout-actions">
           <button
@@ -640,4 +668,5 @@ function Checkout({
 }
 
 export default Checkout;
+
 
