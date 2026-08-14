@@ -29,7 +29,7 @@ function App() {
   // =========================
   // HORÁRIO DA HAMBURGUERIA
   // Sexta a domingo
-  // 19:00 A s 23:30
+  // 19:00 às 23:30
   // =========================
 
   const now = new Date();
@@ -76,7 +76,7 @@ function App() {
   // =========================
 
   function addToCart(product) {
-    // Se o produto tiver opçAµes, abre a janela de escolha
+    // Se o produto tiver opções, abre a janela de escolha
     if (product.options && product.options.length > 0) {
       setSelectedProduct(product);
       setSelectedOption("");
@@ -192,7 +192,7 @@ function App() {
             />
 
             <span className="brand-city">
-              037 â€¢ DIVINA“POLIS - MG
+              037 • DIVINÓPOLIS - MG
             </span>
           </div>
         </header>
@@ -221,7 +221,7 @@ function App() {
           />
 
           <span className="brand-city">
-            037 â€¢ DIVINA“POLIS - MG
+            037 • DIVINÓPOLIS - MG
           </span>
         </div>
 
@@ -244,7 +244,7 @@ function App() {
         <section className="hero">
           <div className="hero-content">
             <span className="hero-label">
-              SABOR â€¢ QUALIDADE â€¢ ATITUDE
+              SABOR • QUALIDADE • ATITUDE
             </span>
 
             <h1>BLEND BURGUER</h1>
@@ -267,7 +267,7 @@ function App() {
               <Clock size={17} />
 
               <span>
-                Sexta a domingo - 19h as 23h30
+                Sexta a domingo - 19h às 23h30
               </span>
             </div>
 
@@ -332,7 +332,7 @@ function App() {
                 >
                   {product.popular && (
                     <span className="popular-badge">
-MAIS PEDIDO
+                      MAIS PEDIDO
                     </span>
                   )}
 
@@ -455,13 +455,13 @@ MAIS PEDIDO
       <footer className="footer">
         <strong>BLEND BURGUER</strong>
 
-        <span>037 â€¢ DIVINA“POLIS - MG</span>
+        <span>037 • DIVINÓPOLIS - MG</span>
 
         <span>Feito pra matar a fome.</span>
       </footer>
 
       {/* =========================
-          MODAL DE OPA‡A•ES
+          MODAL DE OPÇÕES
       ========================= */}
 
       {selectedProduct && (
@@ -503,7 +503,7 @@ MAIS PEDIDO
                     <span>{value}</span>
 
                     {selectedOption === value && (
-                      <strong>âœ“</strong>
+                      <strong>✓</strong>
                     )}
                   </button>
                 )
@@ -526,5 +526,3 @@ MAIS PEDIDO
 }
 
 export default App;
-
-

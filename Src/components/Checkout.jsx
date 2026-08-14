@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
+
 import {
   calculateChange,
   calculateTotal,
@@ -35,17 +36,8 @@ function Checkout({
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
 
-  const deliveryFee = useMemo(() => {
-    if (orderType === "pickup") {
-      return 0;
-    }
-
-    if (!customer.address.trim()) {
-      return 0;
-    }
-
-    return 5;
-  }, [orderType, customer.address]);
+  // A taxa de entrega será confirmada pelo WhatsApp.
+  const deliveryFee = 0;
 
   const total = calculateTotal(
     subtotal,
@@ -222,11 +214,8 @@ function Checkout({
 
       /*
        * =========================================
-       * ABRIR WHATSAPP
+       * IMPRIMIR PEDIDO
        * =========================================
-       *
-       * O pedido será enviado para:
-       * +55 37 99812-1783
        */
 
       const printResponse = await fetch(
@@ -276,7 +265,7 @@ function Checkout({
   return (
     <section className="checkout">
       <div className="section-heading">
-        <span>FINALIZAA‡AƒO</span>
+        <span>FINALIZAÇÃO</span>
 
         <h2>Finalizar pedido</h2>
       </div>
@@ -298,12 +287,10 @@ function Checkout({
                   : "choice"
               }
               onClick={() =>
-                handleOrderType(
-                  "delivery"
-                )
+                handleOrderType("delivery")
               }
             >
-              ðŸšš Entrega
+              🚚 Entrega
             </button>
 
             <button
@@ -314,12 +301,10 @@ function Checkout({
                   : "choice"
               }
               onClick={() =>
-                handleOrderType(
-                  "pickup"
-                )
+                handleOrderType("pickup")
               }
             >
-              ðŸª Retirar no local
+              🏪 Retirar no local
             </button>
           </div>
         </div>
@@ -364,7 +349,7 @@ function Checkout({
           </label>
         </div>
 
-        {/* ENDEREA‡O */}
+        {/* ENDEREÇO */}
 
         {orderType === "delivery" && (
           <div className="checkout-section">
@@ -410,9 +395,7 @@ function Checkout({
 
               <input
                 type="text"
-                value={
-                  customer.neighborhood
-                }
+                value={customer.neighborhood}
                 onChange={(event) =>
                   updateCustomer(
                     "neighborhood",
@@ -428,9 +411,7 @@ function Checkout({
 
               <input
                 type="text"
-                value={
-                  customer.reference
-                }
+                value={customer.reference}
                 onChange={(event) =>
                   updateCustomer(
                     "reference",
@@ -446,9 +427,7 @@ function Checkout({
 
               <input
                 type="text"
-                value={
-                  customer.complement
-                }
+                value={customer.complement}
                 onChange={(event) =>
                   updateCustomer(
                     "complement",
@@ -458,6 +437,16 @@ function Checkout({
                 placeholder="Apartamento, bloco etc."
               />
             </label>
+
+            <div className="pickup-info">
+              <strong>
+                🚚 Taxa de entrega
+              </strong>
+
+              <p>
+                O valor da entrega será confirmado pelo WhatsApp.
+              </p>
+            </div>
           </div>
         )}
 
@@ -466,11 +455,11 @@ function Checkout({
         {orderType === "pickup" && (
           <div className="pickup-info">
             <strong>
-              ðŸª Retirada no local
+              🏪 Retirada no local
             </strong>
 
             <p>
-              Rua Frei Patrício de Moura, 71 â€”
+              Rua Frei Patrício de Moura, 71 —
               Morumbi, Divinópolis - MG
             </p>
           </div>
@@ -568,9 +557,7 @@ function Checkout({
                   <p className="change-result">
                     Troco:{" "}
                     <strong>
-                      {formatCurrency(
-                        change
-                      )}
+                      {formatCurrency(change)}
                     </strong>
                   </p>
                 )}
@@ -578,15 +565,13 @@ function Checkout({
           )}
         </div>
 
-        {/* OBSERVAA‡AƒO */}
+        {/* OBSERVAÇÃO */}
 
         <div className="checkout-section">
           <h3>Observação</h3>
 
           <textarea
-            value={
-              customer.observation
-            }
+            value={customer.observation}
             onChange={(event) =>
               updateCustomer(
                 "observation",
@@ -605,9 +590,7 @@ function Checkout({
             <span>Subtotal</span>
 
             <strong>
-              {formatCurrency(
-                subtotal
-              )}
+              {formatCurrency(subtotal)}
             </strong>
           </div>
 
@@ -617,9 +600,7 @@ function Checkout({
             <strong>
               {orderType === "pickup"
                 ? "Grátis"
-                : formatCurrency(
-                    deliveryFee
-                  )}
+                : "A confirmar pelo WhatsApp"}
             </strong>
           </div>
 
@@ -640,7 +621,7 @@ function Checkout({
           </div>
         )}
 
-        {/* BOTA•ES */}
+        {/* BOTÕES */}
 
         <div className="checkout-actions">
           <button
@@ -668,7 +649,3 @@ function Checkout({
 }
 
 export default Checkout;
-
-
-
-
