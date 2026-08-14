@@ -21,7 +21,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "CHEDDAR BACON",
     description:
-      "Blend de 120g, creme de cheddar, bacon crocante, alface, tomate, cebola e maionese temperada.",
+      "Blend de 120g, cheddar, bacon crocante, alface, tomate, cebola e maionese temperada.",
     price: 28,
     popular: true,
   },
@@ -195,3 +195,4 @@ export const menu = [
     subcategory: "2 LITROS",
   },
 ];
+
