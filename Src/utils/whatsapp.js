@@ -1,6 +1,6 @@
 import { formatCurrency } from "./calculations";
 
-export const WHATSAPP_NUMBER = "5537984188332";
+export const WHATSAPP_NUMBER = "5537998121783";
 
 function cleanText(value) {
   return String(value ?? "").trim();
@@ -60,6 +60,7 @@ export function buildWhatsAppMessage({
     cart.forEach((item) => {
       const quantity = Number(item.quantity) || 0;
       const price = Number(item.price) || 0;
+
       const itemTotal =
         Number(item.total) || price * quantity;
 

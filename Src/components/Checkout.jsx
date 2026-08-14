@@ -11,8 +11,6 @@ import {
   createWhatsAppLink,
 } from "../utils/whatsapp";
 
-import { deliveryRules } from "../Data/delivery";
-
 function Checkout({
   cart = [],
   subtotal = 0,
@@ -42,12 +40,13 @@ function Checkout({
       return 0;
     }
 
-    // Por enquanto, taxa fixa.
-    // Depois podemos conectar ao cálculo real de distância.
     return 5;
   }, [orderType]);
 
-  const total = calculateTotal(subtotal, deliveryFee);
+  const total = calculateTotal(
+    subtotal,
+    deliveryFee
+  );
 
   const change = calculateChange(
     total,
@@ -74,45 +73,6 @@ function Checkout({
         reference: "",
         complement: "",
       }));
-    }
-  }
-
-  /**
-   * Envia o pedido para o programa local de impressão.
-   *
-   * O programa do notebook ficará ouvindo:
-   * http://localhost:3001/print
-   *
-   * Se o programa não estiver aberto, o pedido continua
-   * normalmente para o WhatsApp.
-   */
-  async function sendToPrinter(order) {
-    try {
-      const response = await fetch(
-        "http://localhost:3001/print",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(order),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Servidor de impressão respondeu com ${response.status}`
-        );
-      }
-
-      return true;
-    } catch (error) {
-      console.warn(
-        "Servidor de impressão não disponível:",
-        error
-      );
-
-      return false;
     }
   }
 
@@ -162,37 +122,45 @@ function Checkout({
       }
 
       if (!customer.paymentMethod) {
-        setError("Escolha a forma de pagamento.");
+        setError(
+          "Escolha a forma de pagamento."
+        );
         return;
       }
 
-      if (customer.paymentMethod === "Dinheiro") {
-        if (customer.needsChange) {
-          if (!customer.cashAmount) {
-            setError("Informe o valor para o troco.");
-            return;
-          }
+      if (
+        customer.paymentMethod === "Dinheiro" &&
+        customer.needsChange
+      ) {
+        if (!customer.cashAmount) {
+          setError(
+            "Informe o valor para o troco."
+          );
+          return;
+        }
 
-          if (
-            !validateCashPayment(
-              total,
-              Number(customer.cashAmount)
-            )
-          ) {
-            setError(
-              "O valor informado para o troco precisa ser maior ou igual ao total."
-            );
-            return;
-          }
+        if (
+          !validateCashPayment(
+            total,
+            Number(customer.cashAmount)
+          )
+        ) {
+          setError(
+            "O valor informado para o troco precisa ser maior ou igual ao total."
+          );
+          return;
         }
       }
 
-      const cartForMessage = cart.map((item) => ({
-        ...item,
-        total:
-          Number(item.total) ||
-          Number(item.price) * Number(item.quantity),
-      }));
+      const cartForMessage = cart.map(
+        (item) => ({
+          ...item,
+          total:
+            Number(item.total) ||
+            Number(item.price) *
+              Number(item.quantity),
+        })
+      );
 
       const orderData = {
         customer: {
@@ -214,22 +182,29 @@ function Checkout({
 
         total,
 
-        createdAt: new Date().toISOString(),
+        createdAt:
+          new Date().toISOString(),
       };
 
       /*
-       * =====================================================
-       * MENSAGEM DO WHATSAPP
-       * =====================================================
+       * =========================================
+       * MONTAR PEDIDO DO WHATSAPP
+       * =========================================
        */
 
-      const message = buildWhatsAppMessage({
-        customer: orderData.customer,
-        cart: cartForMessage,
-        subtotal,
-        deliveryFee,
-        total,
-      });
+      const message =
+        buildWhatsAppMessage({
+          customer:
+            orderData.customer,
+
+          cart: cartForMessage,
+
+          subtotal,
+
+          deliveryFee,
+
+          total,
+        });
 
       const whatsappLink =
         createWhatsAppLink(message);
@@ -242,29 +217,16 @@ function Checkout({
       }
 
       /*
-       * =====================================================
-       * IMPRESSÃO
-       * =====================================================
-       *
-       * O notebook precisa estar com o programa
-       * de impressão rodando.
-       *
-       * Se ele estiver ligado:
-       * pedido → notebook → impressora.
-       *
-       * Se estiver desligado:
-       * o pedido continua indo para o WhatsApp.
-       */
-
-      await sendToPrinter(orderData);
-
-      /*
-       * =====================================================
+       * =========================================
        * ABRIR WHATSAPP
-       * =====================================================
+       * =========================================
+       *
+       * O pedido será enviado para:
+       * +55 37 99812-1783
        */
 
-      window.location.href = whatsappLink;
+      window.location.href =
+        whatsappLink;
     } catch (error) {
       console.error(
         "Erro ao enviar pedido:",
@@ -288,12 +250,12 @@ function Checkout({
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* =====================================================
-            TIPO DO PEDIDO
-        ====================================================== */}
+        {/* TIPO DO PEDIDO */}
 
         <div className="checkout-section">
-          <h3>Como você quer receber?</h3>
+          <h3>
+            Como você quer receber?
+          </h3>
 
           <div className="choice-grid">
             <button
@@ -304,7 +266,9 @@ function Checkout({
                   : "choice"
               }
               onClick={() =>
-                handleOrderType("delivery")
+                handleOrderType(
+                  "delivery"
+                )
               }
             >
               🚚 Entrega
@@ -318,7 +282,9 @@ function Checkout({
                   : "choice"
               }
               onClick={() =>
-                handleOrderType("pickup")
+                handleOrderType(
+                  "pickup"
+                )
               }
             >
               🏪 Retirar no local
@@ -326,9 +292,7 @@ function Checkout({
           </div>
         </div>
 
-        {/* =====================================================
-            DADOS DO CLIENTE
-        ====================================================== */}
+        {/* DADOS DO CLIENTE */}
 
         <div className="checkout-section">
           <h3>Seus dados</h3>
@@ -368,13 +332,13 @@ function Checkout({
           </label>
         </div>
 
-        {/* =====================================================
-            ENDEREÇO
-        ====================================================== */}
+        {/* ENDEREÇO */}
 
         {orderType === "delivery" && (
           <div className="checkout-section">
-            <h3>Endereço de entrega</h3>
+            <h3>
+              Endereço de entrega
+            </h3>
 
             <label>
               Endereço *
@@ -414,7 +378,9 @@ function Checkout({
 
               <input
                 type="text"
-                value={customer.neighborhood}
+                value={
+                  customer.neighborhood
+                }
                 onChange={(event) =>
                   updateCustomer(
                     "neighborhood",
@@ -430,7 +396,9 @@ function Checkout({
 
               <input
                 type="text"
-                value={customer.reference}
+                value={
+                  customer.reference
+                }
                 onChange={(event) =>
                   updateCustomer(
                     "reference",
@@ -446,7 +414,9 @@ function Checkout({
 
               <input
                 type="text"
-                value={customer.complement}
+                value={
+                  customer.complement
+                }
                 onChange={(event) =>
                   updateCustomer(
                     "complement",
@@ -459,9 +429,7 @@ function Checkout({
           </div>
         )}
 
-        {/* =====================================================
-            RETIRADA
-        ====================================================== */}
+        {/* RETIRADA */}
 
         {orderType === "pickup" && (
           <div className="pickup-info">
@@ -476,9 +444,7 @@ function Checkout({
           </div>
         )}
 
-        {/* =====================================================
-            PAGAMENTO
-        ====================================================== */}
+        {/* PAGAMENTO */}
 
         <div className="checkout-section">
           <h3>Pagamento</h3>
@@ -493,7 +459,8 @@ function Checkout({
                 key={method}
                 type="button"
                 className={
-                  customer.paymentMethod === method
+                  customer.paymentMethod ===
+                  method
                     ? "choice active"
                     : "choice"
                 }
@@ -524,7 +491,8 @@ function Checkout({
                   onChange={(event) =>
                     updateCustomer(
                       "needsChange",
-                      event.target.value === "sim"
+                      event.target.value ===
+                        "sim"
                     )
                   }
                 >
@@ -568,7 +536,9 @@ function Checkout({
                   <p className="change-result">
                     Troco:{" "}
                     <strong>
-                      {formatCurrency(change)}
+                      {formatCurrency(
+                        change
+                      )}
                     </strong>
                   </p>
                 )}
@@ -576,15 +546,15 @@ function Checkout({
           )}
         </div>
 
-        {/* =====================================================
-            OBSERVAÇÃO
-        ====================================================== */}
+        {/* OBSERVAÇÃO */}
 
         <div className="checkout-section">
           <h3>Observação</h3>
 
           <textarea
-            value={customer.observation}
+            value={
+              customer.observation
+            }
             onChange={(event) =>
               updateCustomer(
                 "observation",
@@ -596,16 +566,16 @@ function Checkout({
           />
         </div>
 
-        {/* =====================================================
-            RESUMO
-        ====================================================== */}
+        {/* RESUMO */}
 
         <div className="order-summary">
           <div>
             <span>Subtotal</span>
 
             <strong>
-              {formatCurrency(subtotal)}
+              {formatCurrency(
+                subtotal
+              )}
             </strong>
           </div>
 
@@ -615,7 +585,9 @@ function Checkout({
             <strong>
               {orderType === "pickup"
                 ? "Grátis"
-                : formatCurrency(deliveryFee)}
+                : formatCurrency(
+                    deliveryFee
+                  )}
             </strong>
           </div>
 
@@ -628,9 +600,7 @@ function Checkout({
           </div>
         </div>
 
-        {/* =====================================================
-            ERRO
-        ====================================================== */}
+        {/* ERRO */}
 
         {error && (
           <div className="checkout-error">
@@ -638,9 +608,7 @@ function Checkout({
           </div>
         )}
 
-        {/* =====================================================
-            BOTÕES
-        ====================================================== */}
+        {/* BOTÕES */}
 
         <div className="checkout-actions">
           <button

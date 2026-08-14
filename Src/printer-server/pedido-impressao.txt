@@ -1,0 +1,26 @@
+================================
+          BLEND BURGUER
+================================
+
+Cliente: TESTE BLEND
+WhatsApp: (37) 99999-9999
+Tipo: Retirada no local
+
+--------------------------------
+PEDIDO
+--------------------------------
+1x BLEND BURGER
+   R$ 25,00
+--------------------------------
+Subtotal: R$ 25,00
+Entrega: R$ 0,00
+TOTAL: R$ 25,00
+
+Pagamento: Pix
+
+OBSERVACAO
+PEDIDO DE TESTE
+
+================================
+       PEDIDO RECEBIDO
+================================
