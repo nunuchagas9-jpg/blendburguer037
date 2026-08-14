@@ -1,4 +1,4 @@
-﻿export const deliveryRules = [
+export const deliveryRules = [
   {
     id: "ate-2km",
     label: "Até 2 km",

@@ -1,4 +1,4 @@
-﻿import { formatCurrency } from "./calculations";
+import { formatCurrency } from "./calculations";
 
 export const WHATSAPP_NUMBER = "5537998121783";
 
