@@ -10,9 +10,17 @@ app.use(express.json());
 const PORT = 3001;
 const PRINTER_NAME = "TOMATE MTIN-773";
 
+// ===============================
+// TESTE DO SERVIDOR
+// ===============================
+
 app.get("/", (req, res) => {
   res.send("Servidor de impressão Blend Burguer funcionando!");
 });
+
+// ===============================
+// RECEBER PEDIDO
+// ===============================
 
 app.post("/print", (req, res) => {
   const { order } = req.body;
@@ -24,17 +32,24 @@ app.post("/print", (req, res) => {
     });
   }
 
-  console.log("PEDIDO RECEBIDO:");
+  console.log("");
+  console.log("========================================");
+  console.log("PEDIDO RECEBIDO");
+  console.log("========================================");
+
   console.log(JSON.stringify(order, null, 2));
 
   const receiptText = createReceipt(order);
 
+  console.log("");
   console.log("TEXTO DA IMPRESSÃO:");
+  console.log("----------------------------------------");
   console.log(receiptText);
+  console.log("----------------------------------------");
 
   printText(receiptText, (error) => {
     if (error) {
-      console.error("Erro ao imprimir:", error);
+      console.error("ERRO AO IMPRIMIR:", error);
 
       return res.status(500).json({
         success: false,
@@ -42,12 +57,18 @@ app.post("/print", (req, res) => {
       });
     }
 
+    console.log("PEDIDO IMPRESSO COM SUCESSO!");
+
     res.json({
       success: true,
       message: "Pedido enviado para a impressora.",
     });
   });
 });
+
+// ===============================
+// MONTAR CUPOM
+// ===============================
 
 function createReceipt(order) {
   const customer = order.customer || {};
@@ -62,14 +83,20 @@ function createReceipt(order) {
   text += "        BLEND BURGUER 037\n";
   text += "================================\n\n";
 
+  // CLIENTE
+
   text += "CLIENTE\n";
   text += "--------------------------------\n";
+
   text += `Nome: ${customer.name || ""}\n`;
   text += `WhatsApp: ${customer.phone || ""}\n\n`;
+
+  // ENTREGA
 
   if (customer.orderType === "Entrega") {
     text += "ENTREGA\n";
     text += "--------------------------------\n";
+
     text += `Endereço: ${customer.address || ""}\n`;
     text += `Número: ${customer.number || ""}\n`;
     text += `Bairro: ${customer.neighborhood || ""}\n`;
@@ -83,12 +110,19 @@ function createReceipt(order) {
     }
 
     text += "\n";
-  } else {
+  }
+
+  // RETIRADA
+
+  else {
     text += "RETIRADA NO LOCAL\n";
     text += "--------------------------------\n";
+
     text += "Rua Frei Patrício de Moura, 71\n";
     text += "Morumbi - Divinópolis/MG\n\n";
   }
+
+  // PEDIDO
 
   text += "PEDIDO\n";
   text += "--------------------------------\n";
@@ -118,12 +152,18 @@ function createReceipt(order) {
     calculatedSubtotal += itemTotal;
 
     text += `${quantity}x ${item.name || "Produto"}\n`;
+
     text += `R$ ${formatMoney(price)} cada\n`;
+
     text += `Total: R$ ${formatMoney(itemTotal)}\n`;
+
+    // OPÇÃO
 
     if (item.selectedOption) {
       text += `Opção: ${item.selectedOption}\n`;
     }
+
+    // OPÇÕES
 
     if (
       Array.isArray(item.selectedOptions) &&
@@ -136,6 +176,8 @@ function createReceipt(order) {
       });
     }
 
+    // OBSERVAÇÃO
+
     if (item.observation) {
       text += `Obs.: ${item.observation}\n`;
     }
@@ -144,6 +186,8 @@ function createReceipt(order) {
   });
 
   text += "--------------------------------\n";
+
+  // SUBTOTAL
 
   let subtotal = parseMoney(
     order.subtotal ??
@@ -157,11 +201,15 @@ function createReceipt(order) {
 
   text += `Subtotal: R$ ${formatMoney(subtotal)}\n`;
 
+  // ENTREGA
+
   if (customer.orderType === "Entrega") {
     text += "Entrega: A CONFIRMAR\n";
   } else {
     text += "Entrega: GRÁTIS\n";
   }
+
+  // TOTAL
 
   let total = parseMoney(
     order.total ??
@@ -174,7 +222,10 @@ function createReceipt(order) {
   }
 
   text += "\n";
+
   text += `TOTAL: R$ ${formatMoney(total)}\n\n`;
+
+  // PAGAMENTO
 
   text += "PAGAMENTO\n";
   text += "--------------------------------\n";
@@ -195,10 +246,16 @@ function createReceipt(order) {
 
   text += "\n";
 
+  // OBSERVAÇÃO
+
   text += "OBSERVAÇÃO\n";
   text += "--------------------------------\n";
+
   text += customer.observation || "Nenhuma";
+
   text += "\n\n";
+
+  // FINAL
 
   text += "================================\n";
   text += "       PEDIDO RECEBIDO\n";
@@ -208,19 +265,10 @@ function createReceipt(order) {
   return text;
 }
 
-/**
- * Converte valores como:
- *
- * 35
- * 35.00
- * "35"
- * "35.00"
- * "35,00"
- * "R$ 35,00"
- * "R$35,00"
- *
- * para número.
- */
+// ===============================
+// CONVERTER DINHEIRO
+// ===============================
+
 function parseMoney(value) {
   if (value === null || value === undefined) {
     return 0;
@@ -255,11 +303,19 @@ function parseMoney(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
+// ===============================
+// FORMATAR DINHEIRO
+// ===============================
+
 function formatMoney(value) {
   return parseMoney(value)
     .toFixed(2)
     .replace(".", ",");
 }
+
+// ===============================
+// IMPRIMIR
+// ===============================
 
 function printText(text, callback) {
   const safeText = String(text)
@@ -268,6 +324,7 @@ function printText(text, callback) {
     .replace(/`/g, "``");
 
   const powershellCommand = `
+$OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 Add-Type -AssemblyName System.Drawing
@@ -282,10 +339,13 @@ $printJob = New-Object System.Drawing.Printing.PrintDocument
 
 $printJob.PrinterSettings.PrinterName = $printer
 
+if (-not $printJob.PrinterSettings.IsValid) {
+    throw "Impressora não encontrada: $printer"
+}
+
 $printJob.add_PrintPage({
     param($sender, $e)
 
-    # Fonte com suporte a caracteres acentuados
     $font = New-Object System.Drawing.Font(
         "Arial",
         9
@@ -300,6 +360,7 @@ $printJob.add_PrintPage({
     $lines = $text -split "\\n"
 
     foreach ($line in $lines) {
+
         $e.Graphics.DrawString(
             $line,
             $font,
@@ -332,31 +393,34 @@ $printJob.Dispose()
         return;
       }
 
+      if (stderr) {
+        console.log("PowerShell:", stderr);
+      }
+
       callback(null);
     }
   );
 }
+
+// ===============================
+// INICIAR SERVIDOR
+// ===============================
 
 const server = app.listen(
   PORT,
   "0.0.0.0",
   () => {
     console.log("");
-    console.log(
-      "========================================"
-    );
-    console.log(
-      " BLEND BURGUER - SERVIDOR DE IMPRESSAO"
-    );
-    console.log(
-      "========================================"
-    );
+    console.log("========================================");
+    console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSÃO");
+    console.log("========================================");
     console.log(
       `Servidor funcionando em http://127.0.0.1:${PORT}`
     );
     console.log(
-      "Nao feche esta janela."
+      `Impressora: ${PRINTER_NAME}`
     );
+    console.log("Não feche esta janela.");
     console.log("");
   }
 );
@@ -365,5 +429,5 @@ server.on("error", (error) => {
   console.error("ERRO NO SERVIDOR:", error);
 });
 
-// Mantém o servidor ativo.
+// Mantém o servidor ativo
 setInterval(() => {}, 1000);
