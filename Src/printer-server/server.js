@@ -5,7 +5,7 @@ const { execFile } = require("child_process");
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
 const PORT = 3001;
 const PRINTER_NAME = "TOMATE MTIN-773";
@@ -15,7 +15,22 @@ const PRINTER_NAME = "TOMATE MTIN-773";
 // ===============================
 
 app.get("/", (req, res) => {
-  res.send("Servidor de impressão Blend Burguer funcionando!");
+  res.status(200).send(
+    "Servidor de impressão Blend Burguer funcionando!"
+  );
+});
+
+// ===============================
+// TESTE / STATUS
+// ===============================
+
+app.get("/status", (req, res) => {
+  res.json({
+    success: true,
+    server: "online",
+    printer: PRINTER_NAME,
+    port: PORT,
+  });
 });
 
 // ===============================
@@ -59,7 +74,7 @@ app.post("/print", (req, res) => {
 
     console.log("PEDIDO IMPRESSO COM SUCESSO!");
 
-    res.json({
+    return res.json({
       success: true,
       message: "Pedido enviado para a impressora.",
     });
@@ -67,8 +82,7 @@ app.post("/print", (req, res) => {
 });
 
 // ===============================
-// QUEBRAR LINHAS GRANDES
-// PAPEL 58MM
+// QUEBRAR LINHAS
 // ===============================
 
 function wrapText(text, maxLength = 42) {
@@ -121,15 +135,11 @@ function createReceipt(order) {
   text += "          BLEND BURGUER 037\n";
   text += "==========================================\n\n";
 
-  // CLIENTE
-
   text += "CLIENTE\n";
   text += "------------------------------------------\n";
 
   text += `Nome: ${customer.name || ""}\n`;
   text += `WhatsApp: ${customer.phone || ""}\n\n`;
-
-  // ENTREGA
 
   if (customer.orderType === "Entrega") {
     text += "ENTREGA\n";
@@ -148,19 +158,13 @@ function createReceipt(order) {
     }
 
     text += "\n";
-  }
-
-  // RETIRADA
-
-  else {
+  } else {
     text += "RETIRADA NO LOCAL\n";
     text += "------------------------------------------\n";
 
     text += "Rua Frei Patrício de Moura, 71\n";
     text += "Morumbi - Divinópolis/MG\n\n";
   }
-
-  // PEDIDO
 
   text += "PEDIDO\n";
   text += "------------------------------------------\n";
@@ -190,18 +194,12 @@ function createReceipt(order) {
     calculatedSubtotal += itemTotal;
 
     text += `${quantity}x ${item.name || "Produto"}\n`;
-
     text += `R$ ${formatMoney(price)} cada\n`;
-
     text += `Total: R$ ${formatMoney(itemTotal)}\n`;
-
-    // OPÇÃO
 
     if (item.selectedOption) {
       text += `Opção: ${item.selectedOption}\n`;
     }
-
-    // OPÇÕES
 
     if (
       Array.isArray(item.selectedOptions) &&
@@ -214,8 +212,6 @@ function createReceipt(order) {
       });
     }
 
-    // OBSERVAÇÃO DO ITEM
-
     if (item.observation) {
       text += `Obs.: ${item.observation}\n`;
     }
@@ -224,8 +220,6 @@ function createReceipt(order) {
   });
 
   text += "------------------------------------------\n";
-
-  // SUBTOTAL
 
   let subtotal = parseMoney(
     order.subtotal ??
@@ -239,15 +233,11 @@ function createReceipt(order) {
 
   text += `Subtotal: R$ ${formatMoney(subtotal)}\n`;
 
-  // ENTREGA
-
   if (customer.orderType === "Entrega") {
     text += "Entrega: A CONFIRMAR\n";
   } else {
     text += "Entrega: GRÁTIS\n";
   }
-
-  // TOTAL
 
   let total = parseMoney(
     order.total ??
@@ -260,10 +250,7 @@ function createReceipt(order) {
   }
 
   text += "\n";
-
   text += `TOTAL: R$ ${formatMoney(total)}\n\n`;
-
-  // PAGAMENTO
 
   text += "PAGAMENTO\n";
   text += "------------------------------------------\n";
@@ -284,16 +271,12 @@ function createReceipt(order) {
 
   text += "\n";
 
-  // OBSERVAÇÃO
-
   text += "OBSERVAÇÃO\n";
   text += "------------------------------------------\n";
 
   text += customer.observation || "Nenhuma";
 
   text += "\n\n";
-
-  // FINAL
 
   text += "==========================================\n";
   text += "          PEDIDO RECEBIDO\n";
@@ -304,7 +287,7 @@ function createReceipt(order) {
 }
 
 // ===============================
-// CONVERTER DINHEIRO
+// DINHEIRO
 // ===============================
 
 function parseMoney(value) {
@@ -360,7 +343,6 @@ function printText(text, callback) {
     .replace(/\r\n/g, "\n")
     .replace(/\r/g, "\n");
 
-  // Converte o texto para UTF-8
   const textBase64 = Buffer
     .from(safeText, "utf8")
     .toString("base64");
@@ -375,10 +357,8 @@ $printer = "${PRINTER_NAME}"
 
 $base64 = "${textBase64}"
 
-# Converte Base64 para bytes
 $bytes = [System.Convert]::FromBase64String($base64)
 
-# Reconstrói o texto usando UTF-8
 $text = [System.Text.Encoding]::UTF8.GetString($bytes)
 
 $printJob = New-Object System.Drawing.Printing.PrintDocument
@@ -389,24 +369,13 @@ if (-not $printJob.PrinterSettings.IsValid) {
     throw "Impressora nao encontrada: $printer"
 }
 
-# ===============================
-# CONFIGURAÇÃO DO PAPEL
-# ===============================
-
 $printJob.DefaultPageSettings.Margins.Left = 5
 $printJob.DefaultPageSettings.Margins.Right = 5
 $printJob.DefaultPageSettings.Margins.Top = 5
 $printJob.DefaultPageSettings.Margins.Bottom = 5
 
-# ===============================
-# IMPRESSÃO
-# ===============================
-
 $printJob.add_PrintPage({
     param($sender, $e)
-
-    # Arial possui suporte aos
-    # caracteres portugueses.
 
     $font = New-Object System.Drawing.Font(
         "Arial",
@@ -419,7 +388,6 @@ $printJob.add_PrintPage({
 
     $x = 5
     $y = 5
-
     $lineHeight = 12
 
     $lines = $text -split "\\n"
@@ -453,7 +421,6 @@ $printJob.Dispose()
       powershellCommand,
     ],
     (error, stdout, stderr) => {
-
       if (error) {
         console.error("PowerShell:", stderr);
         callback(error);
@@ -481,7 +448,6 @@ const server = app.listen(
   PORT,
   "0.0.0.0",
   () => {
-
     console.log("");
     console.log("========================================");
     console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSÃO");
@@ -507,5 +473,4 @@ server.on("error", (error) => {
   console.error("ERRO NO SERVIDOR:", error);
 });
 
-// Mantém o servidor ativo
 setInterval(() => {}, 1000);
