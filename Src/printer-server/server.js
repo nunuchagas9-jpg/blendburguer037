@@ -77,46 +77,58 @@ function createReceipt(order) {
     ? order.cart
     : [];
 
+  const LINE = "--------------------------------";
+  const EQUALS = "================================";
+
   let text = "";
 
-  text += "================================\n";
-  text += "        BLEND BURGUER 037\n";
-  text += "================================\n\n";
+  text += EQUALS + "\n";
+  text += center("BLEND BURGUER 037") + "\n";
+  text += EQUALS + "\n\n";
 
   // CLIENTE
 
   text += "CLIENTE\n";
-  text += "--------------------------------\n";
+  text += LINE + "\n";
 
-  text += `Nome: ${customer.name || ""}\n`;
-  text += `WhatsApp: ${customer.phone || ""}\n\n`;
+  text += wrapText(`Nome: ${customer.name || ""}`);
+  text += wrapText(`WhatsApp: ${customer.phone || ""}`);
+  text += "\n";
 
   // ENTREGA
 
   if (customer.orderType === "Entrega") {
     text += "ENTREGA\n";
-    text += "--------------------------------\n";
+    text += LINE + "\n";
 
-    text += `Endereço: ${customer.address || ""}\n`;
-    text += `Número: ${customer.number || ""}\n`;
-    text += `Bairro: ${customer.neighborhood || ""}\n`;
+    text += wrapText(
+      `Endereço: ${customer.address || ""}`
+    );
+
+    text += wrapText(
+      `Número: ${customer.number || ""}`
+    );
+
+    text += wrapText(
+      `Bairro: ${customer.neighborhood || ""}`
+    );
 
     if (customer.reference) {
-      text += `Referência: ${customer.reference}\n`;
+      text += wrapText(
+        `Referência: ${customer.reference}`
+      );
     }
 
     if (customer.complement) {
-      text += `Complemento: ${customer.complement}\n`;
+      text += wrapText(
+        `Complemento: ${customer.complement}`
+      );
     }
 
     text += "\n";
-  }
-
-  // RETIRADA
-
-  else {
+  } else {
     text += "RETIRADA NO LOCAL\n";
-    text += "--------------------------------\n";
+    text += LINE + "\n";
 
     text += "Rua Frei Patrício de Moura, 71\n";
     text += "Morumbi - Divinópolis/MG\n\n";
@@ -125,7 +137,7 @@ function createReceipt(order) {
   // PEDIDO
 
   text += "PEDIDO\n";
-  text += "--------------------------------\n";
+  text += LINE + "\n";
 
   let calculatedSubtotal = 0;
 
@@ -151,7 +163,9 @@ function createReceipt(order) {
 
     calculatedSubtotal += itemTotal;
 
-    text += `${quantity}x ${item.name || "Produto"}\n`;
+    text += wrapText(
+      `${quantity}x ${item.name || "Produto"}`
+    );
 
     text += `R$ ${formatMoney(price)} cada\n`;
 
@@ -160,7 +174,9 @@ function createReceipt(order) {
     // OPÇÃO
 
     if (item.selectedOption) {
-      text += `Opção: ${item.selectedOption}\n`;
+      text += wrapText(
+        `Opção: ${item.selectedOption}`
+      );
     }
 
     // OPÇÕES
@@ -170,22 +186,26 @@ function createReceipt(order) {
       item.selectedOptions.length > 0
     ) {
       item.selectedOptions.forEach((option) => {
-        text += `${option.name || "Opção"}: ${
-          option.value || ""
-        }\n`;
+        text += wrapText(
+          `${option.name || "Opção"}: ${
+            option.value || ""
+          }`
+        );
       });
     }
 
-    // OBSERVAÇÃO
+    // OBSERVAÇÃO DO ITEM
 
     if (item.observation) {
-      text += `Obs.: ${item.observation}\n`;
+      text += wrapText(
+        `Obs.: ${item.observation}`
+      );
     }
 
     text += "\n";
   });
 
-  text += "--------------------------------\n";
+  text += LINE + "\n";
 
   // SUBTOTAL
 
@@ -222,17 +242,16 @@ function createReceipt(order) {
   }
 
   text += "\n";
-
   text += `TOTAL: R$ ${formatMoney(total)}\n\n`;
 
   // PAGAMENTO
 
   text += "PAGAMENTO\n";
-  text += "--------------------------------\n";
+  text += LINE + "\n";
 
-  text += `Forma: ${
-    customer.paymentMethod || ""
-  }\n`;
+  text += wrapText(
+    `Forma: ${customer.paymentMethod || ""}`
+  );
 
   if (customer.needsChange) {
     text += `Troco para: R$ ${formatMoney(
@@ -249,20 +268,79 @@ function createReceipt(order) {
   // OBSERVAÇÃO
 
   text += "OBSERVAÇÃO\n";
-  text += "--------------------------------\n";
+  text += LINE + "\n";
 
-  text += customer.observation || "Nenhuma";
+  if (customer.observation) {
+    text += wrapText(customer.observation);
+  } else {
+    text += "Nenhuma\n";
+  }
 
-  text += "\n\n";
+  text += "\n";
 
   // FINAL
 
-  text += "================================\n";
-  text += "       PEDIDO RECEBIDO\n";
-  text += "       BLEND BURGUER 037\n";
-  text += "================================\n\n\n";
+  text += EQUALS + "\n";
+  text += center("PEDIDO RECEBIDO") + "\n";
+  text += center("BLEND BURGUER 037") + "\n";
+  text += EQUALS + "\n\n\n";
 
   return text;
+}
+
+// ===============================
+// CENTRALIZAR
+// ===============================
+
+function center(text) {
+  const WIDTH = 32;
+
+  if (text.length >= WIDTH) {
+    return text.substring(0, WIDTH);
+  }
+
+  const spaces = Math.floor(
+    (WIDTH - text.length) / 2
+  );
+
+  return " ".repeat(spaces) + text;
+}
+
+// ===============================
+// QUEBRAR TEXTO PARA 58 MM
+// ===============================
+
+function wrapText(text) {
+  const WIDTH = 32;
+
+  if (!text) {
+    return "\n";
+  }
+
+  const words = String(text).split(" ");
+
+  let line = "";
+  let result = "";
+
+  words.forEach((word) => {
+    if (
+      (line + " " + word).trim().length > WIDTH
+    ) {
+      if (line) {
+        result += line + "\n";
+      }
+
+      line = word;
+    } else {
+      line = (line + " " + word).trim();
+    }
+  });
+
+  if (line) {
+    result += line + "\n";
+  }
+
+  return result;
 }
 
 // ===============================
@@ -275,7 +353,9 @@ function parseMoney(value) {
   }
 
   if (typeof value === "number") {
-    return Number.isFinite(value) ? value : 0;
+    return Number.isFinite(value)
+      ? value
+      : 0;
   }
 
   let text = String(value).trim();
@@ -300,7 +380,9 @@ function parseMoney(value) {
 
   const number = Number(text);
 
-  return Number.isFinite(number) ? number : 0;
+  return Number.isFinite(number)
+    ? number
+    : 0;
 }
 
 // ===============================
@@ -314,7 +396,7 @@ function formatMoney(value) {
 }
 
 // ===============================
-// IMPRIMIR
+// IMPRIMIR EM 58 MM
 // ===============================
 
 function printText(text, callback) {
@@ -324,8 +406,8 @@ function printText(text, callback) {
     .replace(/`/g, "``");
 
   const powershellCommand = `
-$OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
 Add-Type -AssemblyName System.Drawing
 
@@ -343,24 +425,32 @@ if (-not $printJob.PrinterSettings.IsValid) {
     throw "Impressora não encontrada: $printer"
 }
 
+$printJob.DefaultPageSettings.Margins.Left = 0
+$printJob.DefaultPageSettings.Margins.Right = 0
+$printJob.DefaultPageSettings.Margins.Top = 0
+$printJob.DefaultPageSettings.Margins.Bottom = 0
+
 $printJob.add_PrintPage({
     param($sender, $e)
 
+    # 58 mm
+    # Área aproximada de impressão
     $font = New-Object System.Drawing.Font(
-        "Arial",
-        9
+        "Courier New",
+        8,
+        [System.Drawing.FontStyle]::Regular,
+        [System.Drawing.GraphicsUnit]::Point
     )
 
     $brush = [System.Drawing.Brushes]::Black
 
-    $x = 10
-    $y = 10
-    $lineHeight = 14
+    $x = 3
+    $y = 3
+    $lineHeight = 12
 
     $lines = $text -split "\\n"
 
     foreach ($line in $lines) {
-
         $e.Graphics.DrawString(
             $line,
             $font,
@@ -388,13 +478,13 @@ $printJob.Dispose()
     ],
     (error, stdout, stderr) => {
       if (error) {
-        console.error("PowerShell:", stderr);
+        console.error(
+          "ERRO POWERSHELL:",
+          stderr
+        );
+
         callback(error);
         return;
-      }
-
-      if (stderr) {
-        console.log("PowerShell:", stderr);
       }
 
       callback(null);
@@ -411,22 +501,41 @@ const server = app.listen(
   "0.0.0.0",
   () => {
     console.log("");
-    console.log("========================================");
-    console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSÃO");
-    console.log("========================================");
+    console.log(
+      "========================================"
+    );
+    console.log(
+      " BLEND BURGUER - IMPRESSÃO 58 MM"
+    );
+    console.log(
+      "========================================"
+    );
+
     console.log(
       `Servidor funcionando em http://127.0.0.1:${PORT}`
     );
+
     console.log(
       `Impressora: ${PRINTER_NAME}`
     );
-    console.log("Não feche esta janela.");
+
+    console.log(
+      "Largura configurada: 58 mm"
+    );
+
+    console.log(
+      "Aguardando pedidos..."
+    );
+
     console.log("");
   }
 );
 
 server.on("error", (error) => {
-  console.error("ERRO NO SERVIDOR:", error);
+  console.error(
+    "ERRO NO SERVIDOR:",
+    error
+  );
 });
 
 // Mantém o servidor ativo
