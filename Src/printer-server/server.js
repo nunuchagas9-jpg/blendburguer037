@@ -67,26 +67,8 @@ app.post("/print", (req, res) => {
 });
 
 // ===============================
-// REMOVER ACENTOS
-// SOMENTE PARA A IMPRESSAO
-// ===============================
-
-function removeAccents(text) {
-  if (text === null || text === undefined) {
-    return "";
-  }
-
-  return String(text)
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/ç/g, "c")
-    .replace(/Ç/g, "C")
-    .replace(/[^\x20-\x7E\n\r\t]/g, "");
-}
-
-// ===============================
 // QUEBRAR LINHAS GRANDES
-// PARA PAPEL 58MM
+// PAPEL 58MM
 // ===============================
 
 function wrapText(text, maxLength = 42) {
@@ -153,12 +135,12 @@ function createReceipt(order) {
     text += "ENTREGA\n";
     text += "------------------------------------------\n";
 
-    text += `Endereco: ${customer.address || ""}\n`;
-    text += `Numero: ${customer.number || ""}\n`;
+    text += `Endereço: ${customer.address || ""}\n`;
+    text += `Número: ${customer.number || ""}\n`;
     text += `Bairro: ${customer.neighborhood || ""}\n`;
 
     if (customer.reference) {
-      text += `Referencia: ${customer.reference}\n`;
+      text += `Referência: ${customer.reference}\n`;
     }
 
     if (customer.complement) {
@@ -174,8 +156,8 @@ function createReceipt(order) {
     text += "RETIRADA NO LOCAL\n";
     text += "------------------------------------------\n";
 
-    text += "Rua Frei Patricio de Moura, 71\n";
-    text += "Morumbi - Divinopolis/MG\n\n";
+    text += "Rua Frei Patrício de Moura, 71\n";
+    text += "Morumbi - Divinópolis/MG\n\n";
   }
 
   // PEDIDO
@@ -213,26 +195,26 @@ function createReceipt(order) {
 
     text += `Total: R$ ${formatMoney(itemTotal)}\n`;
 
-    // OPCAO
+    // OPÇÃO
 
     if (item.selectedOption) {
-      text += `Opcao: ${item.selectedOption}\n`;
+      text += `Opção: ${item.selectedOption}\n`;
     }
 
-    // OPCOES
+    // OPÇÕES
 
     if (
       Array.isArray(item.selectedOptions) &&
       item.selectedOptions.length > 0
     ) {
       item.selectedOptions.forEach((option) => {
-        text += `${option.name || "Opcao"}: ${
+        text += `${option.name || "Opção"}: ${
           option.value || ""
         }\n`;
       });
     }
 
-    // OBSERVACAO DO ITEM
+    // OBSERVAÇÃO DO ITEM
 
     if (item.observation) {
       text += `Obs.: ${item.observation}\n`;
@@ -262,7 +244,7 @@ function createReceipt(order) {
   if (customer.orderType === "Entrega") {
     text += "Entrega: A CONFIRMAR\n";
   } else {
-    text += "Entrega: GRATIS\n";
+    text += "Entrega: GRÁTIS\n";
   }
 
   // TOTAL
@@ -302,9 +284,9 @@ function createReceipt(order) {
 
   text += "\n";
 
-  // OBSERVACAO
+  // OBSERVAÇÃO
 
-  text += "OBSERVACAO\n";
+  text += "OBSERVAÇÃO\n";
   text += "------------------------------------------\n";
 
   text += customer.observation || "Nenhuma";
@@ -318,16 +300,7 @@ function createReceipt(order) {
   text += "          BLEND BURGUER 037\n";
   text += "==========================================\n\n\n";
 
-  // ========================================
-  // AQUI ACONTECE A CONVERSAO AUTOMATICA
-  // ========================================
-
-  text = removeAccents(text);
-
-  // Quebra textos muito grandes para 58mm
-  text = wrapText(text, 42);
-
-  return text;
+  return wrapText(text, 42);
 }
 
 // ===============================
@@ -383,16 +356,21 @@ function formatMoney(value) {
 // ===============================
 
 function printText(text, callback) {
+  const safeText = String(text)
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
 
-  // Remove acentos novamente por segurança
-  const safeText = removeAccents(
-    String(text)
-      .replace(/\r\n/g, "\n")
-      .replace(/\r/g, "\n")
-  );
+  /*
+   * IMPORTANTE:
+   * Não removemos acentos.
+   *
+   * O texto é convertido para UTF-8 e enviado
+   * em Base64 para o PowerShell.
+   *
+   * O PowerShell reconstrói o texto Unicode
+   * antes de desenhar na impressora.
+   */
 
-  // Converte o texto para Base64.
-  // Isso evita problemas de caracteres no PowerShell.
   const textBase64 = Buffer
     .from(safeText, "utf8")
     .toString("base64");
@@ -401,6 +379,7 @@ function printText(text, callback) {
 $ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.Drawing
+Add-Type -AssemblyName System.Drawing.Printing
 
 $printer = "${PRINTER_NAME}"
 
@@ -418,21 +397,34 @@ if (-not $printJob.PrinterSettings.IsValid) {
     throw "Impressora nao encontrada: $printer"
 }
 
+# Papel de 58mm
+# A área útil depende do driver da impressora.
+
+$printJob.DefaultPageSettings.Margins.Left = 5
+$printJob.DefaultPageSettings.Margins.Right = 5
+$printJob.DefaultPageSettings.Margins.Top = 5
+$printJob.DefaultPageSettings.Margins.Bottom = 5
+
 $printJob.add_PrintPage({
     param($sender, $e)
 
-    # Fonte monoespaco para impressora 58mm
+    # Fonte monoespaçada
+    # O Windows desenha os caracteres,
+    # incluindo acentos, antes de enviar
+    # para o driver da impressora.
+
     $font = New-Object System.Drawing.Font(
         "Courier New",
-        8.5
+        8.5,
+        [System.Drawing.FontStyle]::Regular,
+        [System.Drawing.GraphicsUnit]::Point
     )
 
     $brush = [System.Drawing.Brushes]::Black
 
-    $x = 8
-    $y = 8
+    $x = 5
+    $y = 5
 
-    # Altura da linha
     $lineHeight = 12
 
     $lines = $text -split "\\n"
@@ -443,8 +435,8 @@ $printJob.add_PrintPage({
             $line,
             $font,
             $brush,
-            $x,
-            $y
+            [float]$x,
+            [float]$y
         )
 
         $y += $lineHeight
@@ -466,7 +458,6 @@ $printJob.Dispose()
       powershellCommand,
     ],
     (error, stdout, stderr) => {
-
       if (error) {
         console.error("PowerShell:", stderr);
         callback(error);
@@ -490,10 +481,9 @@ const server = app.listen(
   PORT,
   "0.0.0.0",
   () => {
-
     console.log("");
     console.log("========================================");
-    console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSAO");
+    console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSÃO");
     console.log("========================================");
 
     console.log(
@@ -504,10 +494,10 @@ const server = app.listen(
       `Impressora: ${PRINTER_NAME}`
     );
 
-    console.log("Conversao automatica de acentos: ATIVA");
+    console.log("Acentos: ATIVADOS");
     console.log("Formato: 58mm");
     console.log("Fonte: Courier New");
-    console.log("Nao feche esta janela.");
+    console.log("Não feche esta janela.");
     console.log("");
   }
 );
