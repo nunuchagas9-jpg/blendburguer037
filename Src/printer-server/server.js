@@ -360,17 +360,7 @@ function printText(text, callback) {
     .replace(/\r\n/g, "\n")
     .replace(/\r/g, "\n");
 
-  /*
-   * IMPORTANTE:
-   * Não removemos acentos.
-   *
-   * O texto é convertido para UTF-8 e enviado
-   * em Base64 para o PowerShell.
-   *
-   * O PowerShell reconstrói o texto Unicode
-   * antes de desenhar na impressora.
-   */
-
+  // Converte o texto para UTF-8
   const textBase64 = Buffer
     .from(safeText, "utf8")
     .toString("base64");
@@ -385,8 +375,10 @@ $printer = "${PRINTER_NAME}"
 
 $base64 = "${textBase64}"
 
+# Converte Base64 para bytes
 $bytes = [System.Convert]::FromBase64String($base64)
 
+# Reconstrói o texto usando UTF-8
 $text = [System.Text.Encoding]::UTF8.GetString($bytes)
 
 $printJob = New-Object System.Drawing.Printing.PrintDocument
@@ -397,24 +389,27 @@ if (-not $printJob.PrinterSettings.IsValid) {
     throw "Impressora nao encontrada: $printer"
 }
 
-# Papel de 58mm
-# A área útil depende do driver da impressora.
+# ===============================
+# CONFIGURAÇÃO DO PAPEL
+# ===============================
 
 $printJob.DefaultPageSettings.Margins.Left = 5
 $printJob.DefaultPageSettings.Margins.Right = 5
 $printJob.DefaultPageSettings.Margins.Top = 5
 $printJob.DefaultPageSettings.Margins.Bottom = 5
 
+# ===============================
+# IMPRESSÃO
+# ===============================
+
 $printJob.add_PrintPage({
     param($sender, $e)
 
-    # Fonte monoespaçada
-    # O Windows desenha os caracteres,
-    # incluindo acentos, antes de enviar
-    # para o driver da impressora.
+    # Arial possui suporte aos
+    # caracteres portugueses.
 
     $font = New-Object System.Drawing.Font(
-        "Courier New",
+        "Arial",
         8.5,
         [System.Drawing.FontStyle]::Regular,
         [System.Drawing.GraphicsUnit]::Point
@@ -458,10 +453,15 @@ $printJob.Dispose()
       powershellCommand,
     ],
     (error, stdout, stderr) => {
+
       if (error) {
         console.error("PowerShell:", stderr);
         callback(error);
         return;
+      }
+
+      if (stdout) {
+        console.log("PowerShell:", stdout);
       }
 
       if (stderr) {
@@ -481,6 +481,7 @@ const server = app.listen(
   PORT,
   "0.0.0.0",
   () => {
+
     console.log("");
     console.log("========================================");
     console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSÃO");
@@ -496,7 +497,7 @@ const server = app.listen(
 
     console.log("Acentos: ATIVADOS");
     console.log("Formato: 58mm");
-    console.log("Fonte: Courier New");
+    console.log("Fonte: Arial");
     console.log("Não feche esta janela.");
     console.log("");
   }
