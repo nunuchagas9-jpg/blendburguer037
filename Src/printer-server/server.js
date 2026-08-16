@@ -67,6 +67,62 @@ app.post("/print", (req, res) => {
 });
 
 // ===============================
+// REMOVER ACENTOS
+// SOMENTE PARA A IMPRESSAO
+// ===============================
+
+function removeAccents(text) {
+  if (text === null || text === undefined) {
+    return "";
+  }
+
+  return String(text)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ç/g, "c")
+    .replace(/Ç/g, "C")
+    .replace(/[^\x20-\x7E\n\r\t]/g, "");
+}
+
+// ===============================
+// QUEBRAR LINHAS GRANDES
+// PARA PAPEL 58MM
+// ===============================
+
+function wrapText(text, maxLength = 42) {
+  const lines = String(text).split("\n");
+  const result = [];
+
+  lines.forEach((line) => {
+    if (line.length <= maxLength) {
+      result.push(line);
+      return;
+    }
+
+    let current = "";
+
+    const words = line.split(" ");
+
+    words.forEach((word) => {
+      if (!current) {
+        current = word;
+      } else if ((current + " " + word).length <= maxLength) {
+        current += " " + word;
+      } else {
+        result.push(current);
+        current = word;
+      }
+    });
+
+    if (current) {
+      result.push(current);
+    }
+  });
+
+  return result.join("\n");
+}
+
+// ===============================
 // MONTAR CUPOM
 // ===============================
 
@@ -77,67 +133,55 @@ function createReceipt(order) {
     ? order.cart
     : [];
 
-  const LINE = "--------------------------------";
-  const EQUALS = "================================";
-
   let text = "";
 
-  text += EQUALS + "\n";
-  text += center("BLEND BURGUER 037") + "\n";
-  text += EQUALS + "\n\n";
+  text += "==========================================\n";
+  text += "          BLEND BURGUER 037\n";
+  text += "==========================================\n\n";
 
   // CLIENTE
 
   text += "CLIENTE\n";
-  text += LINE + "\n";
+  text += "------------------------------------------\n";
 
-  text += wrapText(`Nome: ${customer.name || ""}`);
-  text += wrapText(`WhatsApp: ${customer.phone || ""}`);
-  text += "\n";
+  text += `Nome: ${customer.name || ""}\n`;
+  text += `WhatsApp: ${customer.phone || ""}\n\n`;
 
   // ENTREGA
 
   if (customer.orderType === "Entrega") {
     text += "ENTREGA\n";
-    text += LINE + "\n";
+    text += "------------------------------------------\n";
 
-    text += wrapText(
-      `Endereço: ${customer.address || ""}`
-    );
-
-    text += wrapText(
-      `Número: ${customer.number || ""}`
-    );
-
-    text += wrapText(
-      `Bairro: ${customer.neighborhood || ""}`
-    );
+    text += `Endereco: ${customer.address || ""}\n`;
+    text += `Numero: ${customer.number || ""}\n`;
+    text += `Bairro: ${customer.neighborhood || ""}\n`;
 
     if (customer.reference) {
-      text += wrapText(
-        `Referência: ${customer.reference}`
-      );
+      text += `Referencia: ${customer.reference}\n`;
     }
 
     if (customer.complement) {
-      text += wrapText(
-        `Complemento: ${customer.complement}`
-      );
+      text += `Complemento: ${customer.complement}\n`;
     }
 
     text += "\n";
-  } else {
-    text += "RETIRADA NO LOCAL\n";
-    text += LINE + "\n";
+  }
 
-    text += "Rua Frei Patrício de Moura, 71\n";
-    text += "Morumbi - Divinópolis/MG\n\n";
+  // RETIRADA
+
+  else {
+    text += "RETIRADA NO LOCAL\n";
+    text += "------------------------------------------\n";
+
+    text += "Rua Frei Patricio de Moura, 71\n";
+    text += "Morumbi - Divinopolis/MG\n\n";
   }
 
   // PEDIDO
 
   text += "PEDIDO\n";
-  text += LINE + "\n";
+  text += "------------------------------------------\n";
 
   let calculatedSubtotal = 0;
 
@@ -163,49 +207,41 @@ function createReceipt(order) {
 
     calculatedSubtotal += itemTotal;
 
-    text += wrapText(
-      `${quantity}x ${item.name || "Produto"}`
-    );
+    text += `${quantity}x ${item.name || "Produto"}\n`;
 
     text += `R$ ${formatMoney(price)} cada\n`;
 
     text += `Total: R$ ${formatMoney(itemTotal)}\n`;
 
-    // OPÇÃO
+    // OPCAO
 
     if (item.selectedOption) {
-      text += wrapText(
-        `Opção: ${item.selectedOption}`
-      );
+      text += `Opcao: ${item.selectedOption}\n`;
     }
 
-    // OPÇÕES
+    // OPCOES
 
     if (
       Array.isArray(item.selectedOptions) &&
       item.selectedOptions.length > 0
     ) {
       item.selectedOptions.forEach((option) => {
-        text += wrapText(
-          `${option.name || "Opção"}: ${
-            option.value || ""
-          }`
-        );
+        text += `${option.name || "Opcao"}: ${
+          option.value || ""
+        }\n`;
       });
     }
 
-    // OBSERVAÇÃO DO ITEM
+    // OBSERVACAO DO ITEM
 
     if (item.observation) {
-      text += wrapText(
-        `Obs.: ${item.observation}`
-      );
+      text += `Obs.: ${item.observation}\n`;
     }
 
     text += "\n";
   });
 
-  text += LINE + "\n";
+  text += "------------------------------------------\n";
 
   // SUBTOTAL
 
@@ -226,7 +262,7 @@ function createReceipt(order) {
   if (customer.orderType === "Entrega") {
     text += "Entrega: A CONFIRMAR\n";
   } else {
-    text += "Entrega: GRÁTIS\n";
+    text += "Entrega: GRATIS\n";
   }
 
   // TOTAL
@@ -242,16 +278,17 @@ function createReceipt(order) {
   }
 
   text += "\n";
+
   text += `TOTAL: R$ ${formatMoney(total)}\n\n`;
 
   // PAGAMENTO
 
   text += "PAGAMENTO\n";
-  text += LINE + "\n";
+  text += "------------------------------------------\n";
 
-  text += wrapText(
-    `Forma: ${customer.paymentMethod || ""}`
-  );
+  text += `Forma: ${
+    customer.paymentMethod || ""
+  }\n`;
 
   if (customer.needsChange) {
     text += `Troco para: R$ ${formatMoney(
@@ -265,82 +302,32 @@ function createReceipt(order) {
 
   text += "\n";
 
-  // OBSERVAÇÃO
+  // OBSERVACAO
 
-  text += "OBSERVAÇÃO\n";
-  text += LINE + "\n";
+  text += "OBSERVACAO\n";
+  text += "------------------------------------------\n";
 
-  if (customer.observation) {
-    text += wrapText(customer.observation);
-  } else {
-    text += "Nenhuma\n";
-  }
+  text += customer.observation || "Nenhuma";
 
-  text += "\n";
+  text += "\n\n";
 
   // FINAL
 
-  text += EQUALS + "\n";
-  text += center("PEDIDO RECEBIDO") + "\n";
-  text += center("BLEND BURGUER 037") + "\n";
-  text += EQUALS + "\n\n\n";
+  text += "==========================================\n";
+  text += "          PEDIDO RECEBIDO\n";
+  text += "          BLEND BURGUER 037\n";
+  text += "==========================================\n\n\n";
+
+  // ========================================
+  // AQUI ACONTECE A CONVERSAO AUTOMATICA
+  // ========================================
+
+  text = removeAccents(text);
+
+  // Quebra textos muito grandes para 58mm
+  text = wrapText(text, 42);
 
   return text;
-}
-
-// ===============================
-// CENTRALIZAR
-// ===============================
-
-function center(text) {
-  const WIDTH = 32;
-
-  if (text.length >= WIDTH) {
-    return text.substring(0, WIDTH);
-  }
-
-  const spaces = Math.floor(
-    (WIDTH - text.length) / 2
-  );
-
-  return " ".repeat(spaces) + text;
-}
-
-// ===============================
-// QUEBRAR TEXTO PARA 58 MM
-// ===============================
-
-function wrapText(text) {
-  const WIDTH = 32;
-
-  if (!text) {
-    return "\n";
-  }
-
-  const words = String(text).split(" ");
-
-  let line = "";
-  let result = "";
-
-  words.forEach((word) => {
-    if (
-      (line + " " + word).trim().length > WIDTH
-    ) {
-      if (line) {
-        result += line + "\n";
-      }
-
-      line = word;
-    } else {
-      line = (line + " " + word).trim();
-    }
-  });
-
-  if (line) {
-    result += line + "\n";
-  }
-
-  return result;
 }
 
 // ===============================
@@ -353,9 +340,7 @@ function parseMoney(value) {
   }
 
   if (typeof value === "number") {
-    return Number.isFinite(value)
-      ? value
-      : 0;
+    return Number.isFinite(value) ? value : 0;
   }
 
   let text = String(value).trim();
@@ -380,9 +365,7 @@ function parseMoney(value) {
 
   const number = Number(text);
 
-  return Number.isFinite(number)
-    ? number
-    : 0;
+  return Number.isFinite(number) ? number : 0;
 }
 
 // ===============================
@@ -396,61 +379,66 @@ function formatMoney(value) {
 }
 
 // ===============================
-// IMPRIMIR EM 58 MM
+// IMPRIMIR
 // ===============================
 
 function printText(text, callback) {
-  const safeText = String(text)
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .replace(/`/g, "``");
+
+  // Remove acentos novamente por segurança
+  const safeText = removeAccents(
+    String(text)
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+  );
+
+  // Converte o texto para Base64.
+  // Isso evita problemas de caracteres no PowerShell.
+  const textBase64 = Buffer
+    .from(safeText, "utf8")
+    .toString("base64");
 
   const powershellCommand = `
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$OutputEncoding = [System.Text.Encoding]::UTF8
+$ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.Drawing
 
 $printer = "${PRINTER_NAME}"
 
-$text = @'
-${safeText}
-'@
+$base64 = "${textBase64}"
+
+$bytes = [System.Convert]::FromBase64String($base64)
+
+$text = [System.Text.Encoding]::UTF8.GetString($bytes)
 
 $printJob = New-Object System.Drawing.Printing.PrintDocument
 
 $printJob.PrinterSettings.PrinterName = $printer
 
 if (-not $printJob.PrinterSettings.IsValid) {
-    throw "Impressora não encontrada: $printer"
+    throw "Impressora nao encontrada: $printer"
 }
-
-$printJob.DefaultPageSettings.Margins.Left = 0
-$printJob.DefaultPageSettings.Margins.Right = 0
-$printJob.DefaultPageSettings.Margins.Top = 0
-$printJob.DefaultPageSettings.Margins.Bottom = 0
 
 $printJob.add_PrintPage({
     param($sender, $e)
 
-    # 58 mm
-    # Área aproximada de impressão
+    # Fonte monoespaco para impressora 58mm
     $font = New-Object System.Drawing.Font(
         "Courier New",
-        8,
-        [System.Drawing.FontStyle]::Regular,
-        [System.Drawing.GraphicsUnit]::Point
+        8.5
     )
 
     $brush = [System.Drawing.Brushes]::Black
 
-    $x = 3
-    $y = 3
+    $x = 8
+    $y = 8
+
+    # Altura da linha
     $lineHeight = 12
 
     $lines = $text -split "\\n"
 
     foreach ($line in $lines) {
+
         $e.Graphics.DrawString(
             $line,
             $font,
@@ -464,6 +452,7 @@ $printJob.add_PrintPage({
 })
 
 $printJob.Print()
+
 $printJob.Dispose()
 `;
 
@@ -477,14 +466,15 @@ $printJob.Dispose()
       powershellCommand,
     ],
     (error, stdout, stderr) => {
-      if (error) {
-        console.error(
-          "ERRO POWERSHELL:",
-          stderr
-        );
 
+      if (error) {
+        console.error("PowerShell:", stderr);
         callback(error);
         return;
+      }
+
+      if (stderr) {
+        console.log("PowerShell:", stderr);
       }
 
       callback(null);
@@ -500,16 +490,11 @@ const server = app.listen(
   PORT,
   "0.0.0.0",
   () => {
+
     console.log("");
-    console.log(
-      "========================================"
-    );
-    console.log(
-      " BLEND BURGUER - IMPRESSÃO 58 MM"
-    );
-    console.log(
-      "========================================"
-    );
+    console.log("========================================");
+    console.log(" BLEND BURGUER - SERVIDOR DE IMPRESSAO");
+    console.log("========================================");
 
     console.log(
       `Servidor funcionando em http://127.0.0.1:${PORT}`
@@ -519,23 +504,16 @@ const server = app.listen(
       `Impressora: ${PRINTER_NAME}`
     );
 
-    console.log(
-      "Largura configurada: 58 mm"
-    );
-
-    console.log(
-      "Aguardando pedidos..."
-    );
-
+    console.log("Conversao automatica de acentos: ATIVA");
+    console.log("Formato: 58mm");
+    console.log("Fonte: Courier New");
+    console.log("Nao feche esta janela.");
     console.log("");
   }
 );
 
 server.on("error", (error) => {
-  console.error(
-    "ERRO NO SERVIDOR:",
-    error
-  );
+  console.error("ERRO NO SERVIDOR:", error);
 });
 
 // Mantém o servidor ativo
