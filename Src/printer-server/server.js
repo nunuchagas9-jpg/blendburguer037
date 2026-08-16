@@ -70,12 +70,12 @@ function createReceipt(order) {
   if (customer.orderType === "Entrega") {
     text += "ENTREGA\n";
     text += "--------------------------------\n";
-    text += `Endereco: ${customer.address || ""}\n`;
-    text += `Numero: ${customer.number || ""}\n`;
+    text += `Endereço: ${customer.address || ""}\n`;
+    text += `Número: ${customer.number || ""}\n`;
     text += `Bairro: ${customer.neighborhood || ""}\n`;
 
     if (customer.reference) {
-      text += `Referencia: ${customer.reference}\n`;
+      text += `Referência: ${customer.reference}\n`;
     }
 
     if (customer.complement) {
@@ -86,8 +86,8 @@ function createReceipt(order) {
   } else {
     text += "RETIRADA NO LOCAL\n";
     text += "--------------------------------\n";
-    text += "Rua Frei Patricio de Moura, 71\n";
-    text += "Morumbi - Divinopolis/MG\n\n";
+    text += "Rua Frei Patrício de Moura, 71\n";
+    text += "Morumbi - Divinópolis/MG\n\n";
   }
 
   text += "PEDIDO\n";
@@ -98,12 +98,6 @@ function createReceipt(order) {
   cart.forEach((item) => {
     const quantity = Number(item.quantity) || 1;
 
-    // Aceita:
-    // 35
-    // 35.00
-    // "35"
-    // "35,00"
-    // "R$ 35,00"
     const price = parseMoney(
       item.price ??
       item.unitPrice ??
@@ -117,7 +111,6 @@ function createReceipt(order) {
       item.totalPrice
     );
 
-    // Se não existir total do item, calcula pelo preço x quantidade
     if (itemTotal <= 0) {
       itemTotal = price * quantity;
     }
@@ -129,7 +122,7 @@ function createReceipt(order) {
     text += `Total: R$ ${formatMoney(itemTotal)}\n`;
 
     if (item.selectedOption) {
-      text += `Opcao: ${item.selectedOption}\n`;
+      text += `Opção: ${item.selectedOption}\n`;
     }
 
     if (
@@ -137,7 +130,7 @@ function createReceipt(order) {
       item.selectedOptions.length > 0
     ) {
       item.selectedOptions.forEach((option) => {
-        text += `${option.name || "Opcao"}: ${
+        text += `${option.name || "Opção"}: ${
           option.value || ""
         }\n`;
       });
@@ -152,8 +145,6 @@ function createReceipt(order) {
 
   text += "--------------------------------\n";
 
-  // Primeiro tenta usar o subtotal enviado pelo site.
-  // Se vier vazio/zero, calcula pelos itens.
   let subtotal = parseMoney(
     order.subtotal ??
     order.subTotal ??
@@ -169,17 +160,15 @@ function createReceipt(order) {
   if (customer.orderType === "Entrega") {
     text += "Entrega: A CONFIRMAR\n";
   } else {
-    text += "Entrega: GRATIS\n";
+    text += "Entrega: GRÁTIS\n";
   }
 
-  // Total do pedido
   let total = parseMoney(
     order.total ??
     order.totalPrice ??
     order.finalTotal
   );
 
-  // Se o total não vier corretamente, usa o subtotal.
   if (total <= 0) {
     total = subtotal;
   }
@@ -189,6 +178,7 @@ function createReceipt(order) {
 
   text += "PAGAMENTO\n";
   text += "--------------------------------\n";
+
   text += `Forma: ${
     customer.paymentMethod || ""
   }\n`;
@@ -205,7 +195,7 @@ function createReceipt(order) {
 
   text += "\n";
 
-  text += "OBSERVACAO\n";
+  text += "OBSERVAÇÃO\n";
   text += "--------------------------------\n";
   text += customer.observation || "Nenhuma";
   text += "\n\n";
@@ -246,7 +236,6 @@ function parseMoney(value) {
     return 0;
   }
 
-  // Remove R$, espaços e outros caracteres
   text = text
     .replace(/R\$/gi, "")
     .replace(/\s/g, "")
@@ -256,7 +245,6 @@ function parseMoney(value) {
     return 0;
   }
 
-  // Caso brasileiro: 35,00
   if (text.includes(",")) {
     text = text.replace(/\./g, "");
     text = text.replace(",", ".");
@@ -274,9 +262,14 @@ function formatMoney(value) {
 }
 
 function printText(text, callback) {
-  const safeText = text.replace(/`/g, "``");
+  const safeText = String(text)
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .replace(/`/g, "``");
 
   const powershellCommand = `
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
 Add-Type -AssemblyName System.Drawing
 
 $printer = "${PRINTER_NAME}"
@@ -292,8 +285,9 @@ $printJob.PrinterSettings.PrinterName = $printer
 $printJob.add_PrintPage({
     param($sender, $e)
 
+    # Fonte com suporte a caracteres acentuados
     $font = New-Object System.Drawing.Font(
-        "Courier New",
+        "Arial",
         9
     )
 
@@ -303,7 +297,7 @@ $printJob.add_PrintPage({
     $y = 10
     $lineHeight = 14
 
-    $lines = $text -split "\\r?\\n"
+    $lines = $text -split "\\n"
 
     foreach ($line in $lines) {
         $e.Graphics.DrawString(
