@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
 const PORT = 3001;
-const PRINTER_NAME = "TOMATE MTIN-773";
+const PRINTER_NAME = "POS-58";
 
 // ===============================
 // TESTE DO SERVIDOR
