@@ -432,19 +432,6 @@ function Checkout({
 
         {/* RETIRADA */}
 
-        {orderType === "pickup" && (
-          <div className="pickup-info">
-            <strong>
-              🏪 Retirada no local
-            </strong>
-
-            <p>
-              Rua Frei Patrício de Moura, 71 —
-              Morumbi, Divinópolis - MG
-            </p>
-          </div>
-        )}
-
         {/* PAGAMENTO */}
 
         <div className="checkout-section">
