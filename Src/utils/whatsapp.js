@@ -32,8 +32,7 @@ export function buildWhatsAppMessage({
 
   if (orderType === "Retirada no local") {
     lines.push("[RETIRADA NO LOCAL]");
-    lines.push("Rua Frei Patrício de Moura, 71");
-    lines.push("Morumbi - Divinópolis/MG");
+    lines.push("RETIRADA NO LOCAL");
   } else {
     lines.push("[ENTREGA]");
 
