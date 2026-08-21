@@ -52,6 +52,7 @@ function App() {
     "ARTESANAIS",
     "TRADICIONAIS",
     "PASTÉIS",
+    "DOCES",
     "ADICIONAIS",
     "COMBOS",
     "BEBIDAS",
