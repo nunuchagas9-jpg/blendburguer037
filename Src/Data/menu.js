@@ -93,7 +93,7 @@ export const menu = [
   category: "DOCES",
   name: "HAMBÚRGUER DOCE",
   description: "Pão, creme de avelã e morango.",
-  price: 15,
+  price: 18,
 },
   {
     id: "mussarela-empanada",
