@@ -1478,3 +1478,41 @@ button {
     font-size: 0.58rem;
   }
 }
+/* =========================
+   FOTO DO HAMBÚRGUER - INTEIRA
+========================= */
+
+.product-image {
+  height: 105px !important;
+  background: #222222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center;
+  display: block;
+}
+
+/* CELULAR */
+@media (max-width: 700px) {
+  .product-image {
+    height: 100px !important;
+  }
+
+  .product-image img {
+    object-fit: contain !important;
+  }
+}
+
+/* CELULAR PEQUENO */
+@media (max-width: 380px) {
+  .product-image {
+    height: 85px !important;
+  }
+}
