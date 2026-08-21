@@ -1159,3 +1159,322 @@ button {
     width: 100%;
   }
 }
+/* =========================
+   MOBILE - MAIS COMPACTO
+========================= */
+
+@media (max-width: 700px) {
+
+  .header {
+    padding: 8px 12px;
+  }
+
+  .brand {
+    gap: 6px;
+  }
+
+  .brand-logo {
+    width: 45px;
+    height: 45px;
+  }
+
+  .brand-city {
+    font-size: 0.58rem;
+  }
+
+  .cart-button {
+    min-height: 34px;
+    padding: 0 9px;
+    gap: 5px;
+    font-size: 0.68rem;
+    border-radius: 8px;
+  }
+
+  .cart-button strong {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+  }
+
+  /* HERO */
+
+  .hero {
+    padding: 30px 12px 25px;
+  }
+
+  .hero-label {
+    margin-bottom: 8px;
+    font-size: 0.62rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    line-height: 0.95;
+  }
+
+  .hero p {
+    margin-top: 10px;
+    font-size: 1rem;
+  }
+
+  .store-status {
+    margin-top: 14px;
+    padding: 6px 9px;
+    gap: 5px;
+    font-size: 0.65rem;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .primary-button {
+    min-height: 40px;
+    margin-top: 16px;
+    padding: 0 16px;
+    font-size: 0.72rem;
+    border-radius: 8px;
+  }
+
+  /* CARDÁPIO */
+
+  .menu-preview,
+  .cart-section {
+    padding: 18px 12px;
+  }
+
+  .section-heading span {
+    font-size: 0.6rem;
+  }
+
+  .section-heading h2 {
+    margin-top: 3px;
+    font-size: 1.35rem;
+  }
+
+  /* CATEGORIAS */
+
+  .categories {
+    margin-top: 12px;
+    gap: 6px;
+  }
+
+  .categories button {
+    min-height: 34px;
+    padding: 0 8px;
+    border-radius: 7px;
+    font-size: 0.62rem;
+  }
+
+  /* PRODUTOS */
+
+  .products {
+    margin-top: 12px;
+    gap: 9px;
+  }
+
+  .product-card {
+    padding: 11px;
+    border-radius: 11px;
+  }
+
+  /* FOTO BEM MENOR */
+
+  .product-image {
+    height: 105px;
+    margin-bottom: 9px;
+    border-radius: 8px;
+  }
+
+  .image-placeholder {
+    border-radius: 8px;
+    font-size: 0.6rem;
+  }
+
+  .product-card .popular-badge {
+    margin-bottom: 6px;
+  }
+
+  .popular-badge {
+    padding: 4px 6px;
+    border-radius: 5px;
+    font-size: 0.58rem;
+  }
+
+  .product-card h3 {
+    font-size: 0.9rem;
+  }
+
+  .product-card p {
+    min-height: auto;
+    margin-top: 4px;
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .product-footer {
+    margin-top: 10px;
+    gap: 7px;
+  }
+
+  .product-footer strong {
+    font-size: 0.95rem;
+  }
+
+  .add-button {
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 7px;
+    font-size: 0.62rem;
+  }
+
+  /* CARRINHO */
+
+  .cart-section {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  .cart-list {
+    margin-top: 12px;
+    gap: 7px;
+  }
+
+  .cart-item {
+    padding: 10px;
+    gap: 8px;
+    border-radius: 9px;
+  }
+
+  .cart-item h3 {
+    font-size: 0.78rem;
+  }
+
+  .cart-item small {
+    margin-top: 3px;
+    font-size: 0.65rem;
+  }
+
+  .cart-item > div:first-child span {
+    margin-top: 3px;
+    font-size: 0.68rem;
+  }
+
+  .cart-controls {
+    gap: 5px;
+  }
+
+  .cart-controls button {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  .cart-controls strong {
+    font-size: 0.75rem;
+  }
+
+  .cart-total {
+    margin: 12px 0;
+    font-size: 0.85rem;
+  }
+
+  .cart-total strong {
+    font-size: 1rem;
+  }
+
+  /* FOOTER */
+
+  .footer {
+    margin-top: 25px;
+    padding: 20px 12px 25px;
+    font-size: 0.65rem;
+  }
+
+  .footer strong {
+    font-size: 0.75rem;
+  }
+
+  /* MODAL */
+
+  .option-overlay {
+    padding: 10px;
+  }
+
+  .option-modal {
+    max-width: 350px;
+    max-height: 85vh;
+    padding: 18px 14px;
+    border-radius: 13px;
+  }
+
+  .option-modal h2 {
+    font-size: 1rem;
+  }
+
+  .option-modal > p {
+    margin-bottom: 12px;
+    font-size: 0.72rem;
+  }
+
+  .option-list {
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .option-list button {
+    min-height: 40px;
+    padding: 9px 11px;
+    border-radius: 7px;
+    font-size: 0.72rem;
+  }
+
+  .option-close {
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .option-modal > .primary-button {
+    min-height: 40px;
+    font-size: 0.68rem;
+  }
+}
+
+/* =========================
+   CELULAR MUITO PEQUENO
+========================= */
+
+@media (max-width: 380px) {
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .product-image {
+    height: 90px;
+  }
+
+  .product-card {
+    padding: 9px;
+  }
+
+  .product-card h3 {
+    font-size: 0.82rem;
+  }
+
+  .product-card p {
+    font-size: 0.67rem;
+  }
+
+  .product-footer strong {
+    font-size: 0.88rem;
+  }
+
+  .add-button {
+    min-height: 31px;
+    font-size: 0.58rem;
+  }
+}
