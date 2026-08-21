@@ -1,3 +1,7 @@
+import xFrangoImage from "../assets/burgers/211B5561-4631-40DB-8F7A-AB6E733F48B8.jpeg";
+import doceImage from "../assets/burgers/5BC68375-8B4F-4531-A0C0-813A9F725B44.jpeg";
+import blendDuploImage from "../assets/burgers/B3B4E00C-F66E-4673-B86F-6281D09EB2FD.png";
+
 export const categories = [
   "ARTESANAIS",
   "TRADICIONAIS",
@@ -33,15 +37,17 @@ export const menu = [
     description:
       "2 blends de 120g, bacon crocante, cheddar, alface, tomate, cebola, catupiry, maionese temperada e batata palha.",
     price: 35,
+    image: blendDuploImage,
   },
-{
-  id: "x-frango",
-  category: "ARTESANAIS",
-  name: "X-FRANGO",
-  description:
-    "Pão, blend de frango, maionese temperada, alface, tomate e mussarela empanada.",
-  price: 26,
-},
+  {
+    id: "x-frango",
+    category: "ARTESANAIS",
+    name: "X-FRANGO",
+    description:
+      "Pão, blend de frango, maionese temperada, alface, tomate e mussarela empanada.",
+    price: 26,
+    image: xFrangoImage,
+  },
   {
     id: "x-burguer",
     category: "TRADICIONAIS",
@@ -66,7 +72,6 @@ export const menu = [
       "Bife de hambúrguer, bacon, catupiry, mussarela, batata palha, milho, ovo, alface, tomate e maionese temperada.",
     price: 26,
   },
-
   {
     id: "pastel-frango-bacon",
     category: "PASTÉIS",
@@ -88,13 +93,14 @@ export const menu = [
     description: "Pastel sabor pizza.",
     price: 15,
   },
-{
-  id: "hamburguer-doce",
-  category: "DOCES",
-  name: "HAMBÚRGUER DOCE",
-  description: "Pão, creme de avelã e morango.",
-  price: 18,
-},
+  {
+    id: "hamburguer-doce",
+    category: "DOCES",
+    name: "HAMBÚRGUER DOCE",
+    description: "Pão, creme de avelã e morango.",
+    price: 18,
+    image: doceImage,
+  },
   {
     id: "mussarela-empanada",
     category: "ADICIONAIS",
