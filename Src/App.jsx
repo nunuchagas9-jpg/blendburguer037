@@ -51,7 +51,6 @@ function App() {
   const categories = [
     "ARTESANAIS",
     "TRADICIONAIS",
-    "PASTÉIS",
     "DOCES",
     "ADICIONAIS",
     "COMBOS",
