@@ -5,7 +5,6 @@ import blendDuploImage from "../assets/B3B4E00C-F66E-4673-B86F-6281D09EB2FD.png"
 export const categories = [
   "ARTESANAIS",
   "TRADICIONAIS",
-  "PASTÉIS",
   "DOCES",
   "ADICIONAIS",
   "COMBOS",
@@ -79,27 +78,6 @@ export const menu = [
     description:
       "Bife de hambúrguer, bacon, catupiry, mussarela, batata palha, milho, ovo, alface, tomate e maionese temperada.",
     price: 26,
-  },
-  {
-    id: "pastel-frango-bacon",
-    category: "PASTÉIS",
-    name: "FRANGO COM BACON",
-    description: "Pastel de frango com bacon.",
-    price: 15,
-    options: [
-      {
-        name: "Escolha o recheio cremoso",
-        required: true,
-        values: ["Cheddar", "Catupiry"],
-      },
-    ],
-  },
-  {
-    id: "pastel-pizza",
-    category: "PASTÉIS",
-    name: "PIZZA",
-    description: "Pastel sabor pizza.",
-    price: 15,
   },
   {
     id: "hamburguer-doce",
