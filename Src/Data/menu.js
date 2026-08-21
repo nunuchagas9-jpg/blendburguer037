@@ -1,6 +1,6 @@
-import xFrangoImage from "../assets/burgers/211B5561-4631-40DB-8F7A-AB6E733F48B8.jpeg";
-import doceImage from "../assets/burgers/5BC68375-8B4F-4531-A0C0-813A9F725B44.jpeg";
-import blendDuploImage from "../assets/burgers/B3B4E00C-F66E-4673-B86F-6281D09EB2FD.png";
+import xFrangoImage from "../assets/211B5561-4631-40DB-8F7A-AB6E733F48B8.jpeg";
+import doceImage from "../assets/5BC68375-8B4F-4531-A0C0-813A9F725B44.jpeg";
+import blendDuploImage from "../assets/B3B4E00C-F66E-4673-B86F-6281D09EB2FD.png";
 
 export const categories = [
   "ARTESANAIS",
