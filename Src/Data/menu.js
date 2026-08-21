@@ -2,6 +2,7 @@ export const categories = [
   "ARTESANAIS",
   "TRADICIONAIS",
   "PASTÉIS",
+  "DOCES",
   "ADICIONAIS",
   "COMBOS",
   "BEBIDAS",
@@ -33,7 +34,14 @@ export const menu = [
       "2 blends de 120g, bacon crocante, cheddar, alface, tomate, cebola, catupiry, maionese temperada e batata palha.",
     price: 35,
   },
-
+{
+  id: "x-frango",
+  category: "ARTESANAIS",
+  name: "X-FRANGO",
+  description:
+    "Pão, blend de frango, maionese temperada, alface, tomate e mussarela empanada.",
+  price: 26,
+},
   {
     id: "x-burguer",
     category: "TRADICIONAIS",
@@ -80,7 +88,13 @@ export const menu = [
     description: "Pastel sabor pizza.",
     price: 15,
   },
-
+{
+  id: "hamburguer-doce",
+  category: "DOCES",
+  name: "HAMBÚRGUER DOCE",
+  description: "Pão, creme de avelã e morango.",
+  price: 15,
+},
   {
     id: "mussarela-empanada",
     category: "ADICIONAIS",
