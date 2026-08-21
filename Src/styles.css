@@ -318,6 +318,8 @@ button {
 
   background: #181818;
 
+  overflow: hidden;
+
   transition:
     transform 0.2s ease,
     border-color 0.2s ease;
@@ -327,6 +329,45 @@ button {
   transform: translateY(-2px);
   border-color: #ffc107;
 }
+
+/* =========================
+   FOTOS DOS PRODUTOS
+========================= */
+
+.product-image {
+  width: calc(100% + 44px);
+  height: 220px;
+
+  margin: -22px -22px 18px;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 16px 16px 0 0;
+
+  background: #222222;
+}
+
+/* Espaço para produtos que ainda não possuem foto */
+
+.product-image-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #777777;
+
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+
+  border-bottom: 1px solid #333333;
+}
+
+/* =========================
+   PRODUTO
+========================= */
 
 .product-card .popular-badge {
   margin-bottom: 12px;
@@ -783,8 +824,6 @@ button {
   border-radius: 18px;
 
   background: #181818;
-
-  box-sizing: border-box;
 }
 
 .option-modal h2 {
@@ -852,8 +891,6 @@ button {
   background: #111111;
 
   font-weight: 800;
-
-  box-sizing: border-box;
 }
 
 .option-list button:hover {
@@ -872,8 +909,6 @@ button {
   min-height: 50px;
 
   margin-top: 0;
-
-  box-sizing: border-box;
 }
 
 .option-modal > .primary-button:disabled {
@@ -925,6 +960,10 @@ button {
     min-height: auto;
   }
 
+  .product-image {
+    height: 230px;
+  }
+
   .categories {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -965,8 +1004,6 @@ button {
     padding-left: 15px;
     padding-right: 15px;
   }
-
-  /* MODAL NO CELULAR */
 
   .option-overlay {
     padding: 15px;
