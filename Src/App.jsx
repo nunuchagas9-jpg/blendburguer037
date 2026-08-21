@@ -28,8 +28,8 @@ function App() {
 
   // =========================
   // HORÁRIO DA HAMBURGUERIA
-  // Sexta a domingo
-  // 19:00 às 23:30
+  // SEXTA A DOMINGO
+  // 19:00 ÀS 23:30
   // =========================
 
   const now = new Date();
@@ -77,7 +77,6 @@ function App() {
   // =========================
 
   function addToCart(product) {
-    // Se o produto tiver opções, abre a janela de escolha
     if (product.options && product.options.length > 0) {
       setSelectedProduct(product);
       setSelectedOption("");
@@ -331,6 +330,25 @@ function App() {
                   className="product-card"
                   key={product.id}
                 >
+                  {/* =========================
+                      FOTO DO PRODUTO
+                      Se tiver foto, aparece.
+                      Se não tiver, fica um espaço.
+                  ========================= */}
+
+                  <div className="product-image">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                      />
+                    ) : (
+                      <div className="image-placeholder">
+                        <span>FOTO</span>
+                      </div>
+                    )}
+                  </div>
+
                   {product.popular && (
                     <span className="popular-badge">
                       MAIS PEDIDO
