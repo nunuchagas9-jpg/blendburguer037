@@ -40,6 +40,14 @@ export const menu = [
     image: blendDuploImage,
   },
   {
+  id: "cebola-burger",
+  category: "ARTESANAIS",
+  name: "CEBOLA BURGER",
+  description:
+    "Blend de 120g, mussarela, alface, tomate, cebola caramelizada, maionese temperada e batata palha.",
+  price: 27,
+},
+  {
     id: "x-frango",
     category: "ARTESANAIS",
     name: "X-FRANGO",
