@@ -12,6 +12,27 @@ import {
   createWhatsAppLink,
 } from "../utils/whatsapp";
 
+// ========================================
+// BAIRROS E TAXAS DE ENTREGA
+// ========================================
+// Edite essa lista conforme suas regiões.
+
+const bairros = [
+  { nome: "Centro", taxa: 5 },
+  { nome: "São José", taxa: 5 },
+
+  { nome: "Bom Pastor", taxa: 7 },
+  { nome: "Santa Clara", taxa: 7 },
+  { nome: "Santa Rosa", taxa: 7 },
+
+  { nome: "Belvedere", taxa: 9 },
+  { nome: "Planalto", taxa: 9 },
+
+  { nome: "Jardim Primavera", taxa: 12 },
+
+  { nome: "Exemplo Bairro", taxa: 15 },
+];
+
 function Checkout({
   cart = [],
   subtotal = 0,
@@ -36,25 +57,63 @@ function Checkout({
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
 
-  // A taxa de entrega será confirmada pelo WhatsApp.
-  const deliveryFee = 0;
+  // ========================================
+  // BAIRRO SELECIONADO
+  // ========================================
+
+  const selectedNeighborhood = bairros.find(
+    (bairro) =>
+      bairro.nome.toLowerCase() ===
+      customer.neighborhood.trim().toLowerCase()
+  );
+
+  // ========================================
+  // TAXA DE ENTREGA
+  // ========================================
+
+  const deliveryFee =
+    orderType === "delivery" &&
+    selectedNeighborhood
+      ? selectedNeighborhood.taxa
+      : 0;
+
+  // ========================================
+  // TOTAL
+  // ========================================
 
   const total = calculateTotal(
     subtotal,
     deliveryFee
   );
 
+  // ========================================
+  // TROCO
+  // ========================================
+
   const change = calculateChange(
     total,
     Number(customer.cashAmount) || 0
   );
+
+  // ========================================
+  // ATUALIZAR CLIENTE
+  // ========================================
 
   function updateCustomer(field, value) {
     setCustomer((current) => ({
       ...current,
       [field]: value,
     }));
+
+    // Limpa o erro quando o cliente altera o campo
+    if (error) {
+      setError("");
+    }
   }
+
+  // ========================================
+  // TIPO DO PEDIDO
+  // ========================================
 
   function handleOrderType(type) {
     setOrderType(type);
@@ -72,6 +131,10 @@ function Checkout({
     }
   }
 
+  // ========================================
+  // ENVIAR PEDIDO
+  // ========================================
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -83,9 +146,9 @@ function Checkout({
     setSending(true);
 
     try {
-      // ================================
+      // ========================================
       // VALIDAÇÕES
-      // ================================
+      // ========================================
 
       if (!customer.name.trim()) {
         setError("Informe seu nome.");
@@ -96,6 +159,10 @@ function Checkout({
         setError("Informe seu WhatsApp.");
         return;
       }
+
+      // ========================================
+      // VALIDAÇÃO DE ENTREGA
+      // ========================================
 
       if (orderType === "delivery") {
         if (!customer.address.trim()) {
@@ -113,6 +180,14 @@ function Checkout({
           return;
         }
 
+        // Verifica se o bairro existe na lista
+        if (!selectedNeighborhood) {
+          setError(
+            "Selecione um bairro válido da lista."
+          );
+          return;
+        }
+
         if (!customer.reference.trim()) {
           setError(
             "O ponto de referência é obrigatório."
@@ -121,12 +196,20 @@ function Checkout({
         }
       }
 
+      // ========================================
+      // PAGAMENTO
+      // ========================================
+
       if (!customer.paymentMethod) {
         setError(
           "Escolha a forma de pagamento."
         );
         return;
       }
+
+      // ========================================
+      // DINHEIRO / TROCO
+      // ========================================
 
       if (
         customer.paymentMethod === "Dinheiro" &&
@@ -152,9 +235,9 @@ function Checkout({
         }
       }
 
-      // ================================
-      // PREPARAR ITENS DO PEDIDO
-      // ================================
+      // ========================================
+      // PREPARAR ITENS
+      // ========================================
 
       const cartForMessage = cart.map(
         (item) => ({
@@ -166,9 +249,9 @@ function Checkout({
         })
       );
 
-      // ================================
+      // ========================================
       // DADOS DO PEDIDO
-      // ================================
+      // ========================================
 
       const orderData = {
         customer: {
@@ -180,6 +263,19 @@ function Checkout({
               : "Retirada no local",
 
           changeAmount: change,
+
+          // Nome do bairro selecionado
+          neighborhood:
+            orderType === "delivery"
+              ? selectedNeighborhood?.nome ||
+                customer.neighborhood
+              : "",
+
+          // Taxa da entrega
+          deliveryFee:
+            orderType === "delivery"
+              ? deliveryFee
+              : 0,
         },
 
         cart: cartForMessage,
@@ -194,9 +290,9 @@ function Checkout({
           new Date().toISOString(),
       };
 
-      // ================================
+      // ========================================
       // MENSAGEM DO WHATSAPP
-      // ================================
+      // ========================================
 
       const message =
         buildWhatsAppMessage({
@@ -222,9 +318,9 @@ function Checkout({
         return;
       }
 
-      // ================================
+      // ========================================
       // ABRIR WHATSAPP
-      // ================================
+      // ========================================
 
       window.location.href = whatsappLink;
     } catch (error) {
@@ -251,7 +347,9 @@ function Checkout({
 
       <form onSubmit={handleSubmit}>
 
-        {/* TIPO DO PEDIDO */}
+        {/* ========================================
+            TIPO DO PEDIDO
+        ======================================== */}
 
         <div className="checkout-section">
           <h3>
@@ -289,7 +387,9 @@ function Checkout({
           </div>
         </div>
 
-        {/* DADOS DO CLIENTE */}
+        {/* ========================================
+            DADOS DO CLIENTE
+        ======================================== */}
 
         <div className="checkout-section">
           <h3>Seus dados</h3>
@@ -329,7 +429,9 @@ function Checkout({
           </label>
         </div>
 
-        {/* ENDEREÇO */}
+        {/* ========================================
+            ENDEREÇO DE ENTREGA
+        ======================================== */}
 
         {orderType === "delivery" && (
           <div className="checkout-section">
@@ -370,11 +472,16 @@ function Checkout({
               />
             </label>
 
+            {/* ========================================
+                BAIRRO COM BUSCA
+            ======================================== */}
+
             <label>
               Bairro *
 
               <input
                 type="text"
+                list="lista-bairros"
                 value={customer.neighborhood}
                 onChange={(event) =>
                   updateCustomer(
@@ -382,9 +489,54 @@ function Checkout({
                     event.target.value
                   )
                 }
-                placeholder="Seu bairro"
+                placeholder="Digite para procurar seu bairro"
+                autoComplete="off"
               />
+
+              <datalist id="lista-bairros">
+                {bairros.map((bairro) => (
+                  <option
+                    key={bairro.nome}
+                    value={bairro.nome}
+                  >
+                    R${" "}
+                    {bairro.taxa
+                      .toFixed(2)
+                      .replace(".", ",")}
+                  </option>
+                ))}
+              </datalist>
             </label>
+
+            {/* ========================================
+                TAXA
+            ======================================== */}
+
+            <div className="pickup-info">
+              <strong>
+                🚚 Taxa de entrega
+              </strong>
+
+              {selectedNeighborhood ? (
+                <p>
+                  Entrega para{" "}
+                  <strong>
+                    {selectedNeighborhood.nome}
+                  </strong>
+                  :{" "}
+                  <strong>
+                    {formatCurrency(
+                      selectedNeighborhood.taxa
+                    )}
+                  </strong>
+                </p>
+              ) : (
+                <p>
+                  Digite e selecione seu bairro
+                  para calcular a entrega.
+                </p>
+              )}
+            </div>
 
             <label>
               Ponto de referência *
@@ -417,22 +569,12 @@ function Checkout({
                 placeholder="Apartamento, bloco etc."
               />
             </label>
-
-            <div className="pickup-info">
-              <strong>
-                🚚 Taxa de entrega
-              </strong>
-
-              <p>
-                O valor da entrega será confirmado pelo WhatsApp.
-              </p>
-            </div>
           </div>
         )}
 
-        {/* RETIRADA */}
-
-        {/* PAGAMENTO */}
+        {/* ========================================
+            PAGAMENTO
+        ======================================== */}
 
         <div className="checkout-section">
           <h3>Pagamento</h3>
@@ -532,7 +674,9 @@ function Checkout({
           )}
         </div>
 
-        {/* OBSERVAÇÃO */}
+        {/* ========================================
+            OBSERVAÇÃO
+        ======================================== */}
 
         <div className="checkout-section">
           <h3>Observação</h3>
@@ -550,7 +694,9 @@ function Checkout({
           />
         </div>
 
-        {/* RESUMO */}
+        {/* ========================================
+            RESUMO
+        ======================================== */}
 
         <div className="order-summary">
           <div>
@@ -567,7 +713,11 @@ function Checkout({
             <strong>
               {orderType === "pickup"
                 ? "Grátis"
-                : "A confirmar pelo WhatsApp"}
+                : selectedNeighborhood
+                ? formatCurrency(
+                    deliveryFee
+                  )
+                : "Selecione o bairro"}
             </strong>
           </div>
 
@@ -580,7 +730,9 @@ function Checkout({
           </div>
         </div>
 
-        {/* ERRO */}
+        {/* ========================================
+            ERRO
+        ======================================== */}
 
         {error && (
           <div className="checkout-error">
@@ -588,7 +740,9 @@ function Checkout({
           </div>
         )}
 
-        {/* BOTÕES */}
+        {/* ========================================
+            BOTÕES
+        ======================================== */}
 
         <div className="checkout-actions">
           <button
