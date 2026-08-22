@@ -17,7 +17,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "BLEND BURGER",
     description:
-      "Blend de 120g, mussarela, alface, tomate, cebola, maionese temperada e batata palha.",
+      "Blend, mussarela, alface, tomate, cebola, maionese temperada e batata palha.",
     price: 25,
   },
   {
@@ -25,7 +25,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "CHEDDAR BACON",
     description:
-      "Blend de 120g, cheddar, bacon crocante, alface, tomate, cebola, maionese temperada e batata palha.",
+      "Blend, cheddar, bacon crocante, alface, tomate, cebola, maionese temperada e batata palha.",
     price: 28,
     popular: true,
   },
@@ -34,7 +34,7 @@ export const menu = [
     category: "ARTESANAIS",
     name: "BLEND BURGER DUPLO",
     description:
-      "2 blends de 120g, bacon crocante, cheddar, alface, tomate, cebola, catupiry, maionese temperada e batata palha.",
+      "2 Blends, bacon crocante, cheddar, alface, tomate, cebola, catupiry, maionese temperada e batata palha.",
     price: 35,
     image: blendDuploImage,
   },
@@ -43,7 +43,7 @@ export const menu = [
   category: "ARTESANAIS",
   name: "CEBOLA BURGER",
   description:
-    "Blend de 120g, mussarela, alface, tomate, cebola caramelizada, maionese temperada e batata palha.",
+    "Blend, mussarela, alface, tomate, cebola caramelizada, maionese temperada e batata palha.",
   price: 27,
 },
   {
@@ -60,7 +60,7 @@ export const menu = [
     category: "TRADICIONAIS",
     name: "X-BURGUER",
     description:
-      "Bife de hambúrguer 90g, mussarela, alface, tomate, maionese temperada e batata palha.",
+      "Bife de hambúrguer, mussarela, alface, tomate, maionese temperada e batata palha.",
     price: 20,
   },
   {
@@ -68,7 +68,7 @@ export const menu = [
     category: "TRADICIONAIS",
     name: "X-CHEDDAR BACON",
     description:
-      "Bife de hambúrguer 90g, cheddar, bacon crocante, alface, tomate, maionese temperada e batata palha.",
+      "Bife de hambúrguer, cheddar, bacon crocante, alface, tomate, maionese temperada e batata palha.",
     price: 23,
   },
   {
