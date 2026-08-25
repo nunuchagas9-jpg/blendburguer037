@@ -15,22 +15,36 @@ import {
 // ========================================
 // BAIRROS E TAXAS DE ENTREGA
 // ========================================
-// Edite essa lista conforme suas regiões.
 
 const bairros = [
-  { nome: "Centro", taxa: 5 },
-  { nome: "São José", taxa: 5 },
+  { nome: "Jardim Copacabana", taxa: 3 },
+  { nome: "Santo André", taxa: 3 },
+  { nome: "São Paulo", taxa: 3 },
 
-  { nome: "Bom Pastor", taxa: 7 },
-  { nome: "Santa Clara", taxa: 7 },
-  { nome: "Santa Rosa", taxa: 7 },
+  { nome: "Vivendas da Exposição", taxa: 5 },
+  { nome: "Jardinópolis", taxa: 5 },
+  { nome: "Jardim das Acácias", taxa: 5 },
+  { nome: "Floresta", taxa: 5 },
 
+  { nome: "Padre Herculano Yanes", taxa: 7 },
+  { nome: "Marajó", taxa: 7 },
+  { nome: "São Judas", taxa: 7 },
+  { nome: "Morada Nova", taxa: 7 },
+
+  { nome: "Realengo", taxa: 9 },
+  { nome: "Itacolomi", taxa: 9 },
   { nome: "Belvedere", taxa: 9 },
-  { nome: "Planalto", taxa: 9 },
+  { nome: "Bela Vista", taxa: 9 },
+  { nome: "Jardim Belvedere", taxa: 9 },
+  { nome: "Chanadour", taxa: 9 },
+  { nome: "São Miguel", taxa: 9 },
 
-  { nome: "Jardim Primavera", taxa: 12 },
+  { nome: "Quintino", taxa: 10 },
 
-  { nome: "Exemplo Bairro", taxa: 15 },
+  { nome: "Planalto", taxa: 12 },
+
+  { nome: "Centro", taxa: 15 },
+  { nome: "Vila Santo Antônio", taxa: 15 },
 ];
 
 function Checkout({
@@ -105,7 +119,6 @@ function Checkout({
       [field]: value,
     }));
 
-    // Limpa o erro quando o cliente altera o campo
     if (error) {
       setError("");
     }
@@ -180,7 +193,6 @@ function Checkout({
           return;
         }
 
-        // Verifica se o bairro existe na lista
         if (!selectedNeighborhood) {
           setError(
             "Selecione um bairro válido da lista."
@@ -264,14 +276,12 @@ function Checkout({
 
           changeAmount: change,
 
-          // Nome do bairro selecionado
           neighborhood:
             orderType === "delivery"
               ? selectedNeighborhood?.nome ||
                 customer.neighborhood
               : "",
 
-          // Taxa da entrega
           deliveryFee:
             orderType === "delivery"
               ? deliveryFee
@@ -296,15 +306,10 @@ function Checkout({
 
       const message =
         buildWhatsAppMessage({
-          customer:
-            orderData.customer,
-
+          customer: orderData.customer,
           cart: cartForMessage,
-
           subtotal,
-
           deliveryFee,
-
           total,
         });
 
@@ -323,6 +328,7 @@ function Checkout({
       // ========================================
 
       window.location.href = whatsappLink;
+
     } catch (error) {
       console.error(
         "Erro ao enviar pedido:",
@@ -332,6 +338,7 @@ function Checkout({
       setError(
         "Não foi possível enviar o pedido. Tente novamente."
       );
+
     } finally {
       setSending(false);
     }
@@ -339,24 +346,24 @@ function Checkout({
 
   return (
     <section className="checkout">
+
       <div className="section-heading">
         <span>FINALIZAÇÃO</span>
-
         <h2>Finalizar pedido</h2>
       </div>
 
       <form onSubmit={handleSubmit}>
 
-        {/* ========================================
-            TIPO DO PEDIDO
-        ======================================== */}
+        {/* TIPO DO PEDIDO */}
 
         <div className="checkout-section">
+
           <h3>
             Como você quer receber?
           </h3>
 
           <div className="choice-grid">
+
             <button
               type="button"
               className={
@@ -384,14 +391,15 @@ function Checkout({
             >
               🏪 Retirar no local
             </button>
+
           </div>
+
         </div>
 
-        {/* ========================================
-            DADOS DO CLIENTE
-        ======================================== */}
+        {/* DADOS DO CLIENTE */}
 
         <div className="checkout-section">
+
           <h3>Seus dados</h3>
 
           <label>
@@ -427,14 +435,15 @@ function Checkout({
               autoComplete="tel"
             />
           </label>
+
         </div>
 
-        {/* ========================================
-            ENDEREÇO DE ENTREGA
-        ======================================== */}
+        {/* ENDEREÇO */}
 
         {orderType === "delivery" && (
+
           <div className="checkout-section">
+
             <h3>
               Endereço de entrega
             </h3>
@@ -472,9 +481,7 @@ function Checkout({
               />
             </label>
 
-            {/* ========================================
-                BAIRRO COM BUSCA
-            ======================================== */}
+            {/* BAIRRO */}
 
             <label>
               Bairro *
@@ -494,30 +501,30 @@ function Checkout({
               />
 
               <datalist id="lista-bairros">
+
                 {bairros.map((bairro) => (
+
                   <option
                     key={bairro.nome}
                     value={bairro.nome}
-                  >
-                    R${" "}
-                    {bairro.taxa
-                      .toFixed(2)
-                      .replace(".", ",")}
-                  </option>
+                  />
+
                 ))}
+
               </datalist>
+
             </label>
 
-            {/* ========================================
-                TAXA
-            ======================================== */}
+            {/* TAXA */}
 
             <div className="pickup-info">
+
               <strong>
                 🚚 Taxa de entrega
               </strong>
 
               {selectedNeighborhood ? (
+
                 <p>
                   Entrega para{" "}
                   <strong>
@@ -530,12 +537,16 @@ function Checkout({
                     )}
                   </strong>
                 </p>
+
               ) : (
+
                 <p>
                   Digite e selecione seu bairro
                   para calcular a entrega.
                 </p>
+
               )}
+
             </div>
 
             <label>
@@ -569,28 +580,30 @@ function Checkout({
                 placeholder="Apartamento, bloco etc."
               />
             </label>
+
           </div>
+
         )}
 
-        {/* ========================================
-            PAGAMENTO
-        ======================================== */}
+        {/* PAGAMENTO */}
 
         <div className="checkout-section">
+
           <h3>Pagamento</h3>
 
           <div className="choice-grid payment-grid">
+
             {[
               "Pix",
               "Cartão",
               "Dinheiro",
             ].map((method) => (
+
               <button
                 key={method}
                 type="button"
                 className={
-                  customer.paymentMethod ===
-                  method
+                  customer.paymentMethod === method
                     ? "choice active"
                     : "choice"
                 }
@@ -603,12 +616,16 @@ function Checkout({
               >
                 {method}
               </button>
+
             ))}
+
           </div>
 
           {customer.paymentMethod ===
             "Dinheiro" && (
+
             <div className="cash-box">
+
               <label>
                 Precisa de troco?
 
@@ -621,11 +638,11 @@ function Checkout({
                   onChange={(event) =>
                     updateCustomer(
                       "needsChange",
-                      event.target.value ===
-                        "sim"
+                      event.target.value === "sim"
                     )
                   }
                 >
+
                   <option value="nao">
                     Não
                   </option>
@@ -633,10 +650,13 @@ function Checkout({
                   <option value="sim">
                     Sim
                   </option>
+
                 </select>
+
               </label>
 
               {customer.needsChange && (
+
                 <label>
                   Troco para quanto?
 
@@ -657,28 +677,37 @@ function Checkout({
                       total
                     )}
                   />
+
                 </label>
+
               )}
 
               {customer.needsChange &&
                 customer.cashAmount &&
                 change !== null && (
-                  <p className="change-result">
-                    Troco:{" "}
-                    <strong>
-                      {formatCurrency(change)}
-                    </strong>
-                  </p>
-                )}
+
+                <p className="change-result">
+
+                  Troco:{" "}
+
+                  <strong>
+                    {formatCurrency(change)}
+                  </strong>
+
+                </p>
+
+              )}
+
             </div>
+
           )}
+
         </div>
 
-        {/* ========================================
-            OBSERVAÇÃO
-        ======================================== */}
+        {/* OBSERVAÇÃO */}
 
         <div className="checkout-section">
+
           <h3>Observação</h3>
 
           <textarea
@@ -692,13 +721,13 @@ function Checkout({
             placeholder="Alguma observação sobre o pedido?"
             rows="3"
           />
+
         </div>
 
-        {/* ========================================
-            RESUMO
-        ======================================== */}
+        {/* RESUMO */}
 
         <div className="order-summary">
+
           <div>
             <span>Subtotal</span>
 
@@ -714,37 +743,37 @@ function Checkout({
               {orderType === "pickup"
                 ? "Grátis"
                 : selectedNeighborhood
-                ? formatCurrency(
-                    deliveryFee
-                  )
+                ? formatCurrency(deliveryFee)
                 : "Selecione o bairro"}
             </strong>
           </div>
 
           <div className="total-line">
+
             <span>Total</span>
 
             <strong>
               {formatCurrency(total)}
             </strong>
+
           </div>
+
         </div>
 
-        {/* ========================================
-            ERRO
-        ======================================== */}
+        {/* ERRO */}
 
         {error && (
+
           <div className="checkout-error">
             {error}
           </div>
+
         )}
 
-        {/* ========================================
-            BOTÕES
-        ======================================== */}
+        {/* BOTÕES */}
 
         <div className="checkout-actions">
+
           <button
             type="button"
             className="secondary-button"
@@ -763,8 +792,11 @@ function Checkout({
               ? "ENVIANDO..."
               : "ENVIAR PEDIDO"}
           </button>
+
         </div>
+
       </form>
+
     </section>
   );
 }
