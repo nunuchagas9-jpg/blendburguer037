@@ -52,8 +52,6 @@ function Checkout({
   subtotal = 0,
   onBack,
 }) {
-  const [orderType, setOrderType] = useState("delivery");
-
   const [customer, setCustomer] = useState({
     name: "",
     phone: "",
@@ -85,11 +83,9 @@ function Checkout({
   // TAXA DE ENTREGA
   // ========================================
 
-  const deliveryFee =
-    orderType === "delivery" &&
-    selectedNeighborhood
-      ? selectedNeighborhood.taxa
-      : 0;
+  const deliveryFee = selectedNeighborhood
+    ? selectedNeighborhood.taxa
+    : 0;
 
   // ========================================
   // TOTAL
@@ -125,26 +121,6 @@ function Checkout({
   }
 
   // ========================================
-  // TIPO DO PEDIDO
-  // ========================================
-
-  function handleOrderType(type) {
-    setOrderType(type);
-    setError("");
-
-    if (type === "pickup") {
-      setCustomer((current) => ({
-        ...current,
-        address: "",
-        number: "",
-        neighborhood: "",
-        reference: "",
-        complement: "",
-      }));
-    }
-  }
-
-  // ========================================
   // ENVIAR PEDIDO
   // ========================================
 
@@ -160,7 +136,7 @@ function Checkout({
 
     try {
       // ========================================
-      // VALIDAÇÕES
+      // DADOS DO CLIENTE
       // ========================================
 
       if (!customer.name.trim()) {
@@ -174,38 +150,44 @@ function Checkout({
       }
 
       // ========================================
-      // VALIDAÇÃO DE ENTREGA
+      // ENDEREÇO
       // ========================================
 
-      if (orderType === "delivery") {
-        if (!customer.address.trim()) {
-          setError("Informe o endereço.");
-          return;
-        }
+      if (!customer.address.trim()) {
+        setError("Informe o endereço.");
+        return;
+      }
 
-        if (!customer.number.trim()) {
-          setError("Informe o número.");
-          return;
-        }
+      if (!customer.number.trim()) {
+        setError("Informe o número.");
+        return;
+      }
 
-        if (!customer.neighborhood.trim()) {
-          setError("Informe o bairro.");
-          return;
-        }
+      if (!customer.neighborhood.trim()) {
+        setError("Informe o bairro.");
+        return;
+      }
 
-        if (!selectedNeighborhood) {
-          setError(
-            "Selecione um bairro válido da lista."
-          );
-          return;
-        }
+      // ========================================
+      // BAIRRO VÁLIDO
+      // ========================================
 
-        if (!customer.reference.trim()) {
-          setError(
-            "O ponto de referência é obrigatório."
-          );
-          return;
-        }
+      if (!selectedNeighborhood) {
+        setError(
+          "Selecione um bairro válido da lista."
+        );
+        return;
+      }
+
+      // ========================================
+      // REFERÊNCIA
+      // ========================================
+
+      if (!customer.reference.trim()) {
+        setError(
+          "O ponto de referência é obrigatório."
+        );
+        return;
       }
 
       // ========================================
@@ -269,23 +251,14 @@ function Checkout({
         customer: {
           ...customer,
 
-          orderType:
-            orderType === "delivery"
-              ? "Entrega"
-              : "Retirada no local",
+          orderType: "Entrega",
 
           changeAmount: change,
 
           neighborhood:
-            orderType === "delivery"
-              ? selectedNeighborhood?.nome ||
-                customer.neighborhood
-              : "",
+            selectedNeighborhood.nome,
 
-          deliveryFee:
-            orderType === "delivery"
-              ? deliveryFee
-              : 0,
+          deliveryFee,
         },
 
         cart: cartForMessage,
@@ -301,15 +274,20 @@ function Checkout({
       };
 
       // ========================================
-      // MENSAGEM DO WHATSAPP
+      // WHATSAPP
       // ========================================
 
       const message =
         buildWhatsAppMessage({
-          customer: orderData.customer,
+          customer:
+            orderData.customer,
+
           cart: cartForMessage,
+
           subtotal,
+
           deliveryFee,
+
           total,
         });
 
@@ -349,54 +327,15 @@ function Checkout({
 
       <div className="section-heading">
         <span>FINALIZAÇÃO</span>
+
         <h2>Finalizar pedido</h2>
       </div>
 
       <form onSubmit={handleSubmit}>
 
-        {/* TIPO DO PEDIDO */}
-
-        <div className="checkout-section">
-
-          <h3>
-            Como você quer receber?
-          </h3>
-
-          <div className="choice-grid">
-
-            <button
-              type="button"
-              className={
-                orderType === "delivery"
-                  ? "choice active"
-                  : "choice"
-              }
-              onClick={() =>
-                handleOrderType("delivery")
-              }
-            >
-              🚚 Entrega
-            </button>
-
-            <button
-              type="button"
-              className={
-                orderType === "pickup"
-                  ? "choice active"
-                  : "choice"
-              }
-              onClick={() =>
-                handleOrderType("pickup")
-              }
-            >
-              🏪 Retirar no local
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* DADOS DO CLIENTE */}
+        {/* ========================================
+            DADOS DO CLIENTE
+        ======================================== */}
 
         <div className="checkout-section">
 
@@ -438,154 +377,166 @@ function Checkout({
 
         </div>
 
-        {/* ENDEREÇO */}
+        {/* ========================================
+            ENDEREÇO DE ENTREGA
+        ======================================== */}
 
-        {orderType === "delivery" && (
+        <div className="checkout-section">
 
-          <div className="checkout-section">
+          <h3>
+            Endereço de entrega
+          </h3>
 
-            <h3>
-              Endereço de entrega
-            </h3>
+          <label>
+            Endereço *
 
-            <label>
-              Endereço *
+            <input
+              type="text"
+              value={customer.address}
+              onChange={(event) =>
+                updateCustomer(
+                  "address",
+                  event.target.value
+                )
+              }
+              placeholder="Rua / Avenida"
+              autoComplete="street-address"
+            />
+          </label>
 
-              <input
-                type="text"
-                value={customer.address}
-                onChange={(event) =>
-                  updateCustomer(
-                    "address",
-                    event.target.value
-                  )
-                }
-                placeholder="Rua / Avenida"
-                autoComplete="street-address"
-              />
-            </label>
+          <label>
+            Número *
 
-            <label>
-              Número *
+            <input
+              type="text"
+              value={customer.number}
+              onChange={(event) =>
+                updateCustomer(
+                  "number",
+                  event.target.value
+                )
+              }
+              placeholder="Número"
+            />
+          </label>
 
-              <input
-                type="text"
-                value={customer.number}
-                onChange={(event) =>
-                  updateCustomer(
-                    "number",
-                    event.target.value
-                  )
-                }
-                placeholder="Número"
-              />
-            </label>
+          {/* ========================================
+              BAIRRO
+          ======================================== */}
 
-            {/* BAIRRO */}
+          <label>
+            Bairro *
 
-            <label>
-              Bairro *
+            <input
+              type="text"
+              list="lista-bairros"
+              value={customer.neighborhood}
+              onChange={(event) =>
+                updateCustomer(
+                  "neighborhood",
+                  event.target.value
+                )
+              }
+              placeholder="Digite para procurar seu bairro"
+              autoComplete="off"
+            />
 
-              <input
-                type="text"
-                list="lista-bairros"
-                value={customer.neighborhood}
-                onChange={(event) =>
-                  updateCustomer(
-                    "neighborhood",
-                    event.target.value
-                  )
-                }
-                placeholder="Digite para procurar seu bairro"
-                autoComplete="off"
-              />
+            <datalist id="lista-bairros">
 
-              <datalist id="lista-bairros">
+              {bairros.map((bairro) => (
 
-                {bairros.map((bairro) => (
+                <option
+                  key={bairro.nome}
+                  value={bairro.nome}
+                />
 
-                  <option
-                    key={bairro.nome}
-                    value={bairro.nome}
-                  />
+              ))}
 
-                ))}
+            </datalist>
 
-              </datalist>
+          </label>
 
-            </label>
+          {/* ========================================
+              TAXA DE ENTREGA
+          ======================================== */}
 
-            {/* TAXA */}
+          <div className="pickup-info">
 
-            <div className="pickup-info">
+            <strong>
+              🚚 Taxa de entrega
+            </strong>
 
-              <strong>
-                🚚 Taxa de entrega
-              </strong>
+            {selectedNeighborhood ? (
 
-              {selectedNeighborhood ? (
+              <p>
+                Entrega para{" "}
+                <strong>
+                  {selectedNeighborhood.nome}
+                </strong>
+                :{" "}
+                <strong>
+                  {formatCurrency(
+                    selectedNeighborhood.taxa
+                  )}
+                </strong>
+              </p>
 
-                <p>
-                  Entrega para{" "}
-                  <strong>
-                    {selectedNeighborhood.nome}
-                  </strong>
-                  :{" "}
-                  <strong>
-                    {formatCurrency(
-                      selectedNeighborhood.taxa
-                    )}
-                  </strong>
-                </p>
+            ) : (
 
-              ) : (
+              <p>
+                Digite e selecione seu bairro
+                para calcular a entrega.
+              </p>
 
-                <p>
-                  Digite e selecione seu bairro
-                  para calcular a entrega.
-                </p>
-
-              )}
-
-            </div>
-
-            <label>
-              Ponto de referência *
-
-              <input
-                type="text"
-                value={customer.reference}
-                onChange={(event) =>
-                  updateCustomer(
-                    "reference",
-                    event.target.value
-                  )
-                }
-                placeholder="Ex.: perto da praça"
-              />
-            </label>
-
-            <label>
-              Complemento
-
-              <input
-                type="text"
-                value={customer.complement}
-                onChange={(event) =>
-                  updateCustomer(
-                    "complement",
-                    event.target.value
-                  )
-                }
-                placeholder="Apartamento, bloco etc."
-              />
-            </label>
+            )}
 
           </div>
 
-        )}
+          {/* ========================================
+              REFERÊNCIA
+          ======================================== */}
 
-        {/* PAGAMENTO */}
+          <label>
+            Ponto de referência *
+
+            <input
+              type="text"
+              value={customer.reference}
+              onChange={(event) =>
+                updateCustomer(
+                  "reference",
+                  event.target.value
+                )
+              }
+              placeholder="Ex.: perto da praça"
+            />
+          </label>
+
+          {/* ========================================
+              COMPLEMENTO
+          ======================================== */}
+
+          <label>
+            Complemento
+
+            <input
+              type="text"
+              value={customer.complement}
+              onChange={(event) =>
+                updateCustomer(
+                  "complement",
+                  event.target.value
+                )
+              }
+              placeholder="Apartamento, bloco etc."
+            />
+          </label>
+
+        </div>
+
+        {/* ========================================
+            PAGAMENTO
+        ======================================== */}
 
         <div className="checkout-section">
 
@@ -621,6 +572,8 @@ function Checkout({
 
           </div>
 
+          {/* DINHEIRO */}
+
           {customer.paymentMethod ===
             "Dinheiro" && (
 
@@ -638,7 +591,8 @@ function Checkout({
                   onChange={(event) =>
                     updateCustomer(
                       "needsChange",
-                      event.target.value === "sim"
+                      event.target.value ===
+                        "sim"
                     )
                   }
                 >
@@ -704,7 +658,9 @@ function Checkout({
 
         </div>
 
-        {/* OBSERVAÇÃO */}
+        {/* ========================================
+            OBSERVAÇÃO
+        ======================================== */}
 
         <div className="checkout-section">
 
@@ -724,28 +680,34 @@ function Checkout({
 
         </div>
 
-        {/* RESUMO */}
+        {/* ========================================
+            RESUMO
+        ======================================== */}
 
         <div className="order-summary">
 
           <div>
+
             <span>Subtotal</span>
 
             <strong>
               {formatCurrency(subtotal)}
             </strong>
+
           </div>
 
           <div>
+
             <span>Entrega</span>
 
             <strong>
-              {orderType === "pickup"
-                ? "Grátis"
-                : selectedNeighborhood
-                ? formatCurrency(deliveryFee)
+              {selectedNeighborhood
+                ? formatCurrency(
+                    deliveryFee
+                  )
                 : "Selecione o bairro"}
             </strong>
+
           </div>
 
           <div className="total-line">
@@ -760,7 +722,9 @@ function Checkout({
 
         </div>
 
-        {/* ERRO */}
+        {/* ========================================
+            ERRO
+        ======================================== */}
 
         {error && (
 
@@ -770,7 +734,9 @@ function Checkout({
 
         )}
 
-        {/* BOTÕES */}
+        {/* ========================================
+            BOTÕES
+        ======================================== */}
 
         <div className="checkout-actions">
 
