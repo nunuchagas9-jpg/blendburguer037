@@ -77,7 +77,7 @@ export const menu = [
     name: "X-TUDO BURGER",
     description:
       "Bife de hambúrguer, bacon, catupiry, mussarela, batata palha, milho, ovo, alface, tomate e maionese temperada.",
-28,
+    price: 28,
   },
   {
     id: "hamburguer-doce",
