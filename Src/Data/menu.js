@@ -44,7 +44,7 @@ export const menu = [
   name: "CEBOLA BURGER",
   description:
     "Blend, mussarela, alface, tomate, cebola caramelizada, maionese temperada e batata palha.",
-  price: 29,
+  price: 28,
 },
   {
     id: "x-frango",
