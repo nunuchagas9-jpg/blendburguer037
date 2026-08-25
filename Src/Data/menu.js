@@ -18,7 +18,7 @@ export const menu = [
     name: "BLEND BURGER",
     description:
       "Blend, mussarela, alface, tomate, cebola, maionese temperada e batata palha.",
-    price: 25,
+    price: 27,
   },
   {
     id: "cheddar-bacon",
@@ -26,7 +26,7 @@ export const menu = [
     name: "CHEDDAR BACON",
     description:
       "Blend, cheddar, bacon crocante, alface, tomate, cebola, maionese temperada e batata palha.",
-    price: 28,
+    price: 29,
     popular: true,
   },
   {
@@ -35,7 +35,7 @@ export const menu = [
     name: "BLEND BURGER DUPLO",
     description:
       "2 Blends, bacon crocante, cheddar, alface, tomate, cebola, catupiry, maionese temperada e batata palha.",
-    price: 35,
+    price: 37,
     image: blendDuploImage,
   },
   {
@@ -44,7 +44,7 @@ export const menu = [
   name: "CEBOLA BURGER",
   description:
     "Blend, mussarela, alface, tomate, cebola caramelizada, maionese temperada e batata palha.",
-  price: 27,
+  price: 29,
 },
   {
     id: "x-frango",
@@ -52,7 +52,7 @@ export const menu = [
     name: "X-FRANGO",
     description:
       "Pão, blend de frango, maionese temperada, alface, tomate e mussarela empanada.",
-    price: 26,
+    price: 28,
     image: xFrangoImage,
   },
   {
@@ -61,7 +61,7 @@ export const menu = [
     name: "X-BURGUER",
     description:
       "Bife de hambúrguer, mussarela, alface, tomate, maionese temperada e batata palha.",
-    price: 20,
+    price: 22,
   },
   {
     id: "x-cheddar-bacon",
@@ -69,7 +69,7 @@ export const menu = [
     name: "X-CHEDDAR BACON",
     description:
       "Bife de hambúrguer, cheddar, bacon crocante, alface, tomate, maionese temperada e batata palha.",
-    price: 23,
+    price: 25,
   },
   {
     id: "x-tudo-burger",
@@ -77,7 +77,7 @@ export const menu = [
     name: "X-TUDO BURGER",
     description:
       "Bife de hambúrguer, bacon, catupiry, mussarela, batata palha, milho, ovo, alface, tomate e maionese temperada.",
-    price: 26,
+28,
   },
   {
     id: "hamburguer-doce",
@@ -106,7 +106,7 @@ export const menu = [
     category: "ADICIONAIS",
     name: "BLEND EXTRA",
     description: "Um blend extra de 120g.",
-    price: 5,
+    price: 6,
   },
   {
     id: "barbecue-goiabada",
@@ -116,7 +116,7 @@ export const menu = [
     price: 3,
   },
   {
-    id: "farofa-bacon",
+    id: "bacon",
     category: "ADICIONAIS",
     name: "FAROFA DE BACON",
     description: "Farofa crocante de bacon.",
