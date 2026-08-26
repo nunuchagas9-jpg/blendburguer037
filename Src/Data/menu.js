@@ -128,6 +128,15 @@ export const menu = [
   },
 
   {
+    id: "trufas",
+    category: "DOCES",
+    name: "TRUFAS",
+    description:
+      "Trufas escolha sabor pelo whatsapp.",
+    price: 4,
+    image:
+  },
+  {
     id: "caixinha-trufas",
     category: "DOCES",
     name: "CAIXINHA DE TRUFAS",
