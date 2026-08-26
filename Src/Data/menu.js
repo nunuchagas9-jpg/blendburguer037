@@ -1,6 +1,5 @@
 import doceImage from "../assets/5BC68375-8B4F-4531-A0C0-813A9F725B44.jpeg";
 import blendDuploImage from "../assets/B3B4E00C-F66E-4673-B86F-6281D09EB2FD.png";
-import trufasImage from "../assets/02B95B06-E458-4495-AAF6-B80B272605DB.jpeg";
 import bombomMorangoImage from "../assets/FC56B80A-E9A9-4E51-84A7-99295048664D.png";
 
 export const categories = [
@@ -124,25 +123,6 @@ export const menu = [
       "Pão, creme de avelã e morango.",
     price: 18,
     image: doceImage,
-  },
-
-  {
-    id: "trufa",
-    category: "DOCES",
-    name: "TRUFA",
-    description:
-      "Trufa artesanal 30g. Escolha sabor pelo whatsapp.",
-    price: 4,
-  },
-  
-  {
-    id: "caixinha-trufas",
-    category: "DOCES",
-    name: "CAIXINHA DE TRUFAS",
-    description:
-      "Caixinha com 4 trufas artesanais.",
-    price: 15,
-    image: trufasImage,
   },
 
   {
