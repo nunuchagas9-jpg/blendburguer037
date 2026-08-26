@@ -75,7 +75,6 @@ export const menu = [
     description:
       "Pão, blend de frango, maionese temperada, alface, tomate e mussarela empanada.",
     price: 28,
-    image: xFrangoImage,
     options: [opcaoSachê],
   },
 
