@@ -134,8 +134,8 @@ export const menu = [
     description:
       "Trufas escolha sabor pelo whatsapp.",
     price: 4,
-    image:
   },
+  
   {
     id: "caixinha-trufas",
     category: "DOCES",
