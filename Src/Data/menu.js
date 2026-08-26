@@ -133,7 +133,7 @@ export const menu = [
     category: "DOCES",
     name: "CAIXINHA DE TRUFAS",
     description:
-      "Caixinha com 2 trufas artesanais.",
+      "Caixinha com 4 trufas artesanais.",
     price: 15,
     image: trufasImage,
   },
