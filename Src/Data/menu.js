@@ -127,11 +127,11 @@ export const menu = [
   },
 
   {
-    id: "trufas",
+    id: "trufa",
     category: "DOCES",
-    name: "TRUFAS",
+    name: "TRUFA",
     description:
-      "Trufas escolha sabor pelo whatsapp.",
+      "Trufa artesanal 30g. Escolha sabor pelo whatsapp.",
     price: 4,
   },
   
