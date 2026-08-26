@@ -126,6 +126,24 @@ export const menu = [
     image: doceImage,
   },
 
+  {
+    id: "caixinha-trufas",
+    category: "DOCES",
+    name: "CAIXINHA DE TRUFAS",
+    description:
+      "Caixinha com 2 trufas artesanais.",
+    price: 15,
+  },
+
+  {
+    id: "bombom-de-morango",
+    category: "DOCES",
+    name: "BOMBOM DE MORANGO",
+    description:
+      "Morango inteiro envolvido em recheio cremoso e chocolate.",
+    price: 10,
+  },
+
   // ========================================
   // ADICIONAIS
   // ========================================
