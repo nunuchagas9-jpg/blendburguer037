@@ -73,7 +73,7 @@ export const menu = [
     name: "X-FRANGO",
     description:
       "Pão, blend de frango, maionese temperada, alface, tomate e mussarela empanada.",
-    price: 28,
+    price: 27,
     options: [opcaoSachê],
   },
 
