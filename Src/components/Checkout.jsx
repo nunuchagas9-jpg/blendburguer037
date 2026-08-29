@@ -16,7 +16,9 @@ import {
 // BAIRROS E TAXAS DE ENTREGA
 // ========================================
 
-const bairros = [
+const 
+  { nome: "João Paulo", taxa: 0 },
+  { nome: "Murumbi", taxa: 0 },
   { nome: "Jardim Copacabana", taxa: 3 },
   { nome: "Santo André", taxa: 3 },
   { nome: "São Paulo", taxa: 3 },
