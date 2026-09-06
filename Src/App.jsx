@@ -28,8 +28,8 @@ function App() {
 
   // =========================
   // HORÁRIO DA HAMBURGUERIA
-  // SEXTA A DOMINGO
-  // 19:00 ÀS 23:30
+  // QUARTA-FEIRA,SEXTA E SÁBADO
+  // 19:00 ÀS 23:00
   // =========================
 
   const now = new Date();
