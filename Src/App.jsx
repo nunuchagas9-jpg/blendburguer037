@@ -44,9 +44,13 @@ function App() {
   const closingTime = 23 * 60;
 
   const isOpen =
-    (day === 5 || day === 6 || day === 0) &&
+    (day === 5 || day === 6) &&
     currentTime >= openingTime &&
     currentTime <= closingTime;
+
+  // =========================
+  // CATEGORIAS
+  // =========================
 
   const categories = [
     "ARTESANAIS",
@@ -61,6 +65,10 @@ function App() {
     (product) => product.category === selectedCategory
   );
 
+  // =========================
+  // TOTAL DO CARRINHO
+  // =========================
+
   const subtotal = useMemo(
     () => calculateSubtotal(cart),
     [cart]
@@ -72,11 +80,36 @@ function App() {
   );
 
   // =========================
+  // IR PARA O CARRINHO
+  // =========================
+
+  function irParaCarrinho() {
+    if (cart.length === 0) {
+      document
+        .getElementById("cardapio")
+        ?.scrollIntoView({
+          behavior: "smooth",
+        });
+
+      return;
+    }
+
+    document
+      .getElementById("carrinho")
+      ?.scrollIntoView({
+        behavior: "smooth",
+      });
+  }
+
+  // =========================
   // ADICIONAR AO CARRINHO
   // =========================
 
   function addToCart(product) {
-    if (product.options && product.options.length > 0) {
+    if (
+      product.options &&
+      product.options.length > 0
+    ) {
       setSelectedProduct(product);
       setSelectedOption("");
       return;
@@ -85,7 +118,10 @@ function App() {
     adicionarProdutoAoCarrinho(product);
   }
 
-  function adicionarProdutoAoCarrinho(product, option = "") {
+  function adicionarProdutoAoCarrinho(
+    product,
+    option = ""
+  ) {
     setCart((currentCart) => {
       const itemId = option
         ? `${product.id}-${option}`
@@ -139,6 +175,10 @@ function App() {
     setSelectedOption("");
   }
 
+  // =========================
+  // QUANTIDADE
+  // =========================
+
   function increaseQuantity(cartItemId) {
     setCart((currentCart) =>
       currentCart.map((item) =>
@@ -163,14 +203,17 @@ function App() {
               }
             : item
         )
-        .filter((item) => item.quantity > 0)
+        .filter(
+          (item) => item.quantity > 0
+        )
     );
   }
 
   function removeFromCart(cartItemId) {
     setCart((currentCart) =>
       currentCart.filter(
-        (item) => item.cartItemId !== cartItemId
+        (item) =>
+          item.cartItemId !== cartItemId
       )
     );
   }
@@ -199,7 +242,9 @@ function App() {
         <Checkout
           cart={cart}
           subtotal={subtotal}
-          onBack={() => setShowCheckout(false)}
+          onBack={() =>
+            setShowCheckout(false)
+          }
         />
       </div>
     );
@@ -211,6 +256,11 @@ function App() {
 
   return (
     <div className="site">
+
+      {/* =========================
+          CABEÇALHO
+      ========================= */}
+
       <header className="header">
         <div className="brand">
           <img
@@ -227,7 +277,7 @@ function App() {
         <button
           className="cart-button"
           type="button"
-          onClick={() => setShowCheckout(true)}
+          onClick={irParaCarrinho}
         >
           <ShoppingCart size={20} />
 
@@ -240,17 +290,26 @@ function App() {
       </header>
 
       <main>
+
+        {/* =========================
+            HERO
+        ========================= */}
+
         <section className="hero">
           <div className="hero-content">
+
             <span className="hero-label">
               SABOR • QUALIDADE • ATITUDE
             </span>
 
             <h1>BLEND BURGUER</h1>
 
-            <p>Feito pra matar a fome.</p>
+            <p>
+              Feito pra matar a fome.
+            </p>
 
             <div className="store-status">
+
               <span
                 className={`status-dot ${
                   isOpen
@@ -260,7 +319,9 @@ function App() {
               />
 
               <span>
-                {isOpen ? "ABERTO" : "FECHADO"}
+                {isOpen
+                  ? "ABERTO"
+                  : "FECHADO"}
               </span>
 
               <Clock size={17} />
@@ -268,6 +329,7 @@ function App() {
               <span>
                 Sexta e Sábado - 19h às 23h00
               </span>
+
             </div>
 
             <button
@@ -283,208 +345,364 @@ function App() {
             >
               PEDIR AGORA
             </button>
+
           </div>
         </section>
+
+        {/* =========================
+            CARDÁPIO
+        ========================= */}
 
         <section
           className="menu-preview"
           id="cardapio"
         >
-          <div className="section-heading">
-            <span>ESCOLHA SEU PEDIDO</span>
 
-            <h2>Nosso cardápio</h2>
+          <div className="section-heading">
+
+            <span>
+              ESCOLHA SEU PEDIDO
+            </span>
+
+            <h2>
+              Nosso cardápio
+            </h2>
+
           </div>
+
+          {/* CATEGORIAS */}
 
           <div className="categories">
-            {categories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                className={
-                  selectedCategory === category
-                    ? "category-active"
-                    : ""
-                }
-                onClick={() =>
-                  setSelectedCategory(category)
-                }
-              >
-                {category}
-              </button>
-            ))}
+
+            {categories.map(
+              (category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className={
+                    selectedCategory ===
+                    category
+                      ? "category-active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setSelectedCategory(
+                      category
+                    )
+                  }
+                >
+                  {category}
+                </button>
+              )
+            )}
+
           </div>
+
+          {/* PRODUTOS */}
 
           <div className="products">
-            {filteredProducts.length === 0 ? (
+
+            {filteredProducts.length ===
+            0 ? (
+
               <div className="empty-category">
+
                 <p>
-                  Ainda não temos produtos nessa
+                  Ainda não temos
+                  produtos nessa
                   categoria.
                 </p>
+
               </div>
+
             ) : (
-              filteredProducts.map((product) => (
-                <article
-                  className="product-card"
-                  key={product.id}
-                >
-                  {/* =========================
-                      FOTO DO PRODUTO
-                      Se tiver foto, aparece.
-                      Se não tiver, fica um espaço.
-                  ========================= */}
 
-                  <div className="product-image">
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                      />
-                    ) : (
-                      <div className="image-placeholder">
-                        <span>FOTO</span>
-                      </div>
+              filteredProducts.map(
+                (product) => (
+
+                  <article
+                    className="product-card"
+                    key={product.id}
+                  >
+
+                    {/* FOTO */}
+
+                    <div className="product-image">
+
+                      {product.image ? (
+
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                        />
+
+                      ) : (
+
+                        <div className="image-placeholder">
+                          <span>FOTO</span>
+                        </div>
+
+                      )}
+
+                    </div>
+
+                    {/* MAIS PEDIDO */}
+
+                    {product.popular && (
+                      <span className="popular-badge">
+                        MAIS PEDIDO
+                      </span>
                     )}
-                  </div>
 
-                  {product.popular && (
-                    <span className="popular-badge">
-                      MAIS PEDIDO
-                    </span>
-                  )}
+                    <h3>
+                      {product.name}
+                    </h3>
 
-                  <h3>{product.name}</h3>
+                    <p>
+                      {product.description}
+                    </p>
 
-                  <p>{product.description}</p>
+                    <div className="product-footer">
 
-                  <div className="product-footer">
-                    <strong>
-                      {formatCurrency(product.price)}
-                    </strong>
+                      <strong>
+                        {formatCurrency(
+                          product.price
+                        )}
+                      </strong>
 
-                    <button
-                      className="add-button"
-                      type="button"
-                      onClick={() =>
-                        addToCart(product)
-                      }
-                    >
-                      ADICIONAR
-                    </button>
-                  </div>
-                </article>
-              ))
+                      <button
+                        className="add-button"
+                        type="button"
+                        onClick={() =>
+                          addToCart(product)
+                        }
+                      >
+                        ADICIONAR
+                      </button>
+
+                    </div>
+
+                  </article>
+
+                )
+              )
+
             )}
+
           </div>
+
         </section>
 
-        {cart.length > 0 && (
-          <section className="cart-section">
-            <div className="section-heading">
-              <span>SEU PEDIDO</span>
+        {/* =========================
+            CARRINHO
+        ========================= */}
 
-              <h2>Carrinho</h2>
+        {cart.length > 0 && (
+
+          <section
+            className="cart-section"
+            id="carrinho"
+          >
+
+            <div className="section-heading">
+
+              <span>
+                SEU PEDIDO
+              </span>
+
+              <h2>
+                Carrinho
+              </h2>
+
             </div>
 
             <div className="cart-list">
-              {cart.map((item) => (
-                <article
-                  className="cart-item"
-                  key={item.cartItemId}
-                >
-                  <div>
-                    <h3>{item.name}</h3>
 
-                    {item.selectedOption && (
-                      <small>
-                        Recheio:{" "}
-                        {item.selectedOption}
-                      </small>
-                    )}
+              {cart.map(
+                (item) => (
 
-                    <span>
-                      {formatCurrency(item.price)}
-                    </span>
-                  </div>
+                  <article
+                    className="cart-item"
+                    key={item.cartItemId}
+                  >
 
-                  <div className="cart-controls">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        decreaseQuantity(
-                          item.cartItemId
-                        )
-                      }
-                      aria-label="Diminuir quantidade"
-                    >
-                      <Minus size={16} />
-                    </button>
+                    <div>
 
-                    <strong>{item.quantity}</strong>
+                      <h3>
+                        {item.name}
+                      </h3>
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        increaseQuantity(
-                          item.cartItemId
-                        )
-                      }
-                      aria-label="Aumentar quantidade"
-                    >
-                      <Plus size={16} />
-                    </button>
+                      {item.selectedOption && (
+                        <small>
+                          Recheio:{" "}
+                          {item.selectedOption}
+                        </small>
+                      )}
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeFromCart(
-                          item.cartItemId
-                        )
-                      }
-                      aria-label="Remover produto"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </article>
-              ))}
+                      <span>
+                        {formatCurrency(
+                          item.price
+                        )}
+                      </span>
+
+                    </div>
+
+                    <div className="cart-controls">
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          decreaseQuantity(
+                            item.cartItemId
+                          )
+                        }
+                        aria-label="Diminuir quantidade"
+                      >
+                        <Minus size={16} />
+                      </button>
+
+                      <strong>
+                        {item.quantity}
+                      </strong>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          increaseQuantity(
+                            item.cartItemId
+                          )
+                        }
+                        aria-label="Aumentar quantidade"
+                      >
+                        <Plus size={16} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          removeFromCart(
+                            item.cartItemId
+                          )
+                        }
+                        aria-label="Remover produto"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+
+                    </div>
+
+                  </article>
+
+                )
+              )}
+
             </div>
+
+            {/* TOTAL */}
 
             <div className="cart-total">
-              <span>Subtotal</span>
+
+              <span>
+                Subtotal
+              </span>
 
               <strong>
-                {formatCurrency(subtotal)}
+                {formatCurrency(
+                  subtotal
+                )}
               </strong>
+
             </div>
+
+            {/* FINALIZAR */}
 
             <button
               className="primary-button"
               type="button"
-              onClick={() => setShowCheckout(true)}
+              onClick={() =>
+                setShowCheckout(true)
+              }
             >
               FINALIZAR PEDIDO
             </button>
+
           </section>
+
         )}
+
       </main>
 
+      {/* =========================
+          RODAPÉ
+      ========================= */}
+
       <footer className="footer">
-        <strong>BLEND BURGUER</strong>
 
-        <span>037 • DIVINÓPOLIS - MG</span>
+        <strong>
+          BLEND BURGUER
+        </strong>
 
-        <span>Feito pra matar a fome.</span>
+        <span>
+          037 • DIVINÓPOLIS - MG
+        </span>
+
+        <span>
+          Feito pra matar a fome.
+        </span>
+
       </footer>
+
+      {/* =========================
+          BARRA FIXA DO CARRINHO
+          APARECE QUANDO TEM PEDIDO
+      ========================= */}
+
+      {cart.length > 0 && !showCheckout && (
+
+        <button
+          className="floating-cart"
+          type="button"
+          onClick={irParaCarrinho}
+        >
+
+          <div className="floating-cart-icon">
+            <ShoppingCart size={20} />
+
+            <strong>
+              {cartCount}
+            </strong>
+          </div>
+
+          <div className="floating-cart-info">
+
+            <span>
+              VER CARRINHO
+            </span>
+
+            <strong>
+              {formatCurrency(subtotal)}
+            </strong>
+
+          </div>
+
+          <span className="floating-cart-arrow">
+            →
+          </span>
+
+        </button>
+
+      )}
 
       {/* =========================
           MODAL DE OPÇÕES
       ========================= */}
 
       {selectedProduct && (
+
         <div className="option-overlay">
+
           <div className="option-modal">
+
             <button
               className="option-close"
               type="button"
@@ -497,35 +715,58 @@ function App() {
               <X size={20} />
             </button>
 
-            <h2>{selectedProduct.name}</h2>
+            <h2>
+              {selectedProduct.name}
+            </h2>
 
             <p>
-              {selectedProduct.options?.[0]?.name}
+              {
+                selectedProduct
+                  .options?.[0]?.name
+              }
             </p>
 
             <div className="option-list">
-              {selectedProduct.options?.[0]?.values.map(
-                (value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    className={
-                      selectedOption === value
-                        ? "option-selected"
-                        : ""
-                    }
-                    onClick={() =>
-                      setSelectedOption(value)
-                    }
-                  >
-                    <span>{value}</span>
 
-                    {selectedOption === value && (
-                      <strong>✓</strong>
-                    )}
-                  </button>
-                )
-              )}
+              {
+                selectedProduct
+                  .options?.[0]?.values.map(
+                    (value) => (
+
+                      <button
+                        key={value}
+                        type="button"
+                        className={
+                          selectedOption ===
+                          value
+                            ? "option-selected"
+                            : ""
+                        }
+                        onClick={() =>
+                          setSelectedOption(
+                            value
+                          )
+                        }
+                      >
+
+                        <span>
+                          {value}
+                        </span>
+
+                        {selectedOption ===
+                          value && (
+                          <strong>
+                            ✓
+                          </strong>
+                        )}
+
+                      </button>
+
+                    )
+                  )
+
+              }
+
             </div>
 
             <button
@@ -536,9 +777,13 @@ function App() {
             >
               ADICIONAR AO CARRINHO
             </button>
+
           </div>
+
         </div>
+
       )}
+
     </div>
   );
 }
