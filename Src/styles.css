@@ -77,37 +77,49 @@ button {
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .brand-logo {
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
+
   object-fit: contain;
   display: block;
+
+  flex-shrink: 0;
 }
 
 .brand-city {
   color: #ffffff;
-  font-size: 0.72rem;
-  font-weight: 600;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+
+  white-space: nowrap;
 }
 
 .cart-button {
-  min-height: 42px;
-  padding: 0 14px;
+  min-height: 52px;
+
+  padding: 0 18px;
 
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+
+  gap: 9px;
 
   border: 1px solid #ffc107;
-  border-radius: 10px;
+  border-radius: 12px;
 
   color: #111111;
   background: #ffc107;
 
   font-weight: 900;
+  font-size: 0.95rem;
+
+  white-space: nowrap;
 }
 
 .cart-button:hover {
@@ -115,8 +127,8 @@ button {
 }
 
 .cart-button strong {
-  min-width: 22px;
-  height: 22px;
+  min-width: 25px;
+  height: 25px;
 
   display: inline-flex;
   align-items: center;
@@ -127,7 +139,7 @@ button {
   color: #111111;
   background: #ffffff;
 
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 /* =========================
@@ -137,7 +149,9 @@ button {
 .hero {
   width: 100%;
   max-width: 1180px;
+
   margin: 0 auto;
+
   padding: 72px 20px 58px;
 }
 
@@ -147,20 +161,24 @@ button {
 
 .hero-label {
   display: inline-block;
+
   margin-bottom: 16px;
 
   color: #ffc107;
 
   font-size: 0.78rem;
   font-weight: 800;
+
   letter-spacing: 0.16em;
 }
 
 .hero h1 {
   font-size: clamp(2.5rem, 8vw, 5.5rem);
+
   line-height: 0.95;
 
   font-weight: 950;
+
   letter-spacing: -0.06em;
 
   color: #ffffff;
@@ -172,16 +190,20 @@ button {
   color: #ffffff;
 
   font-size: clamp(1.15rem, 3vw, 1.7rem);
+
   font-weight: 600;
 }
 
 .store-status {
   width: fit-content;
+
   margin-top: 24px;
+
   padding: 9px 13px;
 
   display: flex;
   align-items: center;
+
   gap: 8px;
 
   border: 1px solid #ffc107;
@@ -197,7 +219,9 @@ button {
 .status-dot {
   width: 9px;
   height: 9px;
+
   border-radius: 50%;
+
   flex-shrink: 0;
 }
 
@@ -211,7 +235,9 @@ button {
 
 .primary-button {
   min-height: 48px;
+
   margin-top: 28px;
+
   padding: 0 24px;
 
   border: 0;
@@ -221,6 +247,7 @@ button {
   background: #ffc107;
 
   font-weight: 900;
+
   letter-spacing: 0.02em;
 
   transition:
@@ -230,13 +257,17 @@ button {
 
 .primary-button:hover {
   transform: translateY(-2px);
+
   opacity: 0.92;
+
   background: #ffd54f;
 }
 
 .primary-button:disabled {
   opacity: 0.45;
+
   cursor: not-allowed;
+
   transform: none;
 }
 
@@ -251,6 +282,7 @@ button {
   max-width: 1180px;
 
   margin: 0 auto;
+
   padding: 30px 20px;
 }
 
@@ -258,7 +290,9 @@ button {
   color: #ffc107;
 
   font-size: 0.72rem;
+
   font-weight: 800;
+
   letter-spacing: 0.15em;
 }
 
@@ -266,6 +300,7 @@ button {
   margin-top: 6px;
 
   font-size: 1.8rem;
+
   font-weight: 900;
 
   color: #ffffff;
@@ -279,21 +314,27 @@ button {
   margin-top: 20px;
 
   display: flex;
+
   flex-wrap: wrap;
+
   gap: 10px;
 }
 
 .categories button {
   min-height: 42px;
+
   padding: 0 15px;
 
   border: 1px solid #444444;
+
   border-radius: 9px;
 
   color: #ffffff;
+
   background: #181818;
 
   font-size: 0.78rem;
+
   font-weight: 800;
 
   transition:
@@ -304,13 +345,17 @@ button {
 
 .categories button:hover {
   background: #222222;
+
   border-color: #ffc107;
+
   transform: translateY(-1px);
 }
 
 .categories button.category-active {
   color: #111111;
+
   background: #ffc107;
+
   border-color: #ffc107;
 }
 
@@ -322,18 +367,22 @@ button {
   margin-top: 20px;
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
 
   gap: 14px;
 }
 
 .product-card {
   position: relative;
+
   min-width: 0;
 
   padding: 18px;
 
   border: 1px solid #333333;
+
   border-radius: 16px;
 
   background: #181818;
@@ -347,6 +396,7 @@ button {
 
 .product-card:hover {
   transform: translateY(-2px);
+
   border-color: #ffc107;
 }
 
@@ -359,6 +409,7 @@ button {
   height: 105px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -378,6 +429,7 @@ button {
   display: block;
 
   object-fit: contain;
+
   object-position: center;
 }
 
@@ -390,22 +442,27 @@ button {
   height: 100%;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border: 1px dashed #444444;
+
   border-radius: 12px;
 
   color: #666666;
+
   background: #151515;
 
   font-size: 0.72rem;
+
   font-weight: 800;
+
   letter-spacing: 0.08em;
 }
 
 /* =========================
-   INFORMAÇÕES DOS PRODUTOS
+   INFORMAÇÕES
 ========================= */
 
 .product-card .popular-badge {
@@ -414,6 +471,7 @@ button {
 
 .product-card h3 {
   font-size: 1.15rem;
+
   font-weight: 900;
 
   color: #ffffff;
@@ -427,6 +485,7 @@ button {
   color: #dddddd;
 
   font-size: 0.9rem;
+
   line-height: 1.55;
 }
 
@@ -434,7 +493,9 @@ button {
   margin-top: 20px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 12px;
@@ -442,20 +503,25 @@ button {
 
 .product-footer strong {
   font-size: 1.2rem;
+
   color: #ffc107;
 }
 
 .add-button {
   min-height: 42px;
+
   padding: 0 16px;
 
   border: 1px solid #ffc107;
+
   border-radius: 9px;
 
   color: #111111;
+
   background: #ffc107;
 
   font-size: 0.78rem;
+
   font-weight: 900;
 }
 
@@ -465,17 +531,21 @@ button {
 
 .popular-badge {
   display: inline-flex;
+
   width: fit-content;
 
   padding: 6px 9px;
 
   border: 1px solid #ffc107;
+
   border-radius: 7px;
 
   color: #111111;
+
   background: #ffc107;
 
   font-size: 0.72rem;
+
   font-weight: 900;
 }
 
@@ -483,6 +553,7 @@ button {
   padding: 30px;
 
   border: 1px dashed #444444;
+
   border-radius: 14px;
 
   color: #aaaaaa;
@@ -496,9 +567,11 @@ button {
 
 .cart-section {
   margin-top: 20px;
+
   margin-bottom: 40px;
 
   border-top: 1px solid #333333;
+
   scroll-margin-top: 20px;
 }
 
@@ -506,6 +579,7 @@ button {
   margin-top: 20px;
 
   display: flex;
+
   flex-direction: column;
 
   gap: 10px;
@@ -515,12 +589,15 @@ button {
   padding: 16px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 15px;
 
   border: 1px solid #333333;
+
   border-radius: 12px;
 
   background: #181818;
@@ -528,6 +605,7 @@ button {
 
 .cart-item h3 {
   font-size: 0.95rem;
+
   font-weight: 850;
 
   color: #ffffff;
@@ -555,6 +633,7 @@ button {
 
 .cart-controls {
   display: flex;
+
   align-items: center;
 
   gap: 8px;
@@ -565,18 +644,22 @@ button {
   height: 34px;
 
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
 
   border: 1px solid #444444;
+
   border-radius: 8px;
 
   color: #ffffff;
+
   background: #222222;
 }
 
 .cart-controls button:hover {
   background: #ffc107;
+
   color: #111111;
 }
 
@@ -592,7 +675,9 @@ button {
   margin: 18px 0;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   font-size: 1.05rem;
@@ -602,6 +687,7 @@ button {
 
 .cart-total strong {
   font-size: 1.3rem;
+
   color: #ffc107;
 }
 
@@ -611,17 +697,20 @@ button {
 
 .floating-cart {
   position: fixed;
+
   left: 50%;
   bottom: 15px;
 
   z-index: 9998;
 
   width: min(92%, 500px);
+
   min-height: 58px;
 
   transform: translateX(-50%);
 
   display: flex;
+
   align-items: center;
 
   gap: 12px;
@@ -629,9 +718,11 @@ button {
   padding: 8px 14px;
 
   border: 1px solid #ffc107;
+
   border-radius: 14px;
 
   color: #111111;
+
   background: #ffc107;
 
   box-shadow:
@@ -661,12 +752,14 @@ button {
   flex-shrink: 0;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border-radius: 10px;
 
   color: #ffc107;
+
   background: #111111;
 }
 
@@ -680,12 +773,14 @@ button {
   height: 19px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border-radius: 50%;
 
   color: #ffffff;
+
   background: #111111;
 
   font-size: 0.65rem;
@@ -695,7 +790,9 @@ button {
   flex: 1;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: flex-start;
 
   line-height: 1.15;
@@ -703,6 +800,7 @@ button {
 
 .floating-cart-info span {
   font-size: 0.68rem;
+
   font-weight: 900;
 }
 
@@ -714,6 +812,7 @@ button {
 
 .floating-cart-arrow {
   font-size: 1.5rem;
+
   font-weight: 900;
 }
 
@@ -732,9 +831,11 @@ button {
 
 .checkout-section {
   margin-top: 25px;
+
   padding: 20px;
 
   border: 1px solid #333333;
+
   border-radius: 14px;
 
   background: #181818;
@@ -744,6 +845,7 @@ button {
   margin-bottom: 16px;
 
   font-size: 1rem;
+
   font-weight: 900;
 
   color: #ffc107;
@@ -757,6 +859,7 @@ button {
   color: #ffffff;
 
   font-size: 0.82rem;
+
   font-weight: 700;
 }
 
@@ -766,14 +869,17 @@ button {
   width: 100%;
 
   margin-top: 7px;
+
   padding: 12px 13px;
 
   border: 1px solid #444444;
+
   border-radius: 9px;
 
   outline: none;
 
   color: #ffffff;
+
   background: #111111;
 }
 
@@ -790,13 +896,15 @@ button {
 .choice-grid {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns:
+    repeat(2, 1fr);
 
   gap: 10px;
 }
 
 .payment-grid {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns:
+    repeat(3, 1fr);
 }
 
 .choice {
@@ -805,9 +913,11 @@ button {
   padding: 0 12px;
 
   border: 1px solid #444444;
+
   border-radius: 9px;
 
   color: #ffffff;
+
   background: #111111;
 
   font-weight: 800;
@@ -815,12 +925,15 @@ button {
 
 .choice:hover {
   background: #222222;
+
   border-color: #ffc107;
 }
 
 .choice.active {
   color: #111111;
+
   background: #ffc107;
+
   border-color: #ffc107;
 }
 
@@ -830,9 +943,11 @@ button {
 
 .pickup-info {
   margin-top: 25px;
+
   padding: 18px;
 
   border: 1px solid #ffc107;
+
   border-radius: 14px;
 
   background: #181818;
@@ -842,6 +957,7 @@ button {
   display: block;
 
   font-size: 0.95rem;
+
   color: #ffc107;
 }
 
@@ -851,6 +967,7 @@ button {
   color: #ffffff;
 
   line-height: 1.5;
+
   font-size: 0.85rem;
 }
 
@@ -872,9 +989,11 @@ button {
 
 .order-summary {
   margin-top: 25px;
+
   padding: 20px;
 
   border: 1px solid #333333;
+
   border-radius: 14px;
 
   background: #181818;
@@ -884,7 +1003,9 @@ button {
   padding: 7px 0;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   color: #dddddd;
@@ -894,6 +1015,7 @@ button {
 
 .order-summary .total-line {
   margin-top: 8px;
+
   padding-top: 15px;
 
   border-top: 1px solid #333333;
@@ -905,20 +1027,25 @@ button {
 
 .order-summary .total-line strong {
   font-size: 1.35rem;
+
   color: #ffc107;
 }
 
 .checkout-error {
   margin-top: 15px;
+
   padding: 12px 14px;
 
   border: 1px solid #ffc107;
+
   border-radius: 9px;
 
   color: #ffc107;
+
   background: #251f0a;
 
   font-size: 0.85rem;
+
   font-weight: 700;
 }
 
@@ -926,6 +1053,7 @@ button {
   margin-top: 20px;
 
   display: flex;
+
   justify-content: space-between;
 
   gap: 10px;
@@ -942,9 +1070,11 @@ button {
   padding: 0 20px;
 
   border: 1px solid #444444;
+
   border-radius: 10px;
 
   color: #ffffff;
+
   background: #181818;
 
   font-weight: 900;
@@ -952,6 +1082,7 @@ button {
 
 .secondary-button:hover {
   background: #ffc107;
+
   color: #111111;
 }
 
@@ -964,9 +1095,11 @@ button {
   max-width: 1180px;
 
   margin: 50px auto 0;
+
   padding: 30px 20px 40px;
 
   display: flex;
+
   flex-direction: column;
 
   gap: 6px;
@@ -980,6 +1113,7 @@ button {
 
 .footer strong {
   color: #ffc107;
+
   font-size: 0.9rem;
 }
 
@@ -989,12 +1123,15 @@ button {
 
 .option-overlay {
   position: fixed;
+
   inset: 0;
 
   z-index: 9999;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   padding: 20px;
@@ -1007,6 +1144,7 @@ button {
 
   width: 100%;
   max-width: 420px;
+
   max-height: 90vh;
 
   overflow-y: auto;
@@ -1014,6 +1152,7 @@ button {
   padding: 28px 22px;
 
   border: 1px solid #333333;
+
   border-radius: 18px;
 
   background: #181818;
@@ -1025,6 +1164,7 @@ button {
   color: #ffffff;
 
   font-size: 1.35rem;
+
   font-weight: 900;
 }
 
@@ -1034,6 +1174,7 @@ button {
   color: #ffc107;
 
   font-size: 0.9rem;
+
   font-weight: 800;
 }
 
@@ -1047,23 +1188,28 @@ button {
   height: 38px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border: 1px solid #444444;
+
   border-radius: 9px;
 
   color: #ffffff;
+
   background: #222222;
 }
 
 .option-close:hover {
   color: #111111;
+
   background: #ffc107;
 }
 
 .option-list {
   display: flex;
+
   flex-direction: column;
 
   gap: 10px;
@@ -1073,18 +1219,23 @@ button {
 
 .option-list button {
   width: 100%;
+
   min-height: 52px;
 
   padding: 14px 16px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   border: 1px solid #444444;
+
   border-radius: 10px;
 
   color: #ffffff;
+
   background: #111111;
 
   font-weight: 800;
@@ -1092,17 +1243,21 @@ button {
 
 .option-list button:hover {
   border-color: #ffc107;
+
   background: #222222;
 }
 
 .option-list button.option-selected {
   color: #111111;
+
   background: #ffc107;
+
   border-color: #ffc107;
 }
 
 .option-modal > .primary-button {
   width: 100%;
+
   min-height: 50px;
 
   margin-top: 0;
@@ -1110,7 +1265,9 @@ button {
 
 .option-modal > .primary-button:disabled {
   opacity: 0.45;
+
   cursor: not-allowed;
+
   transform: none;
 }
 
@@ -1120,40 +1277,66 @@ button {
 
 @media (max-width: 700px) {
 
+  /* HEADER */
+
   .header {
     padding: 8px 12px;
+
+    align-items: center;
+
+    gap: 8px;
   }
 
   .brand {
-    gap: 6px;
+    gap: 7px;
+
+    min-width: 0;
   }
 
+  /*
+    LOGO NO CELULAR
+    TAMANHO BOM: 120px
+  */
+
   .brand-logo {
-    width: 90px;
-    height: 90px;
+    width: 120px;
+    height: 120px;
+
+    flex-shrink: 0;
   }
 
   .brand-city {
-    font-size: 0.58rem;
+    font-size: 0.62rem;
+
+    line-height: 1.2;
+
+    white-space: normal;
   }
 
   .cart-button {
-    min-height: 34px;
+    min-height: 42px;
 
-    padding: 0 9px;
+    padding: 0 11px;
 
-    gap: 5px;
+    gap: 6px;
 
-    font-size: 0.68rem;
+    font-size: 0.72rem;
 
-    border-radius: 8px;
+    border-radius: 9px;
+
+    flex-shrink: 0;
+  }
+
+  .cart-button svg {
+    width: 18px;
+    height: 18px;
   }
 
   .cart-button strong {
-    min-width: 18px;
-    height: 18px;
+    min-width: 20px;
+    height: 20px;
 
-    font-size: 0.65rem;
+    font-size: 0.68rem;
   }
 
   /* HERO */
@@ -1170,6 +1353,7 @@ button {
 
   .hero h1 {
     font-size: 2.2rem;
+
     line-height: 0.95;
   }
 
@@ -1230,7 +1414,8 @@ button {
 
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, 1fr);
 
     gap: 6px;
   }
@@ -1483,6 +1668,7 @@ button {
 
   .option-modal {
     max-width: 350px;
+
     max-height: 85vh;
 
     padding: 18px 14px;
@@ -1537,9 +1723,45 @@ button {
 
 @media (max-width: 380px) {
 
+  .header {
+    padding: 6px 9px;
+  }
+
+  .brand {
+    gap: 5px;
+  }
+
+  /*
+    Em celulares bem pequenos,
+    reduzimos um pouco para não
+    apertar o botão Carrinho.
+  */
+
   .brand-logo {
-    width: 75px;
-    height: 75px;
+    width: 105px;
+    height: 105px;
+  }
+
+  .brand-city {
+    font-size: 0.54rem;
+  }
+
+  .cart-button {
+    min-height: 38px;
+
+    padding: 0 8px;
+
+    font-size: 0.65rem;
+  }
+
+  .cart-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cart-button strong {
+    min-width: 18px;
+    height: 18px;
   }
 
   .hero h1 {
