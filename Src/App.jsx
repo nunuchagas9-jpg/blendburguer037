@@ -28,7 +28,7 @@ function App() {
 
   // =========================
   // HORÁRIO DA HAMBURGUERIA
-  // QUARTA-FEIRA,SEXTA E SÁBADO
+  // SEXTA E SÁBADO
   // 19:00 ÀS 23:00
   // =========================
 
