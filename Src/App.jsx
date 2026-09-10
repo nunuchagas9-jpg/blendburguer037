@@ -41,7 +41,7 @@ function App() {
   const currentTime = hour * 60 + minutes;
 
   const openingTime = 19 * 60;
-  const closingTime = 23 * 60 + 30;
+  const closingTime = 23 * 60;
 
   const isOpen =
     (day === 5 || day === 6 || day === 0) &&
@@ -266,7 +266,7 @@ function App() {
               <Clock size={17} />
 
               <span>
-                Sexta a domingo - 19h às 23h30
+                Sexta e Sábado - 19h às 23h00
               </span>
             </div>
 
