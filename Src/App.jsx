@@ -63,16 +63,10 @@ function App() {
       }
     }
 
-    window.addEventListener(
-      "keydown",
-      abrirCaixa
-    );
+    window.addEventListener("keydown", abrirCaixa);
 
     return () => {
-      window.removeEventListener(
-        "keydown",
-        abrirCaixa
-      );
+      window.removeEventListener("keydown", abrirCaixa);
     };
   }, []);
 
@@ -88,34 +82,21 @@ function App() {
       pix: "",
       cartao: "",
 
-      taxas: {
-        3: 0,
-        5: 0,
-        7: 0,
-        9: 0,
-        10: 0,
-        12: 0,
-        15: 0,
-      },
+      totalEntregas: "",
+      totalTaxas: "",
     };
   }
 
   function carregarCaixa() {
     try {
       const salvo = JSON.parse(
-        localStorage.getItem("blend-caixa") ||
-          "null"
+        localStorage.getItem("blend-caixa") || "null"
       );
 
       if (salvo && salvo.data === hoje) {
         return {
           ...criarCaixaVazio(),
           ...salvo,
-
-          taxas: {
-            ...criarCaixaVazio().taxas,
-            ...(salvo.taxas || {}),
-          },
         };
       }
 
@@ -147,28 +128,6 @@ function App() {
   }
 
   // ==================================================
-  // ATUALIZAR TAXA
-  // ==================================================
-
-  function atualizarTaxa(taxa, quantidade) {
-    const novoCaixa = {
-      ...caixa,
-
-      taxas: {
-        ...caixa.taxas,
-        [taxa]: quantidade,
-      },
-    };
-
-    setCaixa(novoCaixa);
-
-    localStorage.setItem(
-      "blend-caixa",
-      JSON.stringify(novoCaixa)
-    );
-  }
-
-  // ==================================================
   // TOTAIS
   // ==================================================
 
@@ -186,24 +145,11 @@ function App() {
     totalPix +
     totalCartao;
 
-  const totalTaxas =
-    Object.entries(caixa.taxas).reduce(
-      (total, [taxa, quantidade]) => {
-        return (
-          total +
-          Number(taxa) *
-            Number(quantidade || 0)
-        );
-      },
-      0
-    );
-
   const totalEntregas =
-    Object.values(caixa.taxas).reduce(
-      (total, quantidade) =>
-        total + Number(quantidade || 0),
-      0
-    );
+    Number(caixa.totalEntregas) || 0;
+
+  const totalTaxas =
+    Number(caixa.totalTaxas) || 0;
 
   // ==================================================
   // COPIAR RESUMO
@@ -219,19 +165,8 @@ CARTÃO: ${formatCurrency(totalCartao)}
 
 TOTAL DE VENDAS: ${formatCurrency(totalVendas)}
 
-TAXAS DE ENTREGA
-
-R$ 3,00 — ${caixa.taxas[3]} entregas
-R$ 5,00 — ${caixa.taxas[5]} entregas
-R$ 7,00 — ${caixa.taxas[7]} entregas
-R$ 9,00 — ${caixa.taxas[9]} entregas
-R$ 10,00 — ${caixa.taxas[10]} entregas
-R$ 12,00 — ${caixa.taxas[12]} entregas
-R$ 15,00 — ${caixa.taxas[15]} entregas
-
 TOTAL DE ENTREGAS: ${totalEntregas}
-
-TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
+TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
     if (
       navigator.clipboard &&
@@ -313,8 +248,7 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
   const filteredProducts =
     menu.filter(
       (product) =>
-        product.category ===
-        selectedCategory
+        product.category === selectedCategory
     );
 
   // ==================================================
@@ -578,9 +512,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
         </div>
 
-        {/* SOMENTE CARRINHO */}
-        {/* O BOTÃO CAIXA FOI REMOVIDO */}
-
         <div
           style={{
             display: "flex",
@@ -700,8 +631,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
           </div>
 
-          {/* CATEGORIAS */}
-
           <div className="categories">
 
             {categories.map(
@@ -729,8 +658,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
             )}
 
           </div>
-
-          {/* PRODUTOS */}
 
           <div className="products">
 
@@ -1081,7 +1008,7 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* TOTAL */}
+            {/* TOTAL DE VENDAS */}
 
             <div className="caixa-total">
 
@@ -1105,49 +1032,48 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
                 🚴 TAXAS DE ENTREGA
               </h3>
 
-              {[3, 5, 7, 9, 10, 12, 15].map(
-                (taxa) => (
+              <label>
 
-                  <div
-                    className="taxa-linha"
-                    key={taxa}
-                  >
+                TOTAL DE ENTREGAS
 
-                    <strong>
-                      R${" "}
-                      {taxa
-                        .toFixed(2)
-                        .replace(
-                          ".",
-                          ","
-                        )}
-                    </strong>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  value={
+                    caixa.totalEntregas
+                  }
+                  onChange={(e) =>
+                    atualizarCaixa(
+                      "totalEntregas",
+                      e.target.value
+                    )
+                  }
+                />
 
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={
-                        caixa.taxas[
-                          taxa
-                        ]
-                      }
-                      onChange={(e) =>
-                        atualizarTaxa(
-                          taxa,
-                          e.target.value
-                        )
-                      }
-                    />
+              </label>
 
-                    <span>
-                      entregas
-                    </span>
+              <label>
 
-                  </div>
+                TOTAL DE TAXAS
 
-                )
-              )}
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0,00"
+                  value={
+                    caixa.totalTaxas
+                  }
+                  onChange={(e) =>
+                    atualizarCaixa(
+                      "totalTaxas",
+                      e.target.value
+                    )
+                  }
+                />
+
+              </label>
 
               <div className="taxa-total">
 
@@ -1284,10 +1210,7 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
               className="option-close"
               type="button"
               onClick={() => {
-                setSelectedProduct(
-                  null
-                );
-
+                setSelectedProduct(null);
                 setSelectedOption("");
               }}
               aria-label="Fechar"
