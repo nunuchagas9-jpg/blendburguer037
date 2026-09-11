@@ -27,7 +27,137 @@ function App() {
   const [selectedOption, setSelectedOption] = useState("");
 
   // =========================
-  // HORÁRIO DA HAMBURGUERIA
+  // CAIXA DO DIA
+  // =========================
+
+  const hoje = new Date().toISOString().split("T")[0];
+
+  const dadosCaixaSalvos = JSON.parse(
+    localStorage.getItem("blend-caixa") || "{}"
+  );
+
+  const caixaInicial =
+    dadosCaixaSalvos.data === hoje
+      ? dadosCaixaSalvos
+      : {
+          data: hoje,
+          dinheiro: "",
+          pix: "",
+          cartao: "",
+          taxas: {
+            3: 0,
+            5: 0,
+            7: 0,
+            9: 0,
+            10: 0,
+            12: 0,
+            15: 0,
+          },
+        };
+
+  const [caixa, setCaixa] = useState(caixaInicial);
+  const [mostrarCaixa, setMostrarCaixa] = useState(false);
+
+  function atualizarCaixa(campo, valor) {
+    const novoCaixa = {
+      ...caixa,
+      [campo]: valor,
+    };
+
+    setCaixa(novoCaixa);
+
+    localStorage.setItem(
+      "blend-caixa",
+      JSON.stringify(novoCaixa)
+    );
+  }
+
+  function atualizarTaxa(taxa, quantidade) {
+    const novoCaixa = {
+      ...caixa,
+      taxas: {
+        ...caixa.taxas,
+        [taxa]: quantidade,
+      },
+    };
+
+    setCaixa(novoCaixa);
+
+    localStorage.setItem(
+      "blend-caixa",
+      JSON.stringify(novoCaixa)
+    );
+  }
+
+  const totalDinheiro =
+    Number(caixa.dinheiro) || 0;
+
+  const totalPix =
+    Number(caixa.pix) || 0;
+
+  const totalCartao =
+    Number(caixa.cartao) || 0;
+
+  const totalVendas =
+    totalDinheiro +
+    totalPix +
+    totalCartao;
+
+  const totalTaxas = Object.entries(
+    caixa.taxas
+  ).reduce(
+    (total, [taxa, quantidade]) =>
+      total +
+      Number(taxa) *
+        Number(quantidade || 0),
+    0
+  );
+
+  function copiarResumo() {
+    const resumo = `RESUMO DE VENDAS — BLEND BURGUER 037
+Data: ${new Date().toLocaleDateString(
+      "pt-BR"
+    )}
+
+DINHEIRO: ${formatCurrency(
+      totalDinheiro
+    )}
+PIX: ${formatCurrency(totalPix)}
+CARTÃO: ${formatCurrency(
+      totalCartao
+    )}
+
+TOTAL DE VENDAS: ${formatCurrency(
+      totalVendas
+    )}
+
+TAXAS DE ENTREGA
+R$ 3,00 — ${caixa.taxas[3]} entregas
+R$ 5,00 — ${caixa.taxas[5]} entregas
+R$ 7,00 — ${caixa.taxas[7]} entregas
+R$ 9,00 — ${caixa.taxas[9]} entregas
+R$ 10,00 — ${caixa.taxas[10]} entregas
+R$ 12,00 — ${caixa.taxas[12]} entregas
+R$ 15,00 — ${caixa.taxas[15]} entregas
+
+TOTAL DE TAXAS: ${formatCurrency(
+      totalTaxas
+    )}`;
+
+    navigator.clipboard
+      .writeText(resumo)
+      .then(() => {
+        alert("Resumo copiado!");
+      })
+      .catch(() => {
+        alert(
+          "Não foi possível copiar automaticamente."
+        );
+      });
+  }
+
+  // =========================
+  // HORÁRIO
   // SEXTA E SÁBADO
   // 19:00 ÀS 23:00
   // =========================
@@ -38,7 +168,8 @@ function App() {
   const hour = now.getHours();
   const minutes = now.getMinutes();
 
-  const currentTime = hour * 60 + minutes;
+  const currentTime =
+    hour * 60 + minutes;
 
   const openingTime = 19 * 60;
   const closingTime = 23 * 60;
@@ -62,7 +193,9 @@ function App() {
   ];
 
   const filteredProducts = menu.filter(
-    (product) => product.category === selectedCategory
+    (product) =>
+      product.category ===
+      selectedCategory
   );
 
   // =========================
@@ -75,7 +208,8 @@ function App() {
   );
 
   const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
+    (total, item) =>
+      total + item.quantity,
     0
   );
 
@@ -127,18 +261,22 @@ function App() {
         ? `${product.id}-${option}`
         : product.id;
 
-      const existing = currentCart.find(
-        (item) => item.cartItemId === itemId
-      );
+      const existing =
+        currentCart.find(
+          (item) =>
+            item.cartItemId === itemId
+        );
 
       if (existing) {
-        return currentCart.map((item) =>
-          item.cartItemId === itemId
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-              }
-            : item
+        return currentCart.map(
+          (item) =>
+            item.cartItemId === itemId
+              ? {
+                  ...item,
+                  quantity:
+                    item.quantity + 1,
+                }
+              : item
         );
       }
 
@@ -159,7 +297,8 @@ function App() {
 
     if (
       selectedProduct.options?.some(
-        (option) => option.required
+        (option) =>
+          option.required
       ) &&
       !selectedOption
     ) {
@@ -179,41 +318,53 @@ function App() {
   // QUANTIDADE
   // =========================
 
-  function increaseQuantity(cartItemId) {
+  function increaseQuantity(
+    cartItemId
+  ) {
     setCart((currentCart) =>
       currentCart.map((item) =>
-        item.cartItemId === cartItemId
+        item.cartItemId ===
+        cartItemId
           ? {
               ...item,
-              quantity: item.quantity + 1,
+              quantity:
+                item.quantity + 1,
             }
           : item
       )
     );
   }
 
-  function decreaseQuantity(cartItemId) {
+  function decreaseQuantity(
+    cartItemId
+  ) {
     setCart((currentCart) =>
       currentCart
         .map((item) =>
-          item.cartItemId === cartItemId
+          item.cartItemId ===
+          cartItemId
             ? {
                 ...item,
-                quantity: item.quantity - 1,
+                quantity:
+                  item.quantity - 1,
               }
             : item
         )
         .filter(
-          (item) => item.quantity > 0
+          (item) =>
+            item.quantity > 0
         )
     );
   }
 
-  function removeFromCart(cartItemId) {
+  function removeFromCart(
+    cartItemId
+  ) {
     setCart((currentCart) =>
       currentCart.filter(
         (item) =>
-          item.cartItemId !== cartItemId
+          item.cartItemId !==
+          cartItemId
       )
     );
   }
@@ -225,8 +376,11 @@ function App() {
   if (showCheckout) {
     return (
       <div className="site">
+
         <header className="header">
+
           <div className="brand">
+
             <img
               src={logo}
               alt="Blend Burguer"
@@ -236,7 +390,9 @@ function App() {
             <span className="brand-city">
               037 • DIVINÓPOLIS - MG
             </span>
+
           </div>
+
         </header>
 
         <Checkout
@@ -246,6 +402,7 @@ function App() {
             setShowCheckout(false)
           }
         />
+
       </div>
     );
   }
@@ -262,7 +419,9 @@ function App() {
       ========================= */}
 
       <header className="header">
+
         <div className="brand">
+
           <img
             src={logo}
             alt="Blend Burguer"
@@ -272,21 +431,49 @@ function App() {
           <span className="brand-city">
             037 • DIVINÓPOLIS - MG
           </span>
+
         </div>
 
-        <button
-          className="cart-button"
-          type="button"
-          onClick={irParaCarrinho}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
         >
-          <ShoppingCart size={20} />
 
-          <span>Carrinho</span>
+          <button
+            className="caixa-button"
+            type="button"
+            onClick={() =>
+              setMostrarCaixa(true)
+            }
+          >
+            CAIXA
+          </button>
 
-          {cartCount > 0 && (
-            <strong>{cartCount}</strong>
-          )}
-        </button>
+          <button
+            className="cart-button"
+            type="button"
+            onClick={irParaCarrinho}
+          >
+
+            <ShoppingCart size={20} />
+
+            <span>
+              Carrinho
+            </span>
+
+            {cartCount > 0 && (
+              <strong>
+                {cartCount}
+              </strong>
+            )}
+
+          </button>
+
+        </div>
+
       </header>
 
       <main>
@@ -296,13 +483,16 @@ function App() {
         ========================= */}
 
         <section className="hero">
+
           <div className="hero-content">
 
             <span className="hero-label">
               SABOR • QUALIDADE • ATITUDE
             </span>
 
-            <h1>BLEND BURGUER</h1>
+            <h1>
+              BLEND BURGUER
+            </h1>
 
             <p>
               Feito pra matar a fome.
@@ -327,7 +517,8 @@ function App() {
               <Clock size={17} />
 
               <span>
-                Sexta e Sábado - 19h às 23h00
+                Sexta e Sábado -
+                19h às 23h00
               </span>
 
             </div>
@@ -337,9 +528,12 @@ function App() {
               type="button"
               onClick={() =>
                 document
-                  .getElementById("cardapio")
+                  .getElementById(
+                    "cardapio"
+                  )
                   ?.scrollIntoView({
-                    behavior: "smooth",
+                    behavior:
+                      "smooth",
                   })
               }
             >
@@ -347,6 +541,7 @@ function App() {
             </button>
 
           </div>
+
         </section>
 
         {/* =========================
@@ -370,12 +565,11 @@ function App() {
 
           </div>
 
-          {/* CATEGORIAS */}
-
           <div className="categories">
 
             {categories.map(
               (category) => (
+
                 <button
                   key={category}
                   type="button"
@@ -393,12 +587,11 @@ function App() {
                 >
                   {category}
                 </button>
+
               )
             )}
 
           </div>
-
-          {/* PRODUTOS */}
 
           <div className="products">
 
@@ -425,8 +618,6 @@ function App() {
                     key={product.id}
                   >
 
-                    {/* FOTO */}
-
                     <div className="product-image">
 
                       {product.image ? (
@@ -439,19 +630,21 @@ function App() {
                       ) : (
 
                         <div className="image-placeholder">
-                          <span>FOTO</span>
+                          <span>
+                            FOTO
+                          </span>
                         </div>
 
                       )}
 
                     </div>
 
-                    {/* MAIS PEDIDO */}
-
                     {product.popular && (
+
                       <span className="popular-badge">
                         MAIS PEDIDO
                       </span>
+
                     )}
 
                     <h3>
@@ -474,7 +667,9 @@ function App() {
                         className="add-button"
                         type="button"
                         onClick={() =>
-                          addToCart(product)
+                          addToCart(
+                            product
+                          )
                         }
                       >
                         ADICIONAR
@@ -533,10 +728,12 @@ function App() {
                       </h3>
 
                       {item.selectedOption && (
+
                         <small>
                           Recheio:{" "}
                           {item.selectedOption}
                         </small>
+
                       )}
 
                       <span>
@@ -598,8 +795,6 @@ function App() {
 
             </div>
 
-            {/* TOTAL */}
-
             <div className="cart-total">
 
               <span>
@@ -614,8 +809,6 @@ function App() {
 
             </div>
 
-            {/* FINALIZAR */}
-
             <button
               className="primary-button"
               type="button"
@@ -625,6 +818,217 @@ function App() {
             >
               FINALIZAR PEDIDO
             </button>
+
+          </section>
+
+        )}
+
+        {/* =========================
+            CAIXA DO DIA
+        ========================= */}
+
+        {mostrarCaixa && (
+
+          <section className="caixa-section">
+
+            <div className="caixa-header">
+
+              <div className="section-heading">
+
+                <span>
+                  CONTROLE DO DIA
+                </span>
+
+                <h2>
+                  Resumo de Vendas
+                </h2>
+
+              </div>
+
+              <button
+                className="caixa-fechar"
+                type="button"
+                onClick={() =>
+                  setMostrarCaixa(false)
+                }
+                aria-label="Fechar caixa"
+              >
+                <X size={20} />
+              </button>
+
+            </div>
+
+            <p className="caixa-data">
+              Data:{" "}
+              <strong>
+                {new Date().toLocaleDateString(
+                  "pt-BR"
+                )}
+              </strong>
+            </p>
+
+            <div className="caixa-vendas">
+
+              <label>
+                💵 DINHEIRO
+
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0,00"
+                  value={caixa.dinheiro}
+                  onChange={(e) =>
+                    atualizarCaixa(
+                      "dinheiro",
+                      e.target.value
+                    )
+                  }
+                />
+
+              </label>
+
+              <label>
+                📱 PIX
+
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0,00"
+                  value={caixa.pix}
+                  onChange={(e) =>
+                    atualizarCaixa(
+                      "pix",
+                      e.target.value
+                    )
+                  }
+                />
+
+              </label>
+
+              <label>
+                💳 CARTÃO
+
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0,00"
+                  value={caixa.cartao}
+                  onChange={(e) =>
+                    atualizarCaixa(
+                      "cartao",
+                      e.target.value
+                    )
+                  }
+                />
+
+              </label>
+
+            </div>
+
+            <div className="caixa-total">
+
+              <span>
+                TOTAL DE VENDAS
+              </span>
+
+              <strong>
+                {formatCurrency(
+                  totalVendas
+                )}
+              </strong>
+
+            </div>
+
+            <div className="caixa-taxas">
+
+              <h3>
+                🚴 TAXAS DE ENTREGA
+              </h3>
+
+              {[3, 5, 7, 9, 10, 12, 15].map(
+                (taxa) => (
+
+                  <div
+                    className="taxa-linha"
+                    key={taxa}
+                  >
+
+                    <strong>
+                      R${" "}
+                      {taxa
+                        .toFixed(2)
+                        .replace(
+                          ".",
+                          ","
+                        )}
+                    </strong>
+
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={
+                        caixa.taxas[
+                          taxa
+                        ]
+                      }
+                      onChange={(e) =>
+                        atualizarTaxa(
+                          taxa,
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <span>
+                      entregas
+                    </span>
+
+                  </div>
+
+                )
+              )}
+
+              <div className="taxa-total">
+
+                <span>
+                  TOTAL DE TAXAS
+                </span>
+
+                <strong>
+                  {formatCurrency(
+                    totalTaxas
+                  )}
+                </strong>
+
+              </div>
+
+            </div>
+
+            <div className="caixa-botoes">
+
+              <button
+                className="primary-button"
+                type="button"
+                onClick={copiarResumo}
+              >
+                📋 COPIAR RESUMO
+              </button>
+
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() =>
+                  window.print()
+                }
+              >
+                🖨️ IMPRIMIR RESUMO
+              </button>
+
+            </div>
 
           </section>
 
@@ -653,45 +1057,49 @@ function App() {
       </footer>
 
       {/* =========================
-          BARRA FIXA DO CARRINHO
-          APARECE QUANDO TEM PEDIDO
+          CARRINHO FIXO
       ========================= */}
 
-      {cart.length > 0 && !showCheckout && (
+      {cart.length > 0 &&
+        !showCheckout && (
 
-        <button
-          className="floating-cart"
-          type="button"
-          onClick={irParaCarrinho}
-        >
+          <button
+            className="floating-cart"
+            type="button"
+            onClick={irParaCarrinho}
+          >
 
-          <div className="floating-cart-icon">
-            <ShoppingCart size={20} />
+            <div className="floating-cart-icon">
 
-            <strong>
-              {cartCount}
-            </strong>
-          </div>
+              <ShoppingCart size={20} />
 
-          <div className="floating-cart-info">
+              <strong>
+                {cartCount}
+              </strong>
 
-            <span>
-              VER CARRINHO
+            </div>
+
+            <div className="floating-cart-info">
+
+              <span>
+                VER CARRINHO
+              </span>
+
+              <strong>
+                {formatCurrency(
+                  subtotal
+                )}
+              </strong>
+
+            </div>
+
+            <span className="floating-cart-arrow">
+              →
             </span>
 
-            <strong>
-              {formatCurrency(subtotal)}
-            </strong>
+          </button>
 
-          </div>
-
-          <span className="floating-cart-arrow">
-            →
-          </span>
-
-        </button>
-
-      )}
+        )}
 
       {/* =========================
           MODAL DE OPÇÕES
@@ -707,7 +1115,9 @@ function App() {
               className="option-close"
               type="button"
               onClick={() => {
-                setSelectedProduct(null);
+                setSelectedProduct(
+                  null
+                );
                 setSelectedOption("");
               }}
               aria-label="Fechar"
@@ -728,52 +1138,55 @@ function App() {
 
             <div className="option-list">
 
-              {
-                selectedProduct
-                  .options?.[0]?.values.map(
-                    (value) => (
+              {selectedProduct
+                .options?.[0]?.values.map(
+                  (value) => (
 
-                      <button
-                        key={value}
-                        type="button"
-                        className={
-                          selectedOption ===
+                    <button
+                      key={value}
+                      type="button"
+                      className={
+                        selectedOption ===
+                        value
+                          ? "option-selected"
+                          : ""
+                      }
+                      onClick={() =>
+                        setSelectedOption(
                           value
-                            ? "option-selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedOption(
-                            value
-                          )
-                        }
-                      >
+                        )
+                      }
+                    >
 
-                        <span>
-                          {value}
-                        </span>
+                      <span>
+                        {value}
+                      </span>
 
-                        {selectedOption ===
-                          value && (
-                          <strong>
-                            ✓
-                          </strong>
-                        )}
+                      {selectedOption ===
+                        value && (
 
-                      </button>
+                        <strong>
+                          ✓
+                        </strong>
 
-                    )
+                      )}
+
+                    </button>
+
                   )
-
-              }
+                )}
 
             </div>
 
             <button
               className="primary-button"
               type="button"
-              disabled={!selectedOption}
-              onClick={confirmarOpcao}
+              disabled={
+                !selectedOption
+              }
+              onClick={
+                confirmarOpcao
+              }
             >
               ADICIONAR AO CARRINHO
             </button>
