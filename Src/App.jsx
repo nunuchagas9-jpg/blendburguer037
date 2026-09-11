@@ -20,8 +20,12 @@ import {
 import logo from "./IMG_6208.png";
 
 function App() {
+  // ========================================
+  // ESTADOS
+  // ========================================
   const [cart, setCart] = useState([]);
-  const [showCheckout, setShowCheckout] = useState(false);
+  const [showCheckout, setShowCheckout] =
+    useState(false);
 
   const [selectedCategory, setSelectedCategory] =
     useState("ARTESANAIS");
@@ -32,280 +36,12 @@ function App() {
   const [selectedOption, setSelectedOption] =
     useState("");
 
-  const [mostrarCaixa, setMostrarCaixa] =
+  const [showCash, setShowCash] =
     useState(false);
 
-  // ==================================================
-  // DATA ATUAL
-  // ==================================================
-
-  const dataAtual = new Date();
-
-  const hoje =
-    `${dataAtual.getFullYear()}-` +
-    `${String(dataAtual.getMonth() + 1).padStart(2, "0")}-` +
-    `${String(dataAtual.getDate()).padStart(2, "0")}`;
-
-  // ==================================================
-  // ACESSO SECRETO AO CAIXA
-  // CTRL + SHIFT + C
-  // ==================================================
-
-  useEffect(() => {
-    function abrirCaixa(event) {
-      if (
-        event.ctrlKey &&
-        event.shiftKey &&
-        event.key.toLowerCase() === "c"
-      ) {
-        event.preventDefault();
-
-        setMostrarCaixa((atual) => !atual);
-      }
-    }
-
-    window.addEventListener("keydown", abrirCaixa);
-
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        abrirCaixa
-      );
-    };
-  }, []);
-
-  // ==================================================
-  // CAIXA VAZIO
-  // ==================================================
-
-  function caixaVazio() {
-    return {
-      dinheiro: 0,
-      pix: 0,
-      cartao: 0,
-      totalVendas: 0,
-      totalEntregas: 0,
-      totalTaxas: 0,
-      quantidadePedidos: 0,
-    };
-  }
-
-  // ==================================================
-  // CARREGAR VENDAS DO DIA
-  // ==================================================
-
-  function carregarVendasDoDia() {
-    try {
-      const vendasSalvas = JSON.parse(
-        localStorage.getItem(
-          "blend-vendas-diarias"
-        ) || "{}"
-      );
-
-      const vendasHoje = vendasSalvas[hoje];
-
-      if (!vendasHoje) {
-        return caixaVazio();
-      }
-
-      return {
-        ...caixaVazio(),
-        ...vendasHoje,
-      };
-    } catch (error) {
-      console.error(
-        "Erro ao carregar vendas:",
-        error
-      );
-
-      return caixaVazio();
-    }
-  }
-
-  // ==================================================
-  // ESTADO DO CAIXA
-  // ==================================================
-
-  const [caixa, setCaixa] = useState(
-    caixaVazio()
-  );
-
-  // ==================================================
-  // ATUALIZAR CAIXA
-  // ==================================================
-
-  function atualizarCaixa() {
-    const vendas = carregarVendasDoDia();
-
-    setCaixa(vendas);
-  }
-
-  // ==================================================
-  // ATUALIZAR AUTOMATICAMENTE
-  // ==================================================
-
-  useEffect(() => {
-    atualizarCaixa();
-
-    function atualizar() {
-      atualizarCaixa();
-    }
-
-    window.addEventListener(
-      "focus",
-      atualizar
-    );
-
-    window.addEventListener(
-      "pageshow",
-      atualizar
-    );
-
-    document.addEventListener(
-      "visibilitychange",
-      atualizar
-    );
-
-    return () => {
-      window.removeEventListener(
-        "focus",
-        atualizar
-      );
-
-      window.removeEventListener(
-        "pageshow",
-        atualizar
-      );
-
-      document.removeEventListener(
-        "visibilitychange",
-        atualizar
-      );
-    };
-  }, [hoje]);
-
-  // ==================================================
-  // ATUALIZAR QUANDO ABRIR O CAIXA
-  // ==================================================
-
-  useEffect(() => {
-    if (mostrarCaixa) {
-      atualizarCaixa();
-    }
-  }, [mostrarCaixa]);
-
-  // ==================================================
-  // VALORES DO CAIXA
-  // ==================================================
-
-  const totalDinheiro =
-    Number(caixa.dinheiro) || 0;
-
-  const totalPix =
-    Number(caixa.pix) || 0;
-
-  const totalCartao =
-    Number(caixa.cartao) || 0;
-
-  const totalVendas =
-    Number(caixa.totalVendas) || 0;
-
-  const totalEntregas =
-    Number(caixa.totalEntregas) || 0;
-
-  const totalTaxas =
-    Number(caixa.totalTaxas) || 0;
-
-  const quantidadePedidos =
-    Number(caixa.quantidadePedidos) || 0;
-
-  // ==================================================
-  // COPIAR RESUMO
-  // ==================================================
-
-  function copiarResumo() {
-    const resumo = `RESUMO DE VENDAS — BLEND BURGUER 037
-Data: ${dataAtual.toLocaleDateString("pt-BR")}
-
-DINHEIRO: ${formatCurrency(totalDinheiro)}
-PIX: ${formatCurrency(totalPix)}
-CARTÃO: ${formatCurrency(totalCartao)}
-
-TOTAL DE VENDAS: ${formatCurrency(totalVendas)}
-
-QUANTIDADE DE PEDIDOS: ${quantidadePedidos}
-
-TOTAL DE ENTREGAS: ${totalEntregas}
-TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
-
-    if (
-      navigator.clipboard &&
-      window.isSecureContext
-    ) {
-      navigator.clipboard
-        .writeText(resumo)
-        .then(() => {
-          alert("Resumo copiado!");
-        })
-        .catch(() => {
-          alert(
-            "Não foi possível copiar o resumo."
-          );
-        });
-
-      return;
-    }
-
-    const textarea =
-      document.createElement("textarea");
-
-    textarea.value = resumo;
-
-    document.body.appendChild(textarea);
-
-    textarea.select();
-
-    try {
-      document.execCommand("copy");
-
-      alert("Resumo copiado!");
-    } catch {
-      alert(
-        "Não foi possível copiar o resumo."
-      );
-    }
-
-    document.body.removeChild(textarea);
-  }
-
-  // ==================================================
-  // HORÁRIO DA LOJA
-  // ==================================================
-
-  const day = dataAtual.getDay();
-
-  const hour = dataAtual.getHours();
-
-  const minutes = dataAtual.getMinutes();
-
-  const currentTime =
-    hour * 60 + minutes;
-
-  const openingTime =
-    19 * 60;
-
-  const closingTime =
-    23 * 60;
-
-  const isOpen =
-    (day === 5 || day === 6) &&
-    currentTime >= openingTime &&
-    currentTime <= closingTime;
-
-  // ==================================================
+  // ========================================
   // CATEGORIAS
-  // ==================================================
-
+  // ========================================
   const categories = [
     "ARTESANAIS",
     "TRADICIONAIS",
@@ -315,33 +51,188 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
     "BEBIDAS",
   ];
 
-  const filteredProducts =
-    menu.filter(
+  // ========================================
+  // PRODUTOS DA CATEGORIA
+  // ========================================
+  const products = useMemo(() => {
+    return menu.filter(
       (product) =>
-        product.category ===
-        selectedCategory
+        product.category === selectedCategory
+    );
+  }, [selectedCategory]);
+
+  // ========================================
+  // SUBTOTAL
+  // ========================================
+  const subtotal = useMemo(() => {
+    return calculateSubtotal(cart);
+  }, [cart]);
+
+  // ========================================
+  // ADICIONAR AO CARRINHO
+  // ========================================
+  function addToCart(product, option = "") {
+    const optionText =
+      typeof option === "string"
+        ? option
+        : "";
+
+    const existingIndex = cart.findIndex(
+      (item) =>
+        item.id === product.id &&
+        item.option === optionText
     );
 
-  // ==================================================
-  // CARRINHO
-  // ==================================================
+    if (existingIndex !== -1) {
+      setCart((current) =>
+        current.map((item, index) =>
+          index === existingIndex
+            ? {
+                ...item,
+                quantity:
+                  Number(item.quantity) + 1,
+                total:
+                  Number(item.price) *
+                  (Number(item.quantity) + 1),
+              }
+            : item
+        )
+      );
 
-  const subtotal = useMemo(
-    () => calculateSubtotal(cart),
-    [cart]
-  );
+      return;
+    }
 
-  const cartCount = cart.reduce(
-    (total, item) =>
-      total + item.quantity,
-    0
-  );
+    const newItem = {
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      quantity: 1,
+      option: optionText,
+      total: Number(product.price),
+    };
 
-  // ==================================================
-  // IR PARA CARRINHO
-  // ==================================================
+    setCart((current) => [
+      ...current,
+      newItem,
+    ]);
+  }
 
-  function irParaCarrinho() {
+  // ========================================
+  // AUMENTAR QUANTIDADE
+  // ========================================
+  function increaseQuantity(index) {
+    setCart((current) =>
+      current.map((item, itemIndex) => {
+        if (itemIndex !== index) {
+          return item;
+        }
+
+        const quantity =
+          Number(item.quantity) + 1;
+
+        return {
+          ...item,
+          quantity,
+          total:
+            Number(item.price) * quantity,
+        };
+      })
+    );
+  }
+
+  // ========================================
+  // DIMINUIR QUANTIDADE
+  // ========================================
+  function decreaseQuantity(index) {
+    setCart((current) =>
+      current
+        .map((item, itemIndex) => {
+          if (itemIndex !== index) {
+            return item;
+          }
+
+          const quantity =
+            Number(item.quantity) - 1;
+
+          return {
+            ...item,
+            quantity,
+            total:
+              Number(item.price) * quantity,
+          };
+        })
+        .filter(
+          (item) =>
+            Number(item.quantity) > 0
+        )
+    );
+  }
+
+  // ========================================
+  // REMOVER ITEM
+  // ========================================
+  function removeFromCart(index) {
+    setCart((current) =>
+      current.filter(
+        (_, itemIndex) =>
+          itemIndex !== index
+      )
+    );
+  }
+
+  // ========================================
+  // LIMPAR CARRINHO
+  // ========================================
+  function clearCart() {
+    setCart([]);
+  }
+
+  // ========================================
+  // ABRIR PRODUTO
+  // ========================================
+  function openProduct(product) {
+    setSelectedProduct(product);
+
+    if (
+      product.options &&
+      product.options.length > 0
+    ) {
+      setSelectedOption(
+        product.options[0]
+      );
+    } else {
+      setSelectedOption("");
+    }
+  }
+
+  // ========================================
+  // FECHAR PRODUTO
+  // ========================================
+  function closeProduct() {
+    setSelectedProduct(null);
+    setSelectedOption("");
+  }
+
+  // ========================================
+  // CONFIRMAR PRODUTO
+  // ========================================
+  function confirmProduct() {
+    if (!selectedProduct) {
+      return;
+    }
+
+    addToCart(
+      selectedProduct,
+      selectedOption
+    );
+
+    closeProduct();
+  }
+
+  // ========================================
+  // IR PARA O CHECKOUT
+  // ========================================
+  function goToCheckout() {
     if (cart.length === 0) {
       document
         .getElementById("cardapio")
@@ -352,883 +243,605 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
       return;
     }
 
-    document
-      .getElementById("carrinho")
-      ?.scrollIntoView({
-        behavior: "smooth",
-      });
-  }
+    setShowCheckout(true);
 
-  // ==================================================
-  // ADICIONAR PRODUTO
-  // ==================================================
-
-  function addToCart(product) {
-    if (
-      product.options &&
-      product.options.length > 0
-    ) {
-      setSelectedProduct(product);
-      setSelectedOption("");
-
-      return;
-    }
-
-    adicionarProdutoAoCarrinho(product);
-  }
-
-  // ==================================================
-  // ADICIONAR PRODUTO AO CARRINHO
-  // ==================================================
-
-  function adicionarProdutoAoCarrinho(
-    product,
-    option = ""
-  ) {
-    setCart((currentCart) => {
-      const itemId = option
-        ? `${product.id}-${option}`
-        : product.id;
-
-      const existing =
-        currentCart.find(
-          (item) =>
-            item.cartItemId === itemId
-        );
-
-      if (existing) {
-        return currentCart.map(
-          (item) =>
-            item.cartItemId === itemId
-              ? {
-                  ...item,
-                  quantity:
-                    item.quantity + 1,
-                }
-              : item
-        );
-      }
-
-      return [
-        ...currentCart,
-        {
-          ...product,
-          cartItemId: itemId,
-          quantity: 1,
-          selectedOption: option,
-        },
-      ];
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
     });
   }
 
-  // ==================================================
-  // CONFIRMAR OPÇÃO
-  // ==================================================
+  // ========================================
+  // VOLTAR DO CHECKOUT
+  // ========================================
+  function backToMenu() {
+    setShowCheckout(false);
 
-  function confirmarOpcao() {
-    if (!selectedProduct) {
-      return;
+    setTimeout(() => {
+      document
+        .getElementById("carrinho")
+        ?.scrollIntoView({
+          behavior: "smooth",
+        });
+    }, 100);
+  }
+
+  // ========================================
+  // CTRL + SHIFT + C
+  // ========================================
+  useEffect(() => {
+    function handleShortcut(event) {
+      if (
+        event.ctrlKey &&
+        event.shiftKey &&
+        event.key.toLowerCase() === "c"
+      ) {
+        event.preventDefault();
+
+        setShowCash((current) => !current);
+      }
     }
 
-    const precisaSelecionar =
-      selectedProduct.options?.some(
-        (option) =>
-          option.required
+    window.addEventListener(
+      "keydown",
+      handleShortcut
+    );
+
+    return () => {
+      window.removeEventListener(
+        "keydown",
+        handleShortcut
       );
+    };
+  }, []);
 
-    if (
-      precisaSelecionar &&
-      !selectedOption
-    ) {
-      return;
-    }
-
-    adicionarProdutoAoCarrinho(
-      selectedProduct,
-      selectedOption
-    );
-
-    setSelectedProduct(null);
-    setSelectedOption("");
-  }
-
-  // ==================================================
-  // AUMENTAR QUANTIDADE
-  // ==================================================
-
-  function increaseQuantity(
-    cartItemId
-  ) {
-    setCart((currentCart) =>
-      currentCart.map((item) =>
-        item.cartItemId ===
-        cartItemId
-          ? {
-              ...item,
-              quantity:
-                item.quantity + 1,
-            }
-          : item
-      )
-    );
-  }
-
-  // ==================================================
-  // DIMINUIR QUANTIDADE
-  // ==================================================
-
-  function decreaseQuantity(
-    cartItemId
-  ) {
-    setCart((currentCart) =>
-      currentCart
-        .map((item) =>
-          item.cartItemId ===
-          cartItemId
-            ? {
-                ...item,
-                quantity:
-                  item.quantity - 1,
-              }
-            : item
-        )
-        .filter(
-          (item) =>
-            item.quantity > 0
-        )
-    );
-  }
-
-  // ==================================================
-  // REMOVER PRODUTO
-  // ==================================================
-
-  function removeFromCart(
-    cartItemId
-  ) {
-    setCart((currentCart) =>
-      currentCart.filter(
-        (item) =>
-          item.cartItemId !==
-          cartItemId
-      )
-    );
-  }
-
-  // ==================================================
+  // ========================================
   // CHECKOUT
-  // ==================================================
-
+  // ========================================
   if (showCheckout) {
     return (
-      <div className="site">
+      <main className="app">
 
-        <header className="header">
-
-          <div className="brand">
+        <header className="site-header">
+          <div className="header-inner">
 
             <img
               src={logo}
-              alt="Blend Burguer"
-              className="brand-logo"
+              alt="BLEND BURGUER 037"
+              className="site-logo"
             />
 
-            <span className="brand-city">
-              037 • DIVINÓPOLIS - MG
-            </span>
+            <button
+              type="button"
+              className="cart-button"
+              onClick={backToMenu}
+            >
+              <ShoppingCart
+                size={20}
+              />
+
+              Carrinho
+
+              {cart.length > 0 && (
+                <span>
+                  {cart.reduce(
+                    (total, item) =>
+                      total +
+                      Number(
+                        item.quantity
+                      ),
+                    0
+                  )}
+                </span>
+              )}
+            </button>
 
           </div>
-
         </header>
 
         <Checkout
           cart={cart}
           subtotal={subtotal}
-          onBack={() =>
-            setShowCheckout(false)
-          }
+          onBack={backToMenu}
         />
 
-      </div>
+      </main>
     );
   }
 
-  // ==================================================
+  // ========================================
   // SITE
-  // ==================================================
-
+  // ========================================
   return (
-    <div className="site">
+    <main className="app">
 
-      {/* ================= HEADER ================= */}
+      {/* ========================================
+          CABEÇALHO
+      ======================================== */}
+      <header className="site-header">
 
-      <header className="header">
-
-        <div className="brand">
+        <div className="header-inner">
 
           <img
             src={logo}
-            alt="Blend Burguer"
-            className="brand-logo"
+            alt="BLEND BURGUER 037"
+            className="site-logo"
           />
 
-          <span className="brand-city">
-            037 • DIVINÓPOLIS - MG
-          </span>
+          <div className="header-actions">
 
-        </div>
+            <div className="header-hours">
+              <Clock size={16} />
+              <span>
+                Sex a Dom • 19h às 23h
+              </span>
+            </div>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
+            <button
+              type="button"
+              className="cart-button"
+              onClick={goToCheckout}
+            >
+              <ShoppingCart
+                size={20}
+              />
 
-          <button
-            className="cart-button"
-            type="button"
-            onClick={irParaCarrinho}
-          >
-
-            <ShoppingCart size={20} />
-
-            <span>
               Carrinho
-            </span>
 
-            {cartCount > 0 && (
-              <strong>
-                {cartCount}
-              </strong>
-            )}
+              {cart.length > 0 && (
+                <span>
+                  {cart.reduce(
+                    (total, item) =>
+                      total +
+                      Number(
+                        item.quantity
+                      ),
+                    0
+                  )}
+                </span>
+              )}
+            </button>
 
-          </button>
+          </div>
 
         </div>
 
       </header>
 
-      {/* ================= CONTEÚDO ================= */}
+      {/* ========================================
+          HERO
+      ======================================== */}
+      <section className="hero">
 
-      <main>
+        <div className="hero-content">
 
-        {/* ================= HERO ================= */}
+          <span className="hero-label">
+            DIVINÓPOLIS - MG
+          </span>
 
-        <section className="hero">
+          <h1>
+            BLEND BURGUER
+          </h1>
 
-          <div className="hero-content">
+          <p>
+            Feito pra matar a fome.
+          </p>
 
-            <span className="hero-label">
-              SABOR • QUALIDADE • ATITUDE
-            </span>
+          <strong>
+            SABOR. QUALIDADE • ATITUDE
+          </strong>
 
-            <h1>
-              BLEND BURGUER
-            </h1>
+        </div>
 
-            <p>
-              Feito pra matar a fome.
-            </p>
+      </section>
 
-            <div className="store-status">
+      {/* ========================================
+          CARDÁPIO
+      ======================================== */}
+      <section
+        id="cardapio"
+        className="menu-section"
+      >
 
-              <span
-                className={`status-dot ${
-                  isOpen
-                    ? "status-open"
-                    : "status-closed"
-                }`}
-              />
+        <div className="section-heading">
 
-              <span>
-                {isOpen
-                  ? "ABERTO"
-                  : "FECHADO"}
-              </span>
+          <span>
+            NOSSO CARDÁPIO
+          </span>
 
-              <Clock size={17} />
+          <h2>
+            Escolha seu pedido
+          </h2>
 
-              <span>
-                Sexta e Sábado -
-                19h às 23h00
-              </span>
+        </div>
 
-            </div>
+        {/* ========================================
+            CATEGORIAS
+        ======================================== */}
+        <div className="category-list">
 
-            <button
-              className="primary-button"
-              type="button"
-              onClick={() =>
-                document
-                  .getElementById(
-                    "cardapio"
+          {categories.map(
+            (category) => (
+
+              <button
+                key={category}
+                type="button"
+                className={
+                  selectedCategory ===
+                  category
+                    ? "category-button active"
+                    : "category-button"
+                }
+                onClick={() =>
+                  setSelectedCategory(
+                    category
                   )
-                  ?.scrollIntoView({
-                    behavior:
-                      "smooth",
-                  })
-              }
-            >
-              PEDIR AGORA
-            </button>
+                }
+              >
+                {category}
+              </button>
 
-          </div>
+            )
+          )}
 
-        </section>
+        </div>
 
-        {/* ================= CARDÁPIO ================= */}
+        {/* ========================================
+            PRODUTOS
+        ======================================== */}
+        <div className="products-grid">
+
+          {products.map(
+            (product) => (
+
+              <article
+                key={product.id}
+                className="product-card"
+              >
+
+                <div className="product-info">
+
+                  {product.popular && (
+                    <span className="popular-badge">
+                      MAIS PEDIDO
+                    </span>
+                  )}
+
+                  <h3>
+                    {product.name}
+                  </h3>
+
+                  {product.description && (
+                    <p>
+                      {product.description}
+                    </p>
+                  )}
+
+                  <strong className="product-price">
+                    {formatCurrency(
+                      product.price
+                    )}
+                  </strong>
+
+                </div>
+
+                <button
+                  type="button"
+                  className="add-button"
+                  onClick={() => {
+
+                    if (
+                      product.options &&
+                      product.options.length >
+                        0
+                    ) {
+                      openProduct(product);
+                    } else {
+                      addToCart(product);
+                    }
+
+                  }}
+                >
+                  <Plus size={18} />
+
+                  ADICIONAR
+                </button>
+
+              </article>
+
+            )
+          )}
+
+        </div>
+
+      </section>
+
+      {/* ========================================
+          CARRINHO
+      ======================================== */}
+      {cart.length > 0 && (
 
         <section
-          className="menu-preview"
-          id="cardapio"
+          id="carrinho"
+          className="cart-section"
         >
 
           <div className="section-heading">
 
             <span>
-              ESCOLHA SEU PEDIDO
+              SEU PEDIDO
             </span>
 
             <h2>
-              Nosso cardápio
+              Carrinho
             </h2>
 
           </div>
 
-          <div className="categories">
+          <div className="cart-list">
 
-            {categories.map(
-              (category) => (
+            {cart.map(
+              (item, index) => (
 
-                <button
-                  key={category}
-                  type="button"
-                  className={
-                    selectedCategory ===
-                    category
-                      ? "category-active"
-                      : ""
-                  }
-                  onClick={() =>
-                    setSelectedCategory(
-                      category
-                    )
-                  }
-                >
-                  {category}
-                </button>
-
-              )
-            )}
-
-          </div>
-
-          <div className="products">
-
-            {filteredProducts.length ===
-            0 ? (
-
-              <div className="empty-category">
-
-                <p>
-                  Ainda não temos
-                  produtos nessa
-                  categoria.
-                </p>
-
-              </div>
-
-            ) : (
-
-              filteredProducts.map(
-                (product) => (
-
-                  <article
-                    className="product-card"
-                    key={product.id}
-                  >
-
-                    <div className="product-image">
-
-                      {product.image ? (
-
-                        <img
-                          src={
-                            product.image
-                          }
-                          alt={
-                            product.name
-                          }
-                        />
-
-                      ) : (
-
-                        <div className="image-placeholder">
-
-                          <span>
-                            FOTO
-                          </span>
-
-                        </div>
-
-                      )}
-
-                    </div>
-
-                    {product.popular && (
-                      <span className="popular-badge">
-                        MAIS PEDIDO
-                      </span>
-                    )}
-
-                    <h3>
-                      {product.name}
-                    </h3>
-
-                    <p>
-                      {
-                        product.description
-                      }
-                    </p>
-
-                    <div className="product-footer">
-
-                      <strong>
-                        {formatCurrency(
-                          product.price
-                        )}
-                      </strong>
-
-                      <button
-                        className="add-button"
-                        type="button"
-                        onClick={() =>
-                          addToCart(
-                            product
-                          )
-                        }
-                      >
-                        ADICIONAR
-                      </button>
-
-                    </div>
-
-                  </article>
-
-                )
-              )
-
-            )}
-
-          </div>
-
-        </section>
-
-        {/* ================= CARRINHO ================= */}
-
-        {cart.length > 0 && (
-
-          <section
-            className="cart-section"
-            id="carrinho"
-          >
-
-            <div className="section-heading">
-
-              <span>
-                SEU PEDIDO
-              </span>
-
-              <h2>
-                Carrinho
-              </h2>
-
-            </div>
-
-            <div className="cart-list">
-
-              {cart.map((item) => (
-
-                <article
+                <div
+                  key={`${item.id}-${item.option}-${index}`}
                   className="cart-item"
-                  key={
-                    item.cartItemId
-                  }
                 >
 
-                  <div>
+                  <div className="cart-item-info">
 
                     <h3>
                       {item.name}
                     </h3>
 
-                    {item.selectedOption && (
-                      <small>
-                        Opção:{" "}
-                        {
-                          item.selectedOption
-                        }
-                      </small>
+                    {item.option && (
+                      <p>
+                        {item.option}
+                      </p>
                     )}
 
-                    <span>
+                    <strong>
                       {formatCurrency(
                         item.price
                       )}
-                    </span>
+                    </strong>
 
                   </div>
 
-                  <div className="cart-controls">
+                  <div className="cart-item-actions">
 
                     <button
                       type="button"
                       onClick={() =>
                         decreaseQuantity(
-                          item.cartItemId
+                          index
                         )
                       }
-                      aria-label="Diminuir quantidade"
                     >
                       <Minus size={16} />
                     </button>
 
-                    <strong>
+                    <span>
                       {item.quantity}
-                    </strong>
+                    </span>
 
                     <button
                       type="button"
                       onClick={() =>
                         increaseQuantity(
-                          item.cartItemId
+                          index
                         )
                       }
-                      aria-label="Aumentar quantidade"
                     >
                       <Plus size={16} />
                     </button>
 
                     <button
                       type="button"
+                      className="remove-button"
                       onClick={() =>
                         removeFromCart(
-                          item.cartItemId
+                          index
                         )
                       }
-                      aria-label="Remover produto"
                     >
-                      <Trash2 size={16} />
+                      <Trash2
+                        size={18}
+                      />
                     </button>
 
                   </div>
 
-                </article>
+                </div>
 
-              ))}
+              )
+            )}
 
-            </div>
+          </div>
 
-            <div className="cart-total">
+          {/* ========================================
+              TOTAL DO CARRINHO
+          ======================================== */}
+          <div className="cart-total">
 
-              <span>
-                Subtotal
-              </span>
+            <span>
+              Subtotal
+            </span>
 
-              <strong>
-                {formatCurrency(
-                  subtotal
-                )}
-              </strong>
+            <strong>
+              {formatCurrency(
+                subtotal
+              )}
+            </strong>
 
-            </div>
+          </div>
+
+          <div className="cart-actions">
 
             <button
-              className="primary-button"
               type="button"
-              onClick={() =>
-                setShowCheckout(true)
-              }
+              className="secondary-button"
+              onClick={clearCart}
+            >
+              LIMPAR CARRINHO
+            </button>
+
+            <button
+              type="button"
+              className="primary-button"
+              onClick={goToCheckout}
             >
               FINALIZAR PEDIDO
             </button>
 
-          </section>
+          </div>
 
-        )}
+        </section>
 
-        {/* ================= CAIXA DO DIA ================= */}
+      )}
 
-        {mostrarCaixa && (
+      {/* ========================================
+          BARRA FIXA DO CARRINHO
+      ======================================== */}
+      {cart.length > 0 && (
 
-          <section className="caixa-section">
+        <div className="floating-cart">
 
-            <div className="caixa-header">
+          <div>
+            <span>
+              {cart.reduce(
+                (total, item) =>
+                  total +
+                  Number(
+                    item.quantity
+                  ),
+                0
+              )}{" "}
+              item(ns)
+            </span>
 
-              <div className="section-heading">
+            <strong>
+              {formatCurrency(
+                subtotal
+              )}
+            </strong>
+          </div>
 
-                <span>
-                  CONTROLE DO DIA
-                </span>
+          <button
+            type="button"
+            onClick={goToCheckout}
+          >
+            FINALIZAR
+          </button>
 
-                <h2>
-                  Resumo de Vendas
-                </h2>
+        </div>
 
-              </div>
+      )}
 
-              <button
-                className="caixa-fechar"
-                type="button"
-                onClick={() =>
-                  setMostrarCaixa(false)
-                }
-                aria-label="Fechar caixa"
-              >
-                <X size={20} />
-              </button>
+      {/* ========================================
+          CAIXA DO DIA
+          
+          ATENÇÃO:
+          Sem banco online, esta área NÃO
+          recebe automaticamente os pedidos
+          feitos pelo celular do cliente.
+          
+          Ela fica disponível para você usar
+          futuramente.
+      ======================================== */}
+      {showCash && (
 
+        <section className="cash-control">
+
+          <div className="cash-control-header">
+
+            <div>
+              <span>
+                CONTROLE INTERNO
+              </span>
+
+              <h2>
+                Caixa do Dia
+              </h2>
             </div>
 
-            <p className="caixa-data">
+            <button
+              type="button"
+              onClick={() =>
+                setShowCash(false)
+              }
+            >
+              <X size={20} />
+            </button>
 
-              Data:{" "}
+          </div>
 
-              <strong>
-                {dataAtual.toLocaleDateString(
-                  "pt-BR"
-                )}
-              </strong>
+          <div className="cash-empty">
 
+            <strong>
+              Caixa automático
+            </strong>
+
+            <p>
+              O caixa ainda não está
+              conectado aos pedidos do
+              WhatsApp.
             </p>
 
-            {/* ================= PAGAMENTOS ================= */}
+            <p>
+              Os pedidos são enviados
+              diretamente para o WhatsApp
+              da BLEND BURGUER 037.
+            </p>
 
-            <div className="caixa-vendas">
+          </div>
 
-              <div>
+        </section>
 
-                <span>
-                  💵 DINHEIRO
-                </span>
+      )}
 
-                <strong>
-                  {formatCurrency(
-                    totalDinheiro
-                  )}
-                </strong>
+      {/* ========================================
+          RODAPÉ
+      ======================================== */}
+      <footer className="site-footer">
 
-              </div>
+        <img
+          src={logo}
+          alt="BLEND BURGUER 037"
+          className="footer-logo"
+        />
 
-              <div>
-
-                <span>
-                  📱 PIX
-                </span>
-
-                <strong>
-                  {formatCurrency(
-                    totalPix
-                  )}
-                </strong>
-
-              </div>
-
-              <div>
-
-                <span>
-                  💳 CARTÃO
-                </span>
-
-                <strong>
-                  {formatCurrency(
-                    totalCartao
-                  )}
-                </strong>
-
-              </div>
-
-            </div>
-
-            {/* ================= TOTAL ================= */}
-
-            <div className="caixa-total">
-
-              <span>
-                TOTAL DE VENDAS
-              </span>
-
-              <strong>
-                {formatCurrency(
-                  totalVendas
-                )}
-              </strong>
-
-            </div>
-
-            {/* ================= PEDIDOS ================= */}
-
-            <div className="taxa-total">
-
-              <span>
-                QUANTIDADE DE PEDIDOS
-              </span>
-
-              <strong>
-                {quantidadePedidos}
-              </strong>
-
-            </div>
-
-            {/* ================= ENTREGAS ================= */}
-
-            <div className="caixa-taxas">
-
-              <h3>
-                🚴 TAXAS DE ENTREGA
-              </h3>
-
-              <div className="taxa-total">
-
-                <span>
-                  TOTAL DE ENTREGAS
-                </span>
-
-                <strong>
-                  {totalEntregas}
-                </strong>
-
-              </div>
-
-              <div className="taxa-total">
-
-                <span>
-                  TOTAL DE TAXAS
-                </span>
-
-                <strong>
-                  {formatCurrency(
-                    totalTaxas
-                  )}
-                </strong>
-
-              </div>
-
-            </div>
-
-            {/* ================= BOTÕES ================= */}
-
-            <div className="caixa-botoes">
-
-              <button
-                className="primary-button"
-                type="button"
-                onClick={
-                  copiarResumo
-                }
-              >
-                📋 COPIAR RESUMO
-              </button>
-
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={() =>
-                  window.print()
-                }
-              >
-                🖨️ IMPRIMIR RESUMO
-              </button>
-
-            </div>
-
-          </section>
-
-        )}
-
-      </main>
-
-      {/* ================= RODAPÉ ================= */}
-
-      <footer className="footer">
-
-        <strong>
-          BLEND BURGUER
-        </strong>
-
-        <span>
-          037 • DIVINÓPOLIS - MG
-        </span>
-
-        <span>
+        <p>
           Feito pra matar a fome.
+        </p>
+
+        <span>
+          Divinópolis - MG
         </span>
 
       </footer>
 
-      {/* ================= CARRINHO FIXO ================= */}
+      {/* ========================================
+          MODAL DE OPÇÃO
+      ======================================== */}
+      {selectedProduct && (
 
-      {cart.length > 0 &&
-        !showCheckout && (
+        <div
+          className="modal-overlay"
+          onClick={closeProduct}
+        >
 
-          <button
-            className="floating-cart"
-            type="button"
-            onClick={
-              irParaCarrinho
+          <div
+            className="product-modal"
+            onClick={(event) =>
+              event.stopPropagation()
             }
           >
 
-            <div className="floating-cart-icon">
-
-              <ShoppingCart size={20} />
-
-              <strong>
-                {cartCount}
-              </strong>
-
-            </div>
-
-            <div className="floating-cart-info">
-
-              <span>
-                VER CARRINHO
-              </span>
-
-              <strong>
-                {formatCurrency(
-                  subtotal
-                )}
-              </strong>
-
-            </div>
-
-            <span className="floating-cart-arrow">
-              →
-            </span>
-
-          </button>
-
-        )}
-
-      {/* ================= MODAL DE OPÇÕES ================= */}
-
-      {selectedProduct && (
-
-        <div className="option-overlay">
-
-          <div className="option-modal">
-
             <button
-              className="option-close"
               type="button"
-              onClick={() => {
-                setSelectedProduct(null);
-                setSelectedOption("");
-              }}
-              aria-label="Fechar"
+              className="modal-close"
+              onClick={closeProduct}
             >
               <X size={20} />
             </button>
@@ -1237,64 +850,60 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
               {selectedProduct.name}
             </h2>
 
-            <p>
-              {
-                selectedProduct
-                  .options?.[0]
-                  ?.name
-              }
-            </p>
+            {selectedProduct.description && (
+              <p>
+                {selectedProduct.description}
+              </p>
+            )}
 
-            <div className="option-list">
+            <strong>
+              {formatCurrency(
+                selectedProduct.price
+              )}
+            </strong>
 
-              {selectedProduct
-                .options?.[0]
-                ?.values.map(
-                  (value) => (
+            {selectedProduct.options &&
+              selectedProduct.options.length >
+                0 && (
+
+              <div className="modal-options">
+
+                <h3>
+                  Escolha uma opção
+                </h3>
+
+                {selectedProduct.options.map(
+                  (option) => (
 
                     <button
-                      key={value}
+                      key={option}
                       type="button"
                       className={
                         selectedOption ===
-                        value
-                          ? "option-selected"
-                          : ""
+                        option
+                          ? "choice active"
+                          : "choice"
                       }
                       onClick={() =>
                         setSelectedOption(
-                          value
+                          option
                         )
                       }
                     >
-
-                      <span>
-                        {value}
-                      </span>
-
-                      {selectedOption ===
-                        value && (
-                        <strong>
-                          ✓
-                        </strong>
-                      )}
-
+                      {option}
                     </button>
 
                   )
                 )}
 
-            </div>
+              </div>
+
+            )}
 
             <button
-              className="primary-button"
               type="button"
-              disabled={
-                !selectedOption
-              }
-              onClick={
-                confirmarOpcao
-              }
+              className="primary-button modal-add"
+              onClick={confirmProduct}
             >
               ADICIONAR AO CARRINHO
             </button>
@@ -1305,7 +914,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
       )}
 
-    </div>
+    </main>
   );
 }
 
