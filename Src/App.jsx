@@ -10,6 +10,7 @@ import {
 
 import { menu } from "./Data/menu";
 import Checkout from "./components/Checkout";
+
 import {
   calculateSubtotal,
   formatCurrency,
@@ -20,43 +21,84 @@ import logo from "./IMG_6208.png";
 function App() {
   const [cart, setCart] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
+
   const [selectedCategory, setSelectedCategory] =
     useState("ARTESANAIS");
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedProduct, setSelectedProduct] =
+    useState(null);
 
-  // =========================
+  const [selectedOption, setSelectedOption] =
+    useState("");
+
+  const [mostrarCaixa, setMostrarCaixa] =
+    useState(false);
+
+  // ==================================================
+  // DATA ATUAL
+  // ==================================================
+
+  const dataAtual = new Date();
+
+  const hoje =
+    `${dataAtual.getFullYear()}-` +
+    `${String(dataAtual.getMonth() + 1).padStart(2, "0")}-` +
+    `${String(dataAtual.getDate()).padStart(2, "0")}`;
+
+  // ==================================================
   // CAIXA DO DIA
-  // =========================
+  // ==================================================
 
-  const hoje = new Date().toISOString().split("T")[0];
+  function criarCaixaVazio() {
+    return {
+      data: hoje,
 
-  const dadosCaixaSalvos = JSON.parse(
-    localStorage.getItem("blend-caixa") || "{}"
-  );
+      dinheiro: "",
+      pix: "",
+      cartao: "",
 
-  const caixaInicial =
-    dadosCaixaSalvos.data === hoje
-      ? dadosCaixaSalvos
-      : {
-          data: hoje,
-          dinheiro: "",
-          pix: "",
-          cartao: "",
+      taxas: {
+        3: 0,
+        5: 0,
+        7: 0,
+        9: 0,
+        10: 0,
+        12: 0,
+        15: 0,
+      },
+    };
+  }
+
+  function carregarCaixa() {
+    try {
+      const salvo = JSON.parse(
+        localStorage.getItem("blend-caixa") || "null"
+      );
+
+      if (salvo && salvo.data === hoje) {
+        return {
+          ...criarCaixaVazio(),
+          ...salvo,
+
           taxas: {
-            3: 0,
-            5: 0,
-            7: 0,
-            9: 0,
-            10: 0,
-            12: 0,
-            15: 0,
+            ...criarCaixaVazio().taxas,
+            ...(salvo.taxas || {}),
           },
         };
+      }
 
-  const [caixa, setCaixa] = useState(caixaInicial);
-  const [mostrarCaixa, setMostrarCaixa] = useState(false);
+      return criarCaixaVazio();
+    } catch {
+      return criarCaixaVazio();
+    }
+  }
+
+  const [caixa, setCaixa] =
+    useState(carregarCaixa);
+
+  // ==================================================
+  // ATUALIZAR CAIXA
+  // ==================================================
 
   function atualizarCaixa(campo, valor) {
     const novoCaixa = {
@@ -72,9 +114,14 @@ function App() {
     );
   }
 
+  // ==================================================
+  // ATUALIZAR TAXA
+  // ==================================================
+
   function atualizarTaxa(taxa, quantidade) {
     const novoCaixa = {
       ...caixa,
+
       taxas: {
         ...caixa.taxas,
         [taxa]: quantidade,
@@ -88,6 +135,10 @@ function App() {
       JSON.stringify(novoCaixa)
     );
   }
+
+  // ==================================================
+  // TOTAIS
+  // ==================================================
 
   const totalDinheiro =
     Number(caixa.dinheiro) || 0;
@@ -103,35 +154,41 @@ function App() {
     totalPix +
     totalCartao;
 
-  const totalTaxas = Object.entries(
-    caixa.taxas
-  ).reduce(
-    (total, [taxa, quantidade]) =>
-      total +
-      Number(taxa) *
-        Number(quantidade || 0),
-    0
-  );
+  const totalTaxas =
+    Object.entries(caixa.taxas).reduce(
+      (total, [taxa, quantidade]) => {
+        return (
+          total +
+          Number(taxa) *
+            Number(quantidade || 0)
+        );
+      },
+      0
+    );
+
+  const totalEntregas =
+    Object.values(caixa.taxas).reduce(
+      (total, quantidade) =>
+        total + Number(quantidade || 0),
+      0
+    );
+
+  // ==================================================
+  // COPIAR RESUMO
+  // ==================================================
 
   function copiarResumo() {
     const resumo = `RESUMO DE VENDAS — BLEND BURGUER 037
-Data: ${new Date().toLocaleDateString(
-      "pt-BR"
-    )}
+Data: ${dataAtual.toLocaleDateString("pt-BR")}
 
-DINHEIRO: ${formatCurrency(
-      totalDinheiro
-    )}
+DINHEIRO: ${formatCurrency(totalDinheiro)}
 PIX: ${formatCurrency(totalPix)}
-CARTÃO: ${formatCurrency(
-      totalCartao
-    )}
+CARTÃO: ${formatCurrency(totalCartao)}
 
-TOTAL DE VENDAS: ${formatCurrency(
-      totalVendas
-    )}
+TOTAL DE VENDAS: ${formatCurrency(totalVendas)}
 
 TAXAS DE ENTREGA
+
 R$ 3,00 — ${caixa.taxas[3]} entregas
 R$ 5,00 — ${caixa.taxas[5]} entregas
 R$ 7,00 — ${caixa.taxas[7]} entregas
@@ -140,48 +197,77 @@ R$ 10,00 — ${caixa.taxas[10]} entregas
 R$ 12,00 — ${caixa.taxas[12]} entregas
 R$ 15,00 — ${caixa.taxas[15]} entregas
 
-TOTAL DE TAXAS: ${formatCurrency(
-      totalTaxas
-    )}`;
+TOTAL DE ENTREGAS: ${totalEntregas}
 
-    navigator.clipboard
-      .writeText(resumo)
-      .then(() => {
-        alert("Resumo copiado!");
-      })
-      .catch(() => {
-        alert(
-          "Não foi possível copiar automaticamente."
-        );
-      });
+TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
+
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+      navigator.clipboard
+        .writeText(resumo)
+        .then(() => {
+          alert("Resumo copiado!");
+        })
+        .catch(() => {
+          alert(
+            "Não foi possível copiar o resumo."
+          );
+        });
+
+      return;
+    }
+
+    const textarea =
+      document.createElement("textarea");
+
+    textarea.value = resumo;
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    try {
+      document.execCommand("copy");
+
+      alert("Resumo copiado!");
+    } catch {
+      alert(
+        "Não foi possível copiar o resumo."
+      );
+    }
+
+    document.body.removeChild(textarea);
   }
 
-  // =========================
-  // HORÁRIO
-  // SEXTA E SÁBADO
-  // 19:00 ÀS 23:00
-  // =========================
+  // ==================================================
+  // HORÁRIO DA LOJA
+  // ==================================================
 
-  const now = new Date();
+  const day = dataAtual.getDay();
 
-  const day = now.getDay();
-  const hour = now.getHours();
-  const minutes = now.getMinutes();
+  const hour = dataAtual.getHours();
+
+  const minutes = dataAtual.getMinutes();
 
   const currentTime =
     hour * 60 + minutes;
 
-  const openingTime = 19 * 60;
-  const closingTime = 23 * 60;
+  const openingTime =
+    19 * 60;
+
+  const closingTime =
+    23 * 60;
 
   const isOpen =
     (day === 5 || day === 6) &&
     currentTime >= openingTime &&
     currentTime <= closingTime;
 
-  // =========================
+  // ==================================================
   // CATEGORIAS
-  // =========================
+  // ==================================================
 
   const categories = [
     "ARTESANAIS",
@@ -192,15 +278,16 @@ TOTAL DE TAXAS: ${formatCurrency(
     "BEBIDAS",
   ];
 
-  const filteredProducts = menu.filter(
-    (product) =>
-      product.category ===
-      selectedCategory
-  );
+  const filteredProducts =
+    menu.filter(
+      (product) =>
+        product.category ===
+        selectedCategory
+    );
 
-  // =========================
-  // TOTAL DO CARRINHO
-  // =========================
+  // ==================================================
+  // CARRINHO
+  // ==================================================
 
   const subtotal = useMemo(
     () => calculateSubtotal(cart),
@@ -213,9 +300,9 @@ TOTAL DE TAXAS: ${formatCurrency(
     0
   );
 
-  // =========================
-  // IR PARA O CARRINHO
-  // =========================
+  // ==================================================
+  // IR PARA CARRINHO
+  // ==================================================
 
   function irParaCarrinho() {
     if (cart.length === 0) {
@@ -235,9 +322,9 @@ TOTAL DE TAXAS: ${formatCurrency(
       });
   }
 
-  // =========================
-  // ADICIONAR AO CARRINHO
-  // =========================
+  // ==================================================
+  // ADICIONAR PRODUTO
+  // ==================================================
 
   function addToCart(product) {
     if (
@@ -246,11 +333,16 @@ TOTAL DE TAXAS: ${formatCurrency(
     ) {
       setSelectedProduct(product);
       setSelectedOption("");
+
       return;
     }
 
     adicionarProdutoAoCarrinho(product);
   }
+
+  // ==================================================
+  // ADICIONAR PRODUTO AO CARRINHO
+  // ==================================================
 
   function adicionarProdutoAoCarrinho(
     product,
@@ -282,24 +374,37 @@ TOTAL DE TAXAS: ${formatCurrency(
 
       return [
         ...currentCart,
+
         {
           ...product,
+
           cartItemId: itemId,
+
           quantity: 1,
+
           selectedOption: option,
         },
       ];
     });
   }
 
-  function confirmarOpcao() {
-    if (!selectedProduct) return;
+  // ==================================================
+  // CONFIRMAR OPÇÃO
+  // ==================================================
 
-    if (
+  function confirmarOpcao() {
+    if (!selectedProduct) {
+      return;
+    }
+
+    const precisaSelecionar =
       selectedProduct.options?.some(
         (option) =>
           option.required
-      ) &&
+      );
+
+    if (
+      precisaSelecionar &&
       !selectedOption
     ) {
       return;
@@ -311,12 +416,13 @@ TOTAL DE TAXAS: ${formatCurrency(
     );
 
     setSelectedProduct(null);
+
     setSelectedOption("");
   }
 
-  // =========================
-  // QUANTIDADE
-  // =========================
+  // ==================================================
+  // AUMENTAR QUANTIDADE
+  // ==================================================
 
   function increaseQuantity(
     cartItemId
@@ -334,6 +440,10 @@ TOTAL DE TAXAS: ${formatCurrency(
       )
     );
   }
+
+  // ==================================================
+  // DIMINUIR QUANTIDADE
+  // ==================================================
 
   function decreaseQuantity(
     cartItemId
@@ -357,6 +467,10 @@ TOTAL DE TAXAS: ${formatCurrency(
     );
   }
 
+  // ==================================================
+  // REMOVER PRODUTO
+  // ==================================================
+
   function removeFromCart(
     cartItemId
   ) {
@@ -369,18 +483,15 @@ TOTAL DE TAXAS: ${formatCurrency(
     );
   }
 
-  // =========================
+  // ==================================================
   // CHECKOUT
-  // =========================
+  // ==================================================
 
   if (showCheckout) {
     return (
       <div className="site">
-
         <header className="header">
-
           <div className="brand">
-
             <img
               src={logo}
               alt="Blend Burguer"
@@ -390,9 +501,7 @@ TOTAL DE TAXAS: ${formatCurrency(
             <span className="brand-city">
               037 • DIVINÓPOLIS - MG
             </span>
-
           </div>
-
         </header>
 
         <Checkout
@@ -402,21 +511,18 @@ TOTAL DE TAXAS: ${formatCurrency(
             setShowCheckout(false)
           }
         />
-
       </div>
     );
   }
 
-  // =========================
+  // ==================================================
   // SITE
-  // =========================
+  // ==================================================
 
   return (
     <div className="site">
 
-      {/* =========================
-          CABEÇALHO
-      ========================= */}
+      {/* ================= HEADER ================= */}
 
       <header className="header">
 
@@ -442,6 +548,8 @@ TOTAL DE TAXAS: ${formatCurrency(
           }}
         >
 
+          {/* BOTÃO CAIXA */}
+
           <button
             className="caixa-button"
             type="button"
@@ -451,6 +559,8 @@ TOTAL DE TAXAS: ${formatCurrency(
           >
             CAIXA
           </button>
+
+          {/* BOTÃO CARRINHO */}
 
           <button
             className="cart-button"
@@ -476,11 +586,11 @@ TOTAL DE TAXAS: ${formatCurrency(
 
       </header>
 
+      {/* ================= CONTEÚDO ================= */}
+
       <main>
 
-        {/* =========================
-            HERO
-        ========================= */}
+        {/* ================= HERO ================= */}
 
         <section className="hero">
 
@@ -544,9 +654,7 @@ TOTAL DE TAXAS: ${formatCurrency(
 
         </section>
 
-        {/* =========================
-            CARDÁPIO
-        ========================= */}
+        {/* ================= CARDÁPIO ================= */}
 
         <section
           className="menu-preview"
@@ -564,6 +672,8 @@ TOTAL DE TAXAS: ${formatCurrency(
             </h2>
 
           </div>
+
+          {/* CATEGORIAS */}
 
           <div className="categories">
 
@@ -593,6 +703,8 @@ TOTAL DE TAXAS: ${formatCurrency(
 
           </div>
 
+          {/* PRODUTOS */}
+
           <div className="products">
 
             {filteredProducts.length ===
@@ -618,33 +730,41 @@ TOTAL DE TAXAS: ${formatCurrency(
                     key={product.id}
                   >
 
+                    {/* IMAGEM */}
+
                     <div className="product-image">
 
                       {product.image ? (
 
                         <img
-                          src={product.image}
-                          alt={product.name}
+                          src={
+                            product.image
+                          }
+                          alt={
+                            product.name
+                          }
                         />
 
                       ) : (
 
                         <div className="image-placeholder">
+
                           <span>
                             FOTO
                           </span>
+
                         </div>
 
                       )}
 
                     </div>
 
-                    {product.popular && (
+                    {/* MAIS PEDIDO */}
 
+                    {product.popular && (
                       <span className="popular-badge">
                         MAIS PEDIDO
                       </span>
-
                     )}
 
                     <h3>
@@ -652,7 +772,9 @@ TOTAL DE TAXAS: ${formatCurrency(
                     </h3>
 
                     <p>
-                      {product.description}
+                      {
+                        product.description
+                      }
                     </p>
 
                     <div className="product-footer">
@@ -688,9 +810,7 @@ TOTAL DE TAXAS: ${formatCurrency(
 
         </section>
 
-        {/* =========================
-            CARRINHO
-        ========================= */}
+        {/* ================= CARRINHO ================= */}
 
         {cart.length > 0 && (
 
@@ -713,87 +833,89 @@ TOTAL DE TAXAS: ${formatCurrency(
 
             <div className="cart-list">
 
-              {cart.map(
-                (item) => (
+              {cart.map((item) => (
 
-                  <article
-                    className="cart-item"
-                    key={item.cartItemId}
-                  >
+                <article
+                  className="cart-item"
+                  key={
+                    item.cartItemId
+                  }
+                >
 
-                    <div>
+                  <div>
 
-                      <h3>
-                        {item.name}
-                      </h3>
+                    <h3>
+                      {item.name}
+                    </h3>
 
-                      {item.selectedOption && (
+                    {item.selectedOption && (
+                      <small>
+                        Opção:{" "}
+                        {
+                          item.selectedOption
+                        }
+                      </small>
+                    )}
 
-                        <small>
-                          Recheio:{" "}
-                          {item.selectedOption}
-                        </small>
-
+                    <span>
+                      {formatCurrency(
+                        item.price
                       )}
+                    </span>
 
-                      <span>
-                        {formatCurrency(
-                          item.price
-                        )}
-                      </span>
+                  </div>
 
-                    </div>
+                  <div className="cart-controls">
 
-                    <div className="cart-controls">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        decreaseQuantity(
+                          item.cartItemId
+                        )
+                      }
+                      aria-label="Diminuir quantidade"
+                    >
+                      <Minus size={16} />
+                    </button>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          decreaseQuantity(
-                            item.cartItemId
-                          )
-                        }
-                        aria-label="Diminuir quantidade"
-                      >
-                        <Minus size={16} />
-                      </button>
+                    <strong>
+                      {item.quantity}
+                    </strong>
 
-                      <strong>
-                        {item.quantity}
-                      </strong>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        increaseQuantity(
+                          item.cartItemId
+                        )
+                      }
+                      aria-label="Aumentar quantidade"
+                    >
+                      <Plus size={16} />
+                    </button>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          increaseQuantity(
-                            item.cartItemId
-                          )
-                        }
-                        aria-label="Aumentar quantidade"
-                      >
-                        <Plus size={16} />
-                      </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        removeFromCart(
+                          item.cartItemId
+                        )
+                      }
+                      aria-label="Remover produto"
+                    >
+                      <Trash2 size={16} />
+                    </button>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          removeFromCart(
-                            item.cartItemId
-                          )
-                        }
-                        aria-label="Remover produto"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                  </div>
 
-                    </div>
+                </article>
 
-                  </article>
-
-                )
-              )}
+              ))}
 
             </div>
+
+            {/* TOTAL */}
 
             <div className="cart-total">
 
@@ -809,6 +931,8 @@ TOTAL DE TAXAS: ${formatCurrency(
 
             </div>
 
+            {/* FINALIZAR */}
+
             <button
               className="primary-button"
               type="button"
@@ -823,9 +947,7 @@ TOTAL DE TAXAS: ${formatCurrency(
 
         )}
 
-        {/* =========================
-            CAIXA DO DIA
-        ========================= */}
+        {/* ================= CAIXA ================= */}
 
         {mostrarCaixa && (
 
@@ -858,18 +980,26 @@ TOTAL DE TAXAS: ${formatCurrency(
 
             </div>
 
+            {/* DATA */}
+
             <p className="caixa-data">
+
               Data:{" "}
+
               <strong>
-                {new Date().toLocaleDateString(
+                {dataAtual.toLocaleDateString(
                   "pt-BR"
                 )}
               </strong>
+
             </p>
+
+            {/* PAGAMENTOS */}
 
             <div className="caixa-vendas">
 
               <label>
+
                 💵 DINHEIRO
 
                 <input
@@ -877,7 +1007,9 @@ TOTAL DE TAXAS: ${formatCurrency(
                   step="0.01"
                   min="0"
                   placeholder="0,00"
-                  value={caixa.dinheiro}
+                  value={
+                    caixa.dinheiro
+                  }
                   onChange={(e) =>
                     atualizarCaixa(
                       "dinheiro",
@@ -889,6 +1021,7 @@ TOTAL DE TAXAS: ${formatCurrency(
               </label>
 
               <label>
+
                 📱 PIX
 
                 <input
@@ -908,6 +1041,7 @@ TOTAL DE TAXAS: ${formatCurrency(
               </label>
 
               <label>
+
                 💳 CARTÃO
 
                 <input
@@ -915,7 +1049,9 @@ TOTAL DE TAXAS: ${formatCurrency(
                   step="0.01"
                   min="0"
                   placeholder="0,00"
-                  value={caixa.cartao}
+                  value={
+                    caixa.cartao
+                  }
                   onChange={(e) =>
                     atualizarCaixa(
                       "cartao",
@@ -927,6 +1063,8 @@ TOTAL DE TAXAS: ${formatCurrency(
               </label>
 
             </div>
+
+            {/* TOTAL DE VENDAS */}
 
             <div className="caixa-total">
 
@@ -941,6 +1079,8 @@ TOTAL DE TAXAS: ${formatCurrency(
               </strong>
 
             </div>
+
+            {/* TAXAS */}
 
             <div className="caixa-taxas">
 
@@ -992,6 +1132,22 @@ TOTAL DE TAXAS: ${formatCurrency(
                 )
               )}
 
+              {/* TOTAL ENTREGAS */}
+
+              <div className="taxa-total">
+
+                <span>
+                  TOTAL DE ENTREGAS
+                </span>
+
+                <strong>
+                  {totalEntregas}
+                </strong>
+
+              </div>
+
+              {/* TOTAL TAXAS */}
+
               <div className="taxa-total">
 
                 <span>
@@ -1008,12 +1164,16 @@ TOTAL DE TAXAS: ${formatCurrency(
 
             </div>
 
+            {/* BOTÕES */}
+
             <div className="caixa-botoes">
 
               <button
                 className="primary-button"
                 type="button"
-                onClick={copiarResumo}
+                onClick={
+                  copiarResumo
+                }
               >
                 📋 COPIAR RESUMO
               </button>
@@ -1036,9 +1196,7 @@ TOTAL DE TAXAS: ${formatCurrency(
 
       </main>
 
-      {/* =========================
-          RODAPÉ
-      ========================= */}
+      {/* ================= RODAPÉ ================= */}
 
       <footer className="footer">
 
@@ -1056,9 +1214,7 @@ TOTAL DE TAXAS: ${formatCurrency(
 
       </footer>
 
-      {/* =========================
-          CARRINHO FIXO
-      ========================= */}
+      {/* ================= CARRINHO FIXO MOBILE ================= */}
 
       {cart.length > 0 &&
         !showCheckout && (
@@ -1066,7 +1222,9 @@ TOTAL DE TAXAS: ${formatCurrency(
           <button
             className="floating-cart"
             type="button"
-            onClick={irParaCarrinho}
+            onClick={
+              irParaCarrinho
+            }
           >
 
             <div className="floating-cart-icon">
@@ -1101,9 +1259,7 @@ TOTAL DE TAXAS: ${formatCurrency(
 
         )}
 
-      {/* =========================
-          MODAL DE OPÇÕES
-      ========================= */}
+      {/* ================= MODAL DE OPÇÕES ================= */}
 
       {selectedProduct && (
 
@@ -1118,6 +1274,7 @@ TOTAL DE TAXAS: ${formatCurrency(
                 setSelectedProduct(
                   null
                 );
+
                 setSelectedOption("");
               }}
               aria-label="Fechar"
@@ -1132,14 +1289,16 @@ TOTAL DE TAXAS: ${formatCurrency(
             <p>
               {
                 selectedProduct
-                  .options?.[0]?.name
+                  .options?.[0]
+                  ?.name
               }
             </p>
 
             <div className="option-list">
 
               {selectedProduct
-                .options?.[0]?.values.map(
+                .options?.[0]
+                ?.values.map(
                   (value) => (
 
                     <button
@@ -1164,11 +1323,9 @@ TOTAL DE TAXAS: ${formatCurrency(
 
                       {selectedOption ===
                         value && (
-
                         <strong>
                           ✓
                         </strong>
-
                       )}
 
                     </button>
