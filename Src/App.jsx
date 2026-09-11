@@ -75,7 +75,7 @@ function App() {
   }, []);
 
   // ==================================================
-  // CAIXA DO DIA — AUTOMÁTICO
+  // CAIXA VAZIO
   // ==================================================
 
   function caixaVazio() {
@@ -90,6 +90,10 @@ function App() {
     };
   }
 
+  // ==================================================
+  // CARREGAR VENDAS DO DIA
+  // ==================================================
+
   function carregarVendasDoDia() {
     try {
       const vendasSalvas = JSON.parse(
@@ -98,65 +102,100 @@ function App() {
         ) || "{}"
       );
 
-      return (
-        vendasSalvas[hoje] ||
-        caixaVazio()
+      const vendasHoje = vendasSalvas[hoje];
+
+      if (!vendasHoje) {
+        return caixaVazio();
+      }
+
+      return {
+        ...caixaVazio(),
+        ...vendasHoje,
+      };
+    } catch (error) {
+      console.error(
+        "Erro ao carregar vendas:",
+        error
       );
-    } catch {
+
       return caixaVazio();
     }
   }
 
+  // ==================================================
+  // ESTADO DO CAIXA
+  // ==================================================
+
   const [caixa, setCaixa] = useState(
-    carregarVendasDoDia
+    caixaVazio()
   );
 
   // ==================================================
-  // ATUALIZAR CAIXA AUTOMATICAMENTE
+  // ATUALIZAR CAIXA
+  // ==================================================
+
+  function atualizarCaixa() {
+    const vendas = carregarVendasDoDia();
+
+    setCaixa(vendas);
+  }
+
+  // ==================================================
+  // ATUALIZAR AUTOMATICAMENTE
   // ==================================================
 
   useEffect(() => {
-    function atualizarCaixaAutomaticamente() {
-      setCaixa(carregarVendasDoDia());
-    }
+    atualizarCaixa();
 
-    atualizarCaixaAutomaticamente();
+    function atualizar() {
+      atualizarCaixa();
+    }
 
     window.addEventListener(
       "focus",
-      atualizarCaixaAutomaticamente
+      atualizar
     );
 
     window.addEventListener(
-      "storage",
-      atualizarCaixaAutomaticamente
+      "pageshow",
+      atualizar
     );
 
     document.addEventListener(
       "visibilitychange",
-      atualizarCaixaAutomaticamente
+      atualizar
     );
 
     return () => {
       window.removeEventListener(
         "focus",
-        atualizarCaixaAutomaticamente
+        atualizar
       );
 
       window.removeEventListener(
-        "storage",
-        atualizarCaixaAutomaticamente
+        "pageshow",
+        atualizar
       );
 
       document.removeEventListener(
         "visibilitychange",
-        atualizarCaixaAutomaticamente
+        atualizar
       );
     };
   }, [hoje]);
 
   // ==================================================
-  // TOTAIS AUTOMÁTICOS
+  // ATUALIZAR QUANDO ABRIR O CAIXA
+  // ==================================================
+
+  useEffect(() => {
+    if (mostrarCaixa) {
+      atualizarCaixa();
+    }
+  }, [mostrarCaixa]);
+
+  // ==================================================
+  // VALORES DO CAIXA
   // ==================================================
 
   const totalDinheiro =
@@ -372,14 +411,10 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
       return [
         ...currentCart,
-
         {
           ...product,
-
           cartItemId: itemId,
-
           quantity: 1,
-
           selectedOption: option,
         },
       ];
@@ -414,7 +449,6 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
     );
 
     setSelectedProduct(null);
-
     setSelectedOption("");
   }
 
@@ -925,7 +959,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
         )}
 
-        {/* ================= CAIXA AUTOMÁTICO ================= */}
+        {/* ================= CAIXA DO DIA ================= */}
 
         {mostrarCaixa && (
 
@@ -1018,7 +1052,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* ================= TOTAL DE VENDAS ================= */}
+            {/* ================= TOTAL ================= */}
 
             <div className="caixa-total">
 
@@ -1034,7 +1068,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* ================= QUANTIDADE DE PEDIDOS ================= */}
+            {/* ================= PEDIDOS ================= */}
 
             <div className="taxa-total">
 
@@ -1048,7 +1082,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* ================= TAXAS DE ENTREGA ================= */}
+            {/* ================= ENTREGAS ================= */}
 
             <div className="caixa-taxas">
 
