@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+
 import {
   ShoppingCart,
   Clock,
@@ -66,69 +67,96 @@ function App() {
     window.addEventListener("keydown", abrirCaixa);
 
     return () => {
-      window.removeEventListener("keydown", abrirCaixa);
+      window.removeEventListener(
+        "keydown",
+        abrirCaixa
+      );
     };
   }, []);
 
   // ==================================================
-  // CAIXA DO DIA
+  // CAIXA DO DIA — AUTOMÁTICO
   // ==================================================
 
-  function criarCaixaVazio() {
+  function caixaVazio() {
     return {
-      data: hoje,
-
-      dinheiro: "",
-      pix: "",
-      cartao: "",
-
-      totalEntregas: "",
-      totalTaxas: "",
+      dinheiro: 0,
+      pix: 0,
+      cartao: 0,
+      totalVendas: 0,
+      totalEntregas: 0,
+      totalTaxas: 0,
+      quantidadePedidos: 0,
     };
   }
 
-  function carregarCaixa() {
+  function carregarVendasDoDia() {
     try {
-      const salvo = JSON.parse(
-        localStorage.getItem("blend-caixa") || "null"
+      const vendasSalvas = JSON.parse(
+        localStorage.getItem(
+          "blend-vendas-diarias"
+        ) || "{}"
       );
 
-      if (salvo && salvo.data === hoje) {
-        return {
-          ...criarCaixaVazio(),
-          ...salvo,
-        };
-      }
-
-      return criarCaixaVazio();
+      return (
+        vendasSalvas[hoje] ||
+        caixaVazio()
+      );
     } catch {
-      return criarCaixaVazio();
+      return caixaVazio();
     }
   }
 
-  const [caixa, setCaixa] =
-    useState(carregarCaixa);
+  const [caixa, setCaixa] = useState(
+    carregarVendasDoDia
+  );
 
   // ==================================================
-  // ATUALIZAR CAIXA
+  // ATUALIZAR CAIXA AUTOMATICAMENTE
   // ==================================================
 
-  function atualizarCaixa(campo, valor) {
-    const novoCaixa = {
-      ...caixa,
-      [campo]: valor,
-    };
+  useEffect(() => {
+    function atualizarCaixaAutomaticamente() {
+      setCaixa(carregarVendasDoDia());
+    }
 
-    setCaixa(novoCaixa);
+    atualizarCaixaAutomaticamente();
 
-    localStorage.setItem(
-      "blend-caixa",
-      JSON.stringify(novoCaixa)
+    window.addEventListener(
+      "focus",
+      atualizarCaixaAutomaticamente
     );
-  }
+
+    window.addEventListener(
+      "storage",
+      atualizarCaixaAutomaticamente
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      atualizarCaixaAutomaticamente
+    );
+
+    return () => {
+      window.removeEventListener(
+        "focus",
+        atualizarCaixaAutomaticamente
+      );
+
+      window.removeEventListener(
+        "storage",
+        atualizarCaixaAutomaticamente
+      );
+
+      document.removeEventListener(
+        "visibilitychange",
+        atualizarCaixaAutomaticamente
+      );
+    };
+  }, [hoje]);
 
   // ==================================================
-  // TOTAIS
+  // TOTAIS AUTOMÁTICOS
   // ==================================================
 
   const totalDinheiro =
@@ -141,15 +169,16 @@ function App() {
     Number(caixa.cartao) || 0;
 
   const totalVendas =
-    totalDinheiro +
-    totalPix +
-    totalCartao;
+    Number(caixa.totalVendas) || 0;
 
   const totalEntregas =
     Number(caixa.totalEntregas) || 0;
 
   const totalTaxas =
     Number(caixa.totalTaxas) || 0;
+
+  const quantidadePedidos =
+    Number(caixa.quantidadePedidos) || 0;
 
   // ==================================================
   // COPIAR RESUMO
@@ -164,6 +193,8 @@ PIX: ${formatCurrency(totalPix)}
 CARTÃO: ${formatCurrency(totalCartao)}
 
 TOTAL DE VENDAS: ${formatCurrency(totalVendas)}
+
+QUANTIDADE DE PEDIDOS: ${quantidadePedidos}
 
 TOTAL DE ENTREGAS: ${totalEntregas}
 TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
@@ -248,7 +279,8 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
   const filteredProducts =
     menu.filter(
       (product) =>
-        product.category === selectedCategory
+        product.category ===
+        selectedCategory
     );
 
   // ==================================================
@@ -893,7 +925,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
         )}
 
-        {/* ================= CAIXA ================= */}
+        {/* ================= CAIXA AUTOMÁTICO ================= */}
 
         {mostrarCaixa && (
 
@@ -938,77 +970,55 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
             </p>
 
-            {/* PAGAMENTOS */}
+            {/* ================= PAGAMENTOS ================= */}
 
             <div className="caixa-vendas">
 
-              <label>
+              <div>
 
-                💵 DINHEIRO
+                <span>
+                  💵 DINHEIRO
+                </span>
 
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0,00"
-                  value={
-                    caixa.dinheiro
-                  }
-                  onChange={(e) =>
-                    atualizarCaixa(
-                      "dinheiro",
-                      e.target.value
-                    )
-                  }
-                />
+                <strong>
+                  {formatCurrency(
+                    totalDinheiro
+                  )}
+                </strong>
 
-              </label>
+              </div>
 
-              <label>
+              <div>
 
-                📱 PIX
+                <span>
+                  📱 PIX
+                </span>
 
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0,00"
-                  value={caixa.pix}
-                  onChange={(e) =>
-                    atualizarCaixa(
-                      "pix",
-                      e.target.value
-                    )
-                  }
-                />
+                <strong>
+                  {formatCurrency(
+                    totalPix
+                  )}
+                </strong>
 
-              </label>
+              </div>
 
-              <label>
+              <div>
 
-                💳 CARTÃO
+                <span>
+                  💳 CARTÃO
+                </span>
 
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0,00"
-                  value={
-                    caixa.cartao
-                  }
-                  onChange={(e) =>
-                    atualizarCaixa(
-                      "cartao",
-                      e.target.value
-                    )
-                  }
-                />
+                <strong>
+                  {formatCurrency(
+                    totalCartao
+                  )}
+                </strong>
 
-              </label>
+              </div>
 
             </div>
 
-            {/* TOTAL DE VENDAS */}
+            {/* ================= TOTAL DE VENDAS ================= */}
 
             <div className="caixa-total">
 
@@ -1024,56 +1034,27 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* TAXAS */}
+            {/* ================= QUANTIDADE DE PEDIDOS ================= */}
+
+            <div className="taxa-total">
+
+              <span>
+                QUANTIDADE DE PEDIDOS
+              </span>
+
+              <strong>
+                {quantidadePedidos}
+              </strong>
+
+            </div>
+
+            {/* ================= TAXAS DE ENTREGA ================= */}
 
             <div className="caixa-taxas">
 
               <h3>
                 🚴 TAXAS DE ENTREGA
               </h3>
-
-              <label>
-
-                TOTAL DE ENTREGAS
-
-                <input
-                  type="number"
-                  min="0"
-                  placeholder="0"
-                  value={
-                    caixa.totalEntregas
-                  }
-                  onChange={(e) =>
-                    atualizarCaixa(
-                      "totalEntregas",
-                      e.target.value
-                    )
-                  }
-                />
-
-              </label>
-
-              <label>
-
-                TOTAL DE TAXAS
-
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0,00"
-                  value={
-                    caixa.totalTaxas
-                  }
-                  onChange={(e) =>
-                    atualizarCaixa(
-                      "totalTaxas",
-                      e.target.value
-                    )
-                  }
-                />
-
-              </label>
 
               <div className="taxa-total">
 
@@ -1103,7 +1084,7 @@ TOTAL DE TAXAS DE ENTREGA: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* BOTÕES */}
+            {/* ================= BOTÕES ================= */}
 
             <div className="caixa-botoes">
 
