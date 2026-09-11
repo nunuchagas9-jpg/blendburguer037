@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   ShoppingCart,
@@ -35,9 +35,6 @@ function App() {
 
   const [selectedOption, setSelectedOption] =
     useState("");
-
-  const [showCash, setShowCash] =
-    useState(false);
 
   // ========================================
   // CATEGORIAS
@@ -265,35 +262,6 @@ function App() {
         });
     }, 100);
   }
-
-  // ========================================
-  // CTRL + SHIFT + C
-  // ========================================
-  useEffect(() => {
-    function handleShortcut(event) {
-      if (
-        event.ctrlKey &&
-        event.shiftKey &&
-        event.key.toLowerCase() === "c"
-      ) {
-        event.preventDefault();
-
-        setShowCash((current) => !current);
-      }
-    }
-
-    window.addEventListener(
-      "keydown",
-      handleShortcut
-    );
-
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        handleShortcut
-      );
-    };
-  }, []);
 
   // ========================================
   // CHECKOUT
@@ -735,68 +703,6 @@ function App() {
           </button>
 
         </div>
-
-      )}
-
-      {/* ========================================
-          CAIXA DO DIA
-          
-          ATENÇÃO:
-          Sem banco online, esta área NÃO
-          recebe automaticamente os pedidos
-          feitos pelo celular do cliente.
-          
-          Ela fica disponível para você usar
-          futuramente.
-      ======================================== */}
-      {showCash && (
-
-        <section className="cash-control">
-
-          <div className="cash-control-header">
-
-            <div>
-              <span>
-                CONTROLE INTERNO
-              </span>
-
-              <h2>
-                Caixa do Dia
-              </h2>
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                setShowCash(false)
-              }
-            >
-              <X size={20} />
-            </button>
-
-          </div>
-
-          <div className="cash-empty">
-
-            <strong>
-              Caixa automático
-            </strong>
-
-            <p>
-              O caixa ainda não está
-              conectado aos pedidos do
-              WhatsApp.
-            </p>
-
-            <p>
-              Os pedidos são enviados
-              diretamente para o WhatsApp
-              da BLEND BURGUER 037.
-            </p>
-
-          </div>
-
-        </section>
 
       )}
 
