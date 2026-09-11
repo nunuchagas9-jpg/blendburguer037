@@ -111,89 +111,6 @@ function Checkout({
   }
 
   // ========================================
-  // REGISTRAR VENDA AUTOMATICAMENTE
-  // ========================================
-  function registrarVenda() {
-    try {
-      const data = new Date();
-
-      const hoje =
-        `${data.getFullYear()}-` +
-        `${String(data.getMonth() + 1).padStart(2, "0")}-` +
-        `${String(data.getDate()).padStart(2, "0")}`;
-
-      const vendasSalvas = JSON.parse(
-        localStorage.getItem("blend-vendas-diarias") ||
-          "{}"
-      );
-
-      if (!vendasSalvas[hoje]) {
-        vendasSalvas[hoje] = {
-          dinheiro: 0,
-          pix: 0,
-          cartao: 0,
-          totalVendas: 0,
-          totalEntregas: 0,
-          totalTaxas: 0,
-          quantidadePedidos: 0,
-        };
-      }
-
-      const caixa = vendasSalvas[hoje];
-
-      const valorVenda = Number(total) || 0;
-      const valorTaxa = Number(deliveryFee) || 0;
-
-      // ========================================
-      // FORMA DE PAGAMENTO
-      // ========================================
-      if (customer.paymentMethod === "Dinheiro") {
-        caixa.dinheiro += valorVenda;
-      }
-
-      if (customer.paymentMethod === "Pix") {
-        caixa.pix += valorVenda;
-      }
-
-      if (customer.paymentMethod === "Cartão") {
-        caixa.cartao += valorVenda;
-      }
-
-      // ========================================
-      // TOTAL DA VENDA
-      // ========================================
-      caixa.totalVendas += valorVenda;
-
-      // ========================================
-      // ENTREGA
-      // ========================================
-      caixa.totalEntregas += 1;
-      caixa.totalTaxas += valorTaxa;
-
-      // ========================================
-      // QUANTIDADE DE PEDIDOS
-      // ========================================
-      caixa.quantidadePedidos += 1;
-
-      vendasSalvas[hoje] = caixa;
-
-      localStorage.setItem(
-        "blend-vendas-diarias",
-        JSON.stringify(vendasSalvas)
-      );
-
-      return true;
-    } catch (error) {
-      console.error(
-        "Erro ao registrar venda:",
-        error
-      );
-
-      return false;
-    }
-  }
-
-  // ========================================
   // ENVIAR PEDIDO
   // ========================================
   async function handleSubmit(event) {
@@ -296,11 +213,12 @@ function Checkout({
       }
 
       // ========================================
-      // PREPARAR ITENS
+      // PREPARAR ITENS DO PEDIDO
       // ========================================
       const cartForMessage = cart.map(
         (item) => ({
           ...item,
+
           total:
             Number(item.total) ||
             Number(item.price) *
@@ -314,16 +232,23 @@ function Checkout({
       const orderData = {
         customer: {
           ...customer,
+
           orderType: "Entrega",
+
           changeAmount: change,
+
           neighborhood:
             selectedNeighborhood.nome,
+
           deliveryFee,
         },
 
         cart: cartForMessage,
+
         subtotal,
+
         deliveryFee,
+
         total,
 
         createdAt:
@@ -331,7 +256,7 @@ function Checkout({
       };
 
       // ========================================
-      // WHATSAPP
+      // MONTAR MENSAGEM DO WHATSAPP
       // ========================================
       const message =
         buildWhatsAppMessage({
@@ -339,31 +264,23 @@ function Checkout({
             orderData.customer,
 
           cart: cartForMessage,
+
           subtotal,
+
           deliveryFee,
+
           total,
         });
 
+      // ========================================
+      // CRIAR LINK DO WHATSAPP
+      // ========================================
       const whatsappLink =
         createWhatsAppLink(message);
 
       if (!whatsappLink) {
         setError(
           "O WhatsApp ainda não foi configurado corretamente."
-        );
-        return;
-      }
-
-      // ========================================
-      // REGISTRA A VENDA AUTOMATICAMENTE
-      // ANTES DE ABRIR O WHATSAPP
-      // ========================================
-      const vendaRegistrada =
-        registrarVenda();
-
-      if (!vendaRegistrada) {
-        setError(
-          "Não foi possível registrar a venda."
         );
         return;
       }
@@ -388,20 +305,28 @@ function Checkout({
 
   return (
     <section className="checkout">
+
+      {/* ========================================
+          TÍTULO
+      ======================================== */}
       <div className="section-heading">
         <span>FINALIZAÇÃO</span>
+
         <h2>Finalizar pedido</h2>
       </div>
 
       <form onSubmit={handleSubmit}>
+
         {/* ========================================
             DADOS DO CLIENTE
         ======================================== */}
         <div className="checkout-section">
+
           <h3>Seus dados</h3>
 
           <label>
             Nome *
+
             <input
               type="text"
               value={customer.name}
@@ -418,6 +343,7 @@ function Checkout({
 
           <label>
             WhatsApp *
+
             <input
               type="tel"
               value={customer.phone}
@@ -431,16 +357,19 @@ function Checkout({
               autoComplete="tel"
             />
           </label>
+
         </div>
 
         {/* ========================================
             ENDEREÇO
         ======================================== */}
         <div className="checkout-section">
+
           <h3>Endereço de entrega</h3>
 
           <label>
             Endereço *
+
             <input
               type="text"
               value={customer.address}
@@ -457,6 +386,7 @@ function Checkout({
 
           <label>
             Número *
+
             <input
               type="text"
               value={customer.number}
@@ -501,9 +431,10 @@ function Checkout({
           </label>
 
           {/* ========================================
-              TAXA DE ENTREGA
+              TAXA
           ======================================== */}
           <div className="pickup-info">
+
             <strong>
               🚚 Taxa de entrega
             </strong>
@@ -511,10 +442,13 @@ function Checkout({
             {selectedNeighborhood ? (
               <p>
                 Entrega para{" "}
+
                 <strong>
                   {selectedNeighborhood.nome}
                 </strong>
+
                 :{" "}
+
                 <strong>
                   {formatCurrency(
                     selectedNeighborhood.taxa
@@ -527,6 +461,7 @@ function Checkout({
                 para calcular a entrega.
               </p>
             )}
+
           </div>
 
           {/* ========================================
@@ -566,20 +501,24 @@ function Checkout({
               placeholder="Apartamento, bloco etc."
             />
           </label>
+
         </div>
 
         {/* ========================================
             PAGAMENTO
         ======================================== */}
         <div className="checkout-section">
+
           <h3>Pagamento</h3>
 
           <div className="choice-grid payment-grid">
+
             {[
               "Pix",
               "Cartão",
               "Dinheiro",
             ].map((method) => (
+
               <button
                 key={method}
                 type="button"
@@ -597,7 +536,9 @@ function Checkout({
               >
                 {method}
               </button>
+
             ))}
+
           </div>
 
           {/* ========================================
@@ -605,7 +546,9 @@ function Checkout({
           ======================================== */}
           {customer.paymentMethod ===
             "Dinheiro" && (
+
             <div className="cash-box">
+
               <label>
                 Precisa de troco?
 
@@ -631,9 +574,11 @@ function Checkout({
                     Sim
                   </option>
                 </select>
+
               </label>
 
               {customer.needsChange && (
+
                 <label>
                   Troco para quanto?
 
@@ -655,26 +600,34 @@ function Checkout({
                     )}
                   />
                 </label>
+
               )}
 
               {customer.needsChange &&
                 customer.cashAmount &&
                 change !== null && (
-                  <p className="change-result">
-                    Troco:{" "}
-                    <strong>
-                      {formatCurrency(change)}
-                    </strong>
-                  </p>
-                )}
+
+                <p className="change-result">
+                  Troco:{" "}
+
+                  <strong>
+                    {formatCurrency(change)}
+                  </strong>
+                </p>
+
+              )}
+
             </div>
+
           )}
+
         </div>
 
         {/* ========================================
             OBSERVAÇÃO
         ======================================== */}
         <div className="checkout-section">
+
           <h3>Observação</h3>
 
           <textarea
@@ -688,12 +641,14 @@ function Checkout({
             placeholder="Alguma observação sobre o pedido?"
             rows="3"
           />
+
         </div>
 
         {/* ========================================
             RESUMO
         ======================================== */}
         <div className="order-summary">
+
           <div>
             <span>Subtotal</span>
 
@@ -715,27 +670,33 @@ function Checkout({
           </div>
 
           <div className="total-line">
+
             <span>Total</span>
 
             <strong>
               {formatCurrency(total)}
             </strong>
+
           </div>
+
         </div>
 
         {/* ========================================
             ERRO
         ======================================== */}
         {error && (
+
           <div className="checkout-error">
             {error}
           </div>
+
         )}
 
         {/* ========================================
             BOTÕES
         ======================================== */}
         <div className="checkout-actions">
+
           <button
             type="button"
             className="secondary-button"
@@ -754,8 +715,11 @@ function Checkout({
               ? "ENVIANDO..."
               : "ENVIAR PEDIDO"}
           </button>
+
         </div>
+
       </form>
+
     </section>
   );
 }
