@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ShoppingCart,
   Clock,
@@ -46,6 +46,37 @@ function App() {
     `${String(dataAtual.getDate()).padStart(2, "0")}`;
 
   // ==================================================
+  // ACESSO SECRETO AO CAIXA
+  // CTRL + SHIFT + C
+  // ==================================================
+
+  useEffect(() => {
+    function abrirCaixa(event) {
+      if (
+        event.ctrlKey &&
+        event.shiftKey &&
+        event.key.toLowerCase() === "c"
+      ) {
+        event.preventDefault();
+
+        setMostrarCaixa((atual) => !atual);
+      }
+    }
+
+    window.addEventListener(
+      "keydown",
+      abrirCaixa
+    );
+
+    return () => {
+      window.removeEventListener(
+        "keydown",
+        abrirCaixa
+      );
+    };
+  }, []);
+
+  // ==================================================
   // CAIXA DO DIA
   // ==================================================
 
@@ -72,7 +103,8 @@ function App() {
   function carregarCaixa() {
     try {
       const salvo = JSON.parse(
-        localStorage.getItem("blend-caixa") || "null"
+        localStorage.getItem("blend-caixa") ||
+          "null"
       );
 
       if (salvo && salvo.data === hoje) {
@@ -490,8 +522,11 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
   if (showCheckout) {
     return (
       <div className="site">
+
         <header className="header">
+
           <div className="brand">
+
             <img
               src={logo}
               alt="Blend Burguer"
@@ -501,7 +536,9 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
             <span className="brand-city">
               037 • DIVINÓPOLIS - MG
             </span>
+
           </div>
+
         </header>
 
         <Checkout
@@ -511,6 +548,7 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
             setShowCheckout(false)
           }
         />
+
       </div>
     );
   }
@@ -540,6 +578,9 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
         </div>
 
+        {/* SOMENTE CARRINHO */}
+        {/* O BOTÃO CAIXA FOI REMOVIDO */}
+
         <div
           style={{
             display: "flex",
@@ -547,20 +588,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
             gap: "8px",
           }}
         >
-
-          {/* BOTÃO CAIXA */}
-
-          <button
-            className="caixa-button"
-            type="button"
-            onClick={() =>
-              setMostrarCaixa(true)
-            }
-          >
-            CAIXA
-          </button>
-
-          {/* BOTÃO CARRINHO */}
 
           <button
             className="cart-button"
@@ -730,8 +757,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
                     key={product.id}
                   >
 
-                    {/* IMAGEM */}
-
                     <div className="product-image">
 
                       {product.image ? (
@@ -758,8 +783,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
                       )}
 
                     </div>
-
-                    {/* MAIS PEDIDO */}
 
                     {product.popular && (
                       <span className="popular-badge">
@@ -915,8 +938,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* TOTAL */}
-
             <div className="cart-total">
 
               <span>
@@ -930,8 +951,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
               </strong>
 
             </div>
-
-            {/* FINALIZAR */}
 
             <button
               className="primary-button"
@@ -979,8 +998,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
               </button>
 
             </div>
-
-            {/* DATA */}
 
             <p className="caixa-data">
 
@@ -1064,7 +1081,7 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
             </div>
 
-            {/* TOTAL DE VENDAS */}
+            {/* TOTAL */}
 
             <div className="caixa-total">
 
@@ -1132,8 +1149,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
                 )
               )}
 
-              {/* TOTAL ENTREGAS */}
-
               <div className="taxa-total">
 
                 <span>
@@ -1145,8 +1160,6 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
                 </strong>
 
               </div>
-
-              {/* TOTAL TAXAS */}
 
               <div className="taxa-total">
 
@@ -1214,7 +1227,7 @@ TOTAL DE TAXAS: ${formatCurrency(totalTaxas)}`;
 
       </footer>
 
-      {/* ================= CARRINHO FIXO MOBILE ================= */}
+      {/* ================= CARRINHO FIXO ================= */}
 
       {cart.length > 0 &&
         !showCheckout && (
