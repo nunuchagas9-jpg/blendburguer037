@@ -1,7 +1,4 @@
-import doceImage from "../assets/5BC68375-8B4F-4531-A0C0-813A9F725B44.jpeg";
 import blendDuploImage from "../assets/B3B4E00C-F66E-4673-B86F-6281D09EB2FD.png";
-import bombomMorangoImage from "../assets/FC56B80A-E9A9-4E51-84A7-99295048664D.png";
-
 export const categories = [
   "ARTESANAIS",
   "TRADICIONAIS",
@@ -9,7 +6,6 @@ export const categories = [
   "COMBOS",
   "BEBIDAS",
 ];
-
 const opcaoSachê = {
   name: "Deseja sachê?",
   required: true,
@@ -18,12 +14,10 @@ const opcaoSachê = {
     "Não quero sachê",
   ],
 };
-
 export const menu = [
   // ========================================
   // ARTESANAIS
   // ========================================
-
   {
     id: "blend-burger",
     category: "ARTESANAIS",
@@ -33,7 +27,6 @@ export const menu = [
     price: 27,
     options: [opcaoSachê],
   },
-
   {
     id: "cheddar-bacon",
     category: "ARTESANAIS",
@@ -44,7 +37,6 @@ export const menu = [
     popular: true,
     options: [opcaoSachê],
   },
-
   {
     id: "blend-burger-duplo",
     category: "ARTESANAIS",
@@ -55,7 +47,6 @@ export const menu = [
     image: blendDuploImage,
     options: [opcaoSachê],
   },
-
   {
     id: "cebola-burger",
     category: "ARTESANAIS",
@@ -65,7 +56,6 @@ export const menu = [
     price: 28,
     options: [opcaoSachê],
   },
-
   {
     id: "x-frango",
     category: "ARTESANAIS",
@@ -75,11 +65,9 @@ export const menu = [
     price: 27,
     options: [opcaoSachê],
   },
-
   // ========================================
   // TRADICIONAIS
   // ========================================
-
   {
     id: "x-burguer",
     category: "TRADICIONAIS",
@@ -89,7 +77,6 @@ export const menu = [
     price: 22,
     options: [opcaoSachê],
   },
-
   {
     id: "x-cheddar-bacon",
     category: "TRADICIONAIS",
@@ -99,7 +86,6 @@ export const menu = [
     price: 25,
     options: [opcaoSachê],
   },
-
   {
     id: "x-tudo-burger",
     category: "TRADICIONAIS",
@@ -109,11 +95,9 @@ export const menu = [
     price: 28,
     options: [opcaoSachê],
   },
-
   // ========================================
   // ADICIONAIS
   // ========================================
-
   {
     id: "mussarela-empanada",
     category: "ADICIONAIS",
@@ -122,7 +106,6 @@ export const menu = [
       "Mussarela empanada.",
     price: 8,
   },
-
   {
     id: "geleia-pimenta-abacaxi",
     category: "ADICIONAIS",
@@ -131,7 +114,6 @@ export const menu = [
       "Geleia de pimenta com abacaxi.",
     price: 3,
   },
-
   {
     id: "blend-extra",
     category: "ADICIONAIS",
@@ -140,7 +122,6 @@ export const menu = [
       "Um blend extra de 120g.",
     price: 6,
   },
-
   {
     id: "barbecue-goiabada",
     category: "ADICIONAIS",
@@ -149,7 +130,6 @@ export const menu = [
       "Molho barbecue de goiabada.",
     price: 3,
   },
-
   {
     id: "bacon",
     category: "ADICIONAIS",
@@ -158,7 +138,6 @@ export const menu = [
       "Farofa crocante de bacon.",
     price: 3,
   },
-
   {
     id: "ovo",
     category: "ADICIONAIS",
@@ -167,7 +146,6 @@ export const menu = [
       "Ovo adicional.",
     price: 1,
   },
-
   {
     id: "batata-cheddar-bacon",
     category: "ADICIONAIS",
@@ -176,11 +154,9 @@ export const menu = [
       "Batata frita individual com cheddar e bacon.",
     price: 8,
   },
-
   // ========================================
   // BEBIDAS
   // ========================================
-
   {
     id: "coca-cola-310",
     category: "BEBIDAS",
@@ -190,7 +166,6 @@ export const menu = [
     price: 6,
     subcategory: "LATA",
   },
-
   {
     id: "coca-cola-zero",
     category: "BEBIDAS",
@@ -200,7 +175,6 @@ export const menu = [
     price: 6.5,
     subcategory: "LATA",
   },
-
   {
     id: "fanta-350",
     category: "BEBIDAS",
@@ -210,7 +184,6 @@ export const menu = [
     price: 5,
     subcategory: "LATA",
   },
-
   {
     id: "guarana-antartica",
     category: "BEBIDAS",
@@ -220,7 +193,6 @@ export const menu = [
     price: 5,
     subcategory: "LATA",
   },
-
   {
     id: "suco-uva",
     category: "BEBIDAS",
@@ -230,7 +202,6 @@ export const menu = [
     price: 6,
     subcategory: "LATA",
   },
-
   {
     id: "mate-couro",
     category: "BEBIDAS",
@@ -240,7 +211,6 @@ export const menu = [
     price: 9,
     subcategory: "1 LITRO",
   },
-
   {
     id: "coca-cola-2l",
     category: "BEBIDAS",
@@ -250,7 +220,6 @@ export const menu = [
     price: 14,
     subcategory: "2 LITROS",
   },
-
   {
     id: "antartica-2l",
     category: "BEBIDAS",
@@ -261,3 +230,10 @@ export const menu = [
     subcategory: "2 LITROS",
   },
 ];
+
+Agora faça assim: substitua todo o conteúdo do seu menu.js por esse código e salve.
+
+Ele fica com 5 categorias:
+ARTESANAIS → TRADICIONAIS → ADICIONAIS → COMBOS → BEBIDAS.
+
+⚠️ Só tem uma coisa que notei: você tem COMBOS nas categorias, mas não tem nenhum produto de COMBOS nesse menu.js. Se clicar em COMBOS, vai aparecer vazio. Se você quiser, eu posso colocar os combos no lugar certo também.
