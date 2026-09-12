@@ -79,8 +79,10 @@ button {
 
 .site-logo {
   display: block;
+
   width: 105px;
   height: 105px;
+
   object-fit: contain;
   flex: 0 0 auto;
 }
@@ -152,6 +154,7 @@ button {
   justify-content: center;
 
   border-radius: 50%;
+
   background: #11110f;
   color: #ffc43d;
 
@@ -165,6 +168,7 @@ button {
 .hero {
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
+
   padding: 100px 0 110px;
 }
 
@@ -174,11 +178,14 @@ button {
 
 .hero-label {
   display: block;
+
   margin-bottom: 20px;
 
   color: #ffc43d;
+
   font-size: 17px;
   font-weight: 900;
+
   letter-spacing: 4px;
 }
 
@@ -186,9 +193,12 @@ button {
   margin-bottom: 18px;
 
   color: #ffffff;
+
   font-size: clamp(48px, 7vw, 82px);
   line-height: 0.95;
+
   font-weight: 950;
+
   letter-spacing: -3px;
 }
 
@@ -196,8 +206,10 @@ button {
   margin-bottom: 12px;
 
   color: #ffffff;
+
   font-size: clamp(22px, 3vw, 32px);
   line-height: 1.2;
+
   font-weight: 700;
 }
 
@@ -205,9 +217,12 @@ button {
   display: block;
 
   color: #ffffff;
+
   font-size: clamp(17px, 2vw, 23px);
   line-height: 1.4;
+
   font-weight: 800;
+
   letter-spacing: 1px;
 }
 
@@ -218,6 +233,7 @@ button {
 .menu-section {
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
+
   padding-bottom: 80px;
 }
 
@@ -227,20 +243,26 @@ button {
 
 .section-heading > span {
   display: block;
+
   margin-bottom: 12px;
 
   color: #ffc43d;
+
   font-size: 15px;
   font-weight: 900;
+
   letter-spacing: 3px;
   text-transform: uppercase;
 }
 
 .section-heading h2 {
   color: #ffffff;
+
   font-size: clamp(32px, 5vw, 48px);
   line-height: 1;
+
   font-weight: 900;
+
   letter-spacing: -1px;
 }
 
@@ -252,7 +274,9 @@ button {
   width: 100%;
 
   display: grid;
+
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 12px;
 
   margin-bottom: 26px;
@@ -260,6 +284,7 @@ button {
 
 .category-button {
   min-height: 70px;
+
   padding: 12px 18px;
 
   border: 2px solid #3b3b3b;
@@ -270,6 +295,7 @@ button {
 
   font-size: 18px;
   font-weight: 850;
+
   letter-spacing: 0.5px;
 
   transition:
@@ -298,12 +324,15 @@ button {
   width: 100%;
 
   display: grid;
+
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 18px;
 }
 
 .product-card {
   position: relative;
+
   min-width: 0;
 
   display: flex;
@@ -311,6 +340,7 @@ button {
   justify-content: space-between;
 
   min-height: 245px;
+
   padding: 26px;
 
   border: 1px solid #30302e;
@@ -330,6 +360,7 @@ button {
   align-items: center;
 
   margin-bottom: 12px;
+
   padding: 6px 10px;
 
   border-radius: 7px;
@@ -339,6 +370,7 @@ button {
 
   font-size: 11px;
   font-weight: 900;
+
   letter-spacing: 0.7px;
 }
 
@@ -346,8 +378,10 @@ button {
   margin-bottom: 10px;
 
   color: #ffffff;
+
   font-size: 24px;
   line-height: 1.1;
+
   font-weight: 900;
 
   overflow-wrap: anywhere;
@@ -357,8 +391,10 @@ button {
   margin-bottom: 20px;
 
   color: #b9b9b9;
+
   font-size: 16px;
   line-height: 1.5;
+
   font-weight: 500;
 
   overflow-wrap: anywhere;
@@ -368,19 +404,24 @@ button {
   display: block;
 
   color: #ffc43d;
+
   font-size: 23px;
   line-height: 1.2;
+
   font-weight: 900;
 }
 
 .add-button {
   width: 100%;
+
   min-height: 48px;
+
   margin-top: 22px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
 
   border: 0;
@@ -412,7 +453,9 @@ button {
 
 .cart-section {
   width: min(1180px, calc(100% - 48px));
+
   margin: 0 auto 80px;
+
   padding: 30px;
 
   border: 1px solid #30302e;
@@ -424,6 +467,7 @@ button {
 .cart-list {
   display: flex;
   flex-direction: column;
+
   gap: 12px;
 }
 
@@ -433,6 +477,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 20px;
 
   padding: 18px;
@@ -451,6 +496,7 @@ button {
   margin-bottom: 5px;
 
   color: #ffffff;
+
   font-size: 18px;
   font-weight: 800;
 
@@ -461,6 +507,7 @@ button {
   margin-bottom: 5px;
 
   color: #aaa;
+
   font-size: 14px;
 
   overflow-wrap: anywhere;
@@ -475,6 +522,7 @@ button {
 
   display: flex;
   align-items: center;
+
   gap: 8px;
 }
 
@@ -495,18 +543,23 @@ button {
 
 .cart-item-actions span {
   min-width: 25px;
+
   text-align: center;
+
   font-weight: 800;
 }
 
 .cart-item-actions .remove-button {
   margin-left: 5px;
+
   border-color: #713333;
+
   color: #ff6b6b;
 }
 
 .cart-total {
   margin-top: 22px;
+
   padding-top: 20px;
 
   display: flex;
@@ -520,6 +573,7 @@ button {
 
 .cart-total strong {
   color: #ffc43d;
+
   font-size: 24px;
 }
 
@@ -527,12 +581,14 @@ button {
   margin-top: 20px;
 
   display: flex;
+
   gap: 12px;
 }
 
 .primary-button,
 .secondary-button {
   min-height: 50px;
+
   padding: 0 22px;
 
   border-radius: 12px;
@@ -543,12 +599,14 @@ button {
 
 .primary-button {
   border: 0;
+
   background: #ffc43d;
   color: #11110f;
 }
 
 .secondary-button {
   border: 1px solid #444;
+
   background: transparent;
   color: #ffffff;
 }
@@ -559,8 +617,10 @@ button {
 
 .floating-cart {
   position: fixed;
+
   left: 50%;
   bottom: 18px;
+
   z-index: 50;
 
   width: min(520px, calc(100% - 30px));
@@ -570,6 +630,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 15px;
 
   padding: 12px 14px 12px 18px;
@@ -579,7 +640,8 @@ button {
 
   background: rgba(20, 20, 18, 0.97);
 
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.45);
 }
 
 .floating-cart > div {
@@ -587,16 +649,19 @@ button {
 
   display: flex;
   flex-direction: column;
+
   gap: 2px;
 }
 
 .floating-cart span {
   color: #bcbcbc;
+
   font-size: 12px;
 }
 
 .floating-cart strong {
   color: #ffc43d;
+
   font-size: 17px;
 }
 
@@ -604,6 +669,7 @@ button {
   flex-shrink: 0;
 
   min-height: 42px;
+
   padding: 0 18px;
 
   border: 0;
@@ -622,6 +688,7 @@ button {
 
 .site-footer {
   width: min(1180px, calc(100% - 48px));
+
   margin: 0 auto;
 
   padding: 55px 0 100px;
@@ -636,6 +703,7 @@ button {
   height: 80px;
 
   object-fit: contain;
+
   margin-bottom: 15px;
 }
 
@@ -643,12 +711,14 @@ button {
   margin-bottom: 6px;
 
   color: #ffffff;
+
   font-size: 16px;
   font-weight: 700;
 }
 
 .site-footer span {
   color: #999;
+
   font-size: 14px;
 }
 
@@ -658,7 +728,9 @@ button {
 
 .modal-overlay {
   position: fixed;
+
   inset: 0;
+
   z-index: 100;
 
   display: flex;
@@ -674,6 +746,7 @@ button {
   position: relative;
 
   width: min(520px, 100%);
+
   max-height: calc(100vh - 40px);
 
   overflow-y: auto;
@@ -688,6 +761,7 @@ button {
 
 .modal-close {
   position: absolute;
+
   top: 15px;
   right: 15px;
 
@@ -707,9 +781,11 @@ button {
 
 .product-modal h2 {
   padding-right: 45px;
+
   margin-bottom: 12px;
 
   color: #ffffff;
+
   font-size: 28px;
   font-weight: 900;
 
@@ -720,14 +796,17 @@ button {
   margin-bottom: 16px;
 
   color: #bdbdbd;
+
   line-height: 1.5;
 }
 
 .product-modal > strong {
   display: block;
+
   margin-bottom: 25px;
 
   color: #ffc43d;
+
   font-size: 24px;
 }
 
@@ -735,14 +814,17 @@ button {
   margin-bottom: 12px;
 
   color: #ffffff;
+
   font-size: 17px;
 }
 
 .choice {
   width: 100%;
+
   min-height: 48px;
 
   margin-bottom: 9px;
+
   padding: 10px 14px;
 
   border: 1px solid #41413f;
@@ -752,11 +834,13 @@ button {
   color: #ffffff;
 
   text-align: left;
+
   font-weight: 700;
 }
 
 .choice.active {
   border-color: #ffc43d;
+
   background: #ffc43d;
   color: #11110f;
 }
@@ -771,7 +855,9 @@ button {
 
 .app > .checkout {
   width: min(900px, calc(100% - 48px));
+
   margin: 40px auto 0;
+
   padding: 0 0 100px;
 }
 
@@ -779,7 +865,9 @@ button {
   width: 100%;
 }
 
-/* TÍTULO */
+/* =========================
+   TÍTULO
+========================= */
 
 .checkout .section-heading {
   margin-bottom: 30px;
@@ -787,29 +875,37 @@ button {
 
 .checkout .section-heading > span {
   display: block;
+
   margin-bottom: 10px;
 
   color: #ffc43d;
+
   font-size: 13px;
   font-weight: 900;
+
   letter-spacing: 3px;
+
   text-transform: uppercase;
 }
 
 .checkout .section-heading h2 {
   color: #ffffff;
+
   font-size: 38px;
   line-height: 1.1;
+
   font-weight: 900;
 }
 
 /* =========================
-   SEÇÕES DO CHECKOUT
+   SEÇÕES
 ========================= */
 
 .checkout-section {
   width: 100%;
+
   margin-bottom: 20px;
+
   padding: 24px;
 
   border: 1px solid #30302e;
@@ -822,24 +918,29 @@ button {
   margin: 0 0 20px;
 
   color: #ffffff;
+
   font-size: 20px;
   line-height: 1.2;
+
   font-weight: 900;
 }
 
 /* =========================
-   CAMPOS DO CHECKOUT
+   CAMPOS
 ========================= */
 
 .checkout-section label {
   display: block !important;
+
   width: 100% !important;
 
   margin: 0 0 18px;
 
   color: #ffffff;
+
   font-size: 14px;
   font-weight: 800;
+
   line-height: 1.4;
 }
 
@@ -853,21 +954,27 @@ button {
   display: block !important;
 
   width: 100% !important;
+
   max-width: 100% !important;
 
   margin: 8px 0 0 !important;
+
   padding: 13px 14px;
 
   border: 1px solid #3a3a38;
+
   border-radius: 11px;
 
   outline: none;
 
   background: #11110f;
+
   color: #ffffff;
 
   font-family: inherit;
+
   font-size: 15px;
+
   line-height: 1.3;
 }
 
@@ -878,7 +985,9 @@ button {
 
 .checkout-section textarea {
   min-height: 100px;
+
   resize: vertical;
+
   line-height: 1.5;
 }
 
@@ -891,15 +1000,9 @@ button {
 .checkout-section select:focus,
 .checkout-section textarea:focus {
   border-color: #ffc43d;
-  box-shadow: 0 0 0 2px rgba(255, 196, 61, 0.08);
-}
 
-/* =========================
-   BAIRRO
-========================= */
-
-.checkout-section input[list] {
-  width: 100% !important;
+  box-shadow:
+    0 0 0 2px rgba(255, 196, 61, 0.08);
 }
 
 /* =========================
@@ -912,6 +1015,7 @@ button {
   width: 100%;
 
   margin: 4px 0 20px;
+
   padding: 15px 16px;
 
   border: 1px solid #343431;
@@ -924,6 +1028,7 @@ button {
   display: block;
 
   color: #ffc43d;
+
   font-size: 14px;
   font-weight: 900;
 }
@@ -934,6 +1039,7 @@ button {
   color: #aaa;
 
   font-size: 14px;
+
   line-height: 1.5;
 }
 
@@ -949,7 +1055,10 @@ button {
   width: 100%;
 
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
   gap: 10px;
 }
 
@@ -957,16 +1066,20 @@ button {
   width: 100%;
 
   min-height: 54px;
+
   margin: 0;
+
   padding: 12px;
 
   border: 1px solid #3a3a38;
+
   border-radius: 11px;
 
   background: #11110f;
   color: #ffffff;
 
   text-align: center;
+
   font-size: 15px;
   font-weight: 800;
 
@@ -982,6 +1095,7 @@ button {
 
 .checkout .payment-grid .choice.active {
   border-color: #ffc43d;
+
   background: #ffc43d;
   color: #11110f;
 }
@@ -994,6 +1108,7 @@ button {
   width: 100%;
 
   margin-top: 18px;
+
   padding: 18px;
 
   border: 1px solid #343431;
@@ -1016,19 +1131,12 @@ button {
   color: #ffffff;
 
   font-size: 15px;
+
   line-height: 1.4;
 }
 
 .checkout .change-result strong {
   color: #ffc43d;
-}
-
-/* =========================
-   OBSERVAÇÃO
-========================= */
-
-.checkout > form > .checkout-section textarea {
-  width: 100% !important;
 }
 
 /* =========================
@@ -1039,6 +1147,7 @@ button {
   width: 100%;
 
   margin-top: 20px;
+
   padding: 22px;
 
   border: 1px solid #30302e;
@@ -1051,7 +1160,9 @@ button {
   width: 100%;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 20px;
@@ -1065,11 +1176,13 @@ button {
 
 .checkout .order-summary > div strong {
   color: #ffffff;
+
   white-space: nowrap;
 }
 
 .checkout .order-summary .total-line {
   margin-top: 10px;
+
   padding-top: 17px;
 
   border-top: 1px solid #333;
@@ -1077,11 +1190,13 @@ button {
   color: #ffffff;
 
   font-size: 19px;
+
   font-weight: 800;
 }
 
 .checkout .order-summary .total-line strong {
   color: #ffc43d;
+
   font-size: 24px;
 }
 
@@ -1093,28 +1208,34 @@ button {
   width: 100%;
 
   margin-top: 16px;
+
   padding: 14px 16px;
 
   border: 1px solid #713333;
   border-radius: 10px;
 
   background: #2b1515;
+
   color: #ff8b8b;
 
   font-size: 14px;
+
   font-weight: 700;
+
   line-height: 1.4;
 }
 
 /* =========================
-   BOTÕES DO CHECKOUT
+   BOTÕES CHECKOUT
 ========================= */
 
 .checkout .checkout-actions {
   width: 100%;
 
   display: grid;
+
   grid-template-columns: 1fr 1.5fr;
+
   gap: 12px;
 
   margin-top: 20px;
@@ -1125,12 +1246,15 @@ button {
   width: 100%;
 
   min-height: 52px;
+
   margin: 0;
+
   padding: 0 20px;
 
   border-radius: 11px;
 
   font-size: 14px;
+
   font-weight: 900;
 
   transition:
@@ -1140,7 +1264,9 @@ button {
 
 .checkout .checkout-actions .secondary-button {
   border: 1px solid #444;
+
   background: #191918;
+
   color: #ffffff;
 }
 
@@ -1150,7 +1276,9 @@ button {
 
 .checkout .checkout-actions .primary-button {
   border: 0;
+
   background: #ffc43d;
+
   color: #11110f;
 }
 
@@ -1160,6 +1288,7 @@ button {
 
 .checkout .checkout-actions button:disabled {
   opacity: 0.6;
+
   cursor: not-allowed;
 }
 
@@ -1201,17 +1330,21 @@ button {
 
 @media (max-width: 600px) {
 
-  /* CABEÇALHO */
+  /* =========================
+     CABEÇALHO
+  ========================= */
 
   .header-inner {
     width: calc(100% - 32px);
-    min-height: 92px;
-    gap: 15px;
+
+    min-height: 82px;
+
+    gap: 12px;
   }
 
   .site-logo {
-    width: 72px;
-    height: 72px;
+    width: 62px;
+    height: 62px;
   }
 
   .header-actions {
@@ -1219,19 +1352,30 @@ button {
   }
 
   .cart-button {
-    min-height: 48px;
-    padding: 0 15px;
+    min-height: 44px;
 
-    border-radius: 12px;
+    padding: 0 14px;
 
-    font-size: 15px;
+    border-radius: 11px;
+
+    font-size: 14px;
   }
 
-  /* HERO */
+  .cart-button span {
+    min-width: 20px;
+    height: 20px;
+
+    font-size: 11px;
+  }
+
+  /* =========================
+     HERO
+  ========================= */
 
   .hero {
     width: calc(100% - 32px);
-    padding: 58px 0 65px;
+
+    padding: 55px 0 65px;
   }
 
   .hero-content {
@@ -1239,32 +1383,46 @@ button {
   }
 
   .hero-label {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 
-    font-size: 13px;
+    font-size: 12px;
+
     letter-spacing: 2.5px;
   }
 
   .hero h1 {
     margin-bottom: 14px;
 
-    font-size: clamp(40px, 12vw, 58px);
-    letter-spacing: -2px;
+    font-size: 48px;
+
+    line-height: 0.96;
+
+    letter-spacing: -1.8px;
   }
 
   .hero p {
-    font-size: 21px;
+    margin-bottom: 12px;
+
+    font-size: 20px;
+
+    line-height: 1.25;
   }
 
   .hero strong {
-    font-size: 15px;
+    font-size: 14px;
+
+    line-height: 1.4;
+
     letter-spacing: 0.5px;
   }
 
-  /* CARDÁPIO */
+  /* =========================
+     CARDÁPIO
+  ========================= */
 
   .menu-section {
     width: calc(100% - 32px);
+
     padding-bottom: 55px;
   }
 
@@ -1273,65 +1431,136 @@ button {
   }
 
   .section-heading > span {
-    font-size: 12px;
-    letter-spacing: 2.5px;
+    margin-bottom: 9px;
+
+    font-size: 11px;
+
+    letter-spacing: 2.2px;
   }
 
   .section-heading h2 {
-    font-size: 34px;
+    font-size: 32px;
+
+    line-height: 1.05;
+
+    letter-spacing: -0.8px;
   }
 
+  /* =========================
+     CATEGORIAS
+  ========================= */
+
   .category-list {
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 9px;
+
+    margin-bottom: 22px;
   }
 
   .category-button {
-    min-height: 60px;
-    padding: 10px;
+    min-height: 58px;
+
+    padding: 9px 8px;
 
     border-radius: 12px;
 
-    font-size: 15px;
+    font-size: 14px;
+
+    font-weight: 850;
+
+    letter-spacing: 0;
+  }
+
+  /* =========================
+     PRODUTOS
+  ========================= */
+
+  .products-grid {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
   }
 
   .product-card {
     min-height: 0;
+
     padding: 20px;
+
     border-radius: 16px;
   }
 
+  .popular-badge {
+    margin-bottom: 9px;
+
+    padding: 5px 8px;
+
+    font-size: 10px;
+  }
+
   .product-card h3 {
-    font-size: 21px;
+    margin-bottom: 8px;
+
+    font-size: 20px;
+
+    line-height: 1.15;
   }
 
   .product-card p {
-    font-size: 15px;
+    margin-bottom: 15px;
+
+    font-size: 14px;
+
     line-height: 1.45;
   }
 
   .product-price {
-    font-size: 21px;
+    font-size: 20px;
   }
 
-  /* CARRINHO */
+  .add-button {
+    min-height: 46px;
+
+    margin-top: 18px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+  }
+
+  /* =========================
+     CARRINHO
+  ========================= */
 
   .cart-section {
     width: calc(100% - 32px);
-    padding: 20px;
+
+    padding: 18px;
+
     margin-bottom: 60px;
 
-    border-radius: 17px;
+    border-radius: 16px;
   }
 
   .cart-item {
     align-items: flex-start;
+
     flex-direction: column;
-    gap: 14px;
+
+    gap: 13px;
+
+    padding: 16px;
+  }
+
+  .cart-item-info h3 {
+    font-size: 17px;
+  }
+
+  .cart-item-info p {
+    font-size: 13px;
   }
 
   .cart-item-actions {
     width: 100%;
+
     justify-content: flex-end;
   }
 
@@ -1344,69 +1573,104 @@ button {
     width: 100%;
   }
 
-  /* CARRINHO FLUTUANTE */
+  /* =========================
+     CARRINHO FLUTUANTE
+  ========================= */
 
   .floating-cart {
     bottom: 12px;
 
     width: calc(100% - 24px);
 
-    padding: 10px 10px 10px 14px;
+    padding: 9px 10px 9px 13px;
+  }
+
+  .floating-cart span {
+    font-size: 11px;
+  }
+
+  .floating-cart strong {
+    font-size: 15px;
   }
 
   .floating-cart button {
-    min-height: 40px;
-    padding: 0 13px;
+    min-height: 39px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
   }
 
-  /* RODAPÉ */
+  /* =========================
+     RODAPÉ
+  ========================= */
 
   .site-footer {
     width: calc(100% - 32px);
+
     padding-bottom: 90px;
   }
 
-  /* MODAL */
+  /* =========================
+     MODAL
+  ========================= */
 
   .product-modal {
-    padding: 24px;
-    border-radius: 17px;
+    padding: 22px;
+
+    border-radius: 16px;
+  }
+
+  .product-modal h2 {
+    font-size: 25px;
   }
 
   /* ===================================================
-     CHECKOUT MOBILE
+     CHECKOUT NO CELULAR
   =================================================== */
 
   .app > .checkout {
     width: calc(100% - 32px);
-    margin: 25px auto 0;
+
+    margin: 22px auto 0;
+
     padding-bottom: 110px;
   }
 
+  .checkout {
+    padding: 5px 0 100px;
+  }
+
   .checkout .section-heading {
-    margin-bottom: 22px;
+    margin-bottom: 20px;
   }
 
   .checkout .section-heading > span {
-    font-size: 11px;
+    font-size: 10px;
+
     letter-spacing: 2px;
   }
 
   .checkout .section-heading h2 {
-    font-size: 30px;
+    font-size: 29px;
+
+    letter-spacing: -0.5px;
   }
 
   .checkout-section {
     width: 100%;
-    padding: 18px;
-    margin-bottom: 16px;
 
-    border-radius: 15px;
+    padding: 17px;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
   }
 
   .checkout-section h3 {
-    margin-bottom: 17px;
-    font-size: 18px;
+    margin-bottom: 16px;
+
+    font-size: 17px;
   }
 
   .checkout-section label {
@@ -1414,7 +1678,7 @@ button {
 
     width: 100% !important;
 
-    margin-bottom: 17px;
+    margin-bottom: 16px;
 
     font-size: 13px;
   }
@@ -1425,60 +1689,77 @@ button {
 
     width: 100% !important;
 
-    height: 47px;
+    height: 46px;
 
     font-size: 14px;
   }
 
   .checkout-section textarea {
+    display: block !important;
+
     width: 100% !important;
+
+    min-height: 90px;
+
     font-size: 14px;
   }
 
-  /* PAGAMENTO */
+  /* =========================
+     PAGAMENTO
+  ========================= */
 
   .checkout .payment-grid {
     grid-template-columns: 1fr;
-    gap: 9px;
+
+    gap: 8px;
   }
 
   .checkout .payment-grid .choice {
-    min-height: 50px;
-  }
+    min-height: 48px;
 
-  /* RESUMO */
-
-  .checkout .order-summary {
-    padding: 18px;
-  }
-
-  .checkout .order-summary > div {
     font-size: 14px;
   }
 
+  /* =========================
+     RESUMO
+  ========================= */
+
+  .checkout .order-summary {
+    padding: 17px;
+  }
+
+  .checkout .order-summary > div {
+    font-size: 13px;
+  }
+
   .checkout .order-summary .total-line {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .checkout .order-summary .total-line strong {
-    font-size: 22px;
+    font-size: 21px;
   }
 
-  /* BOTÕES */
+  /* =========================
+     BOTÕES CHECKOUT
+  ========================= */
 
   .checkout .checkout-actions {
     grid-template-columns: 1fr;
-    gap: 10px;
+
+    gap: 9px;
   }
 
   .checkout .checkout-actions .secondary-button,
   .checkout .checkout-actions .primary-button {
-    min-height: 50px;
+    min-height: 48px;
+
+    font-size: 13px;
   }
 }
 
 /* =====================================================
-   CELULARES PEQUENOS
+   CELULAR PEQUENO
 ===================================================== */
 
 @media (max-width: 380px) {
@@ -1488,13 +1769,14 @@ button {
   }
 
   .site-logo {
-    width: 62px;
-    height: 62px;
+    width: 58px;
+    height: 58px;
   }
 
   .cart-button {
-    padding: 0 12px;
-    font-size: 14px;
+    padding: 0 11px;
+
+    font-size: 13px;
   }
 
   .hero,
@@ -1505,14 +1787,28 @@ button {
   }
 
   .hero {
-    padding-top: 45px;
+    padding-top: 42px;
   }
 
   .hero h1 {
-    font-size: 39px;
+    font-size: 43px;
+  }
+
+  .hero p {
+    font-size: 18px;
+  }
+
+  .hero strong {
+    font-size: 13px;
+  }
+
+  .section-heading h2 {
+    font-size: 29px;
   }
 
   .category-button {
+    min-height: 55px;
+
     font-size: 13px;
   }
 
@@ -1520,17 +1816,31 @@ button {
     padding: 17px;
   }
 
-  /* CHECKOUT */
+  .product-card h3 {
+    font-size: 19px;
+  }
+
+  .product-card p {
+    font-size: 13px;
+  }
+
+  .product-price {
+    font-size: 19px;
+  }
+
+  /* =========================
+     CHECKOUT PEQUENO
+  ========================= */
 
   .app > .checkout {
     width: calc(100% - 22px);
   }
 
   .checkout-section {
-    padding: 16px;
+    padding: 15px;
   }
 
   .checkout .section-heading h2 {
-    font-size: 27px;
+    font-size: 26px;
   }
 }
