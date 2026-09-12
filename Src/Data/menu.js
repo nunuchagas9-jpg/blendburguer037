@@ -5,7 +5,6 @@ import bombomMorangoImage from "../assets/FC56B80A-E9A9-4E51-84A7-99295048664D.p
 export const categories = [
   "ARTESANAIS",
   "TRADICIONAIS",
-  "DOCES",
   "ADICIONAIS",
   "COMBOS",
   "BEBIDAS",
@@ -109,30 +108,6 @@ export const menu = [
       "Bife de hambúrguer, bacon, catupiry, mussarela, batata palha, milho, ovo, alface, tomate e maionese temperada.",
     price: 28,
     options: [opcaoSachê],
-  },
-
-  // ========================================
-  // DOCES
-  // ========================================
-
-  {
-    id: "hamburguer-doce",
-    category: "DOCES",
-    name: "HAMBÚRGUER DOCE",
-    description:
-      "Pão, creme de avelã e morango.",
-    price: 18,
-    image: doceImage,
-  },
-
-  {
-    id: "bombom-de-morango",
-    category: "DOCES",
-    name: "BOMBOM DE MORANGO",
-    description:
-      "Morango inteiro envolvido em recheio cremoso e chocolate.",
-    price: 10,
-    image: bombomMorangoImage,
   },
 
   // ========================================
