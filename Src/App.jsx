@@ -42,7 +42,6 @@ function App() {
   const categories = [
     "ARTESANAIS",
     "TRADICIONAIS",
-    "DOCES",
     "ADICIONAIS",
     "COMBOS",
     "BEBIDAS",
