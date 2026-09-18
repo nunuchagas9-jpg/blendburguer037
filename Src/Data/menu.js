@@ -44,15 +44,6 @@ export const menu = [
     options: opcaoSachê,
   },
   {
-    id: "cebola-burger",
-    category: "ARTESANAIS",
-    name: "CEBOLA BURGER",
-    description:
-      "Blend, mussarela, alface, tomate, cebola caramelizada, maionese temperada e batata palha.",
-    price: 28,
-    options: opcaoSachê,
-  },
-  {
     id: "x-frango",
     category: "ARTESANAIS",
     name: "X-FRANGO",
