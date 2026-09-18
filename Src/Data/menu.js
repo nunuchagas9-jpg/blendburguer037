@@ -127,14 +127,7 @@ export const menu = [
     description: "Ovo adicional.",
     price: 1,
   },
-  {
-    id: "batata-cheddar-bacon",
-    category: "ADICIONAIS",
-    name: "BATATA FRITA COM CHEDDAR E BACON",
-    description: "Batata frita individual com cheddar e bacon.",
-    price: 8,
-  },
-  // ========================================
+// ======================================
   // BEBIDAS
   // ========================================
   {
