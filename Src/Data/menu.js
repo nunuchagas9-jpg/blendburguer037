@@ -116,7 +116,7 @@ export const menu = [
   {
     id: "bacon",
     category: "ADICIONAIS",
-    name: "FAROFA DE BACON",
+    name: "BACON",
     description: "Farofa crocante de bacon.",
     price: 3,
   },
